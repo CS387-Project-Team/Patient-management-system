@@ -368,6 +368,8 @@ create table facility
 create table occupies
 	(patient_id int,
 	bed_id int,
+	start_dt date,
+	end_dt date,
 	primary key (patient_id),
 	foreign key (patient_id) references patient
 		on delete cascade,
