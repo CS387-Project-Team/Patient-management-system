@@ -45,10 +45,10 @@ create table person
 	pincode int,
 	contact varchar(30),
 	gender varchar(2),
-	age int,
 	username varchar(30),
 	password varchar(30),
 	email_id varchar(30),
+	dob date,
 	primary key(id)
 	);
 
