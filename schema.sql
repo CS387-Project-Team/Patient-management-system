@@ -40,11 +40,13 @@
 
 create table person
 	(id int,
-	name varchar(30),
+	name varchar(30) not NULL,
 	address text,
 	pincode int,
-	contact varchar(30),
-	gender varchar(2),
+	contact varchar(10),
+	gender varchar(2)
+		check (gender in ('M','F',NULL)),
+
 	username varchar(30),
 	password varchar(30),
 	email_id varchar(30),
