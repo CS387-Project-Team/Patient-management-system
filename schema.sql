@@ -122,7 +122,7 @@ create table prescription
 create table appointment
 	(app_id int,
 	type text,
-	serial primary key (app_id)
+	primary key (app_id)
 	);
 
 create table symptom
