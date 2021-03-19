@@ -46,10 +46,11 @@ create table person
 	contact varchar(10),
 	gender varchar(2)
 		check (gender in ('M','F',NULL)),
-	age int,
+
 	username varchar(30),
 	password varchar(30),
 	email_id varchar(30),
+	dob date,
 	primary key(id)
 	);
 
@@ -369,6 +370,8 @@ create table facility
 create table occupies
 	(patient_id int,
 	bed_id int,
+	start_dt date,
+	end_dt date,
 	primary key (patient_id),
 	foreign key (patient_id) references patient
 		on delete cascade,
