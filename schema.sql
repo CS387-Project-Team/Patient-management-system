@@ -182,9 +182,11 @@ create table event
 create table bill
 	(bill_no int,
 	person_id int,
-	paid int,
+	--paid int,
+	amt int,
 	purpose text,
 	discount int,
+	mode text,
 	primary key (bill_no),
 	foreign key (person_id) references person_id
 		on delete cascade
@@ -266,7 +268,7 @@ create table history
 	(person_id int,
 	disease_id int,
 	prev_hist_link text,
-	duration text,
+	detected date,
 	primary key (person_id,disease_id),
 	foreign key (person_id) references person
 		on delete cascade,
@@ -338,16 +340,16 @@ create table bill_med
 		on delete cascade
 	);
 
-create table pays
-	(person_id int,
-	bill_no int,
-	mode text,
-	primary key (person_id, bill_no),
-	foreign key (person_id) references person
-		on delete cascade,
-	foreign key (bill_no) references bill
-		 on delete cascade
-	);
+-- create table pays
+-- 	(person_id int,
+-- 	bill_no int,
+-- 	mode text,
+-- 	primary key (person_id, bill_no),
+-- 	foreign key (person_id) references person
+-- 		on delete cascade,
+-- 	foreign key (bill_no) references bill
+-- 		 on delete cascade
+-- 	);
 
 create table bed_room 
 	(bed_no int,
