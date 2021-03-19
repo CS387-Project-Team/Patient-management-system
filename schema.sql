@@ -250,7 +250,7 @@ create table meet
 	dat date,
 	start_time time,
 	patient_complaint text,
-	primary key (doc_id, room_no, dat, start_time),
+	primary key (doc_id, dat, start_time),
 	foreign key	(app_id) references appointment
 		on delete cascade,
 	foreign key (patient_id) references patient
