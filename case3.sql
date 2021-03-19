@@ -9,6 +9,14 @@ update person
 set (name,address,pincode,contact) = ('Binod','IITB',400096,'1234567890')
 where id = 10;
 
+--2.5) add disease history
+select id
+from disease
+where name = 'Flu'
+
+insert into history
+values (10,12,'this.com','2020-03-15')
+
 --3) past appointments
 with pt(patient_id) as
 	(select patient_id

@@ -49,8 +49,10 @@ create table person
 
 	username varchar(30),
 	password varchar(30),
-	email_id varchar(30),
-	dob date,
+	email_id varchar(50)
+		check (email_id like '%@%'),
+	dob date
+		check (dob <= date(now())),
 	qualification text,
 	primary key(id)
 	);
