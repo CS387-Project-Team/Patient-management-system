@@ -120,7 +120,7 @@ create table prescription
 create table appointment
 	(app_id int,
 	type text,
-	primary key (app_id)
+	serial primary key (app_id)
 	);
 
 create table symptom
@@ -244,12 +244,11 @@ create table meet
 	(app_id int,
 	patient_id int,
 	doc_id int,
-	room_no int,
 	--slot_id int,
 	dat date,
 	start_time time,
 	patient_complaint text,
-	primary key (app_id, patient_id, doc_id,room_no,dat,start_time),
+	primary key (doc_id, room_no, dat, start_time),
 	foreign key	(app_id) references appointment
 		on delete cascade,
 	foreign key (patient_id) references patient
