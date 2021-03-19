@@ -51,6 +51,7 @@ create table person
 	password varchar(30),
 	email_id varchar(30),
 	dob date,
+	qualification text,
 	primary key(id)
 	);
 
@@ -58,9 +59,9 @@ create table doctor
 	(id int,
 	speciality text,
 		--check (speciality in ("Physician","Cardiology","Nephrology","Orthopaedic","Skin","Neurology")),
-	qualification text,
+	-- qualification text,
 	salary int,
-	permanent int,
+	permanent boolean,
 	experience int,
 	opd_charges int,
 	ot_charges int,
@@ -71,8 +72,8 @@ create table doctor
 
 create table support_staff
 	(id int,
-	type text,
-	qualification text,
+	role text,
+	-- qualification text,
 	experience int,
 	salary int,
 	start_hr time,
@@ -86,8 +87,7 @@ create table support_staff
 create table admin
 	(id int,
 	salary int,
-	qualification text,
-	role varchar(10),
+	-- qualification text,
 	primary key (id),
 	foreign key (id) references person
 		on delete set null
@@ -181,10 +181,13 @@ create table event
 
 create table bill
 	(bill_no int,
+	person_id int,
 	paid int,
 	purpose text,
 	discount int,
-	primary key (bill_no)
+	primary key (bill_no),
+	foreign key (person_id) references person_id
+		on delete cascade
 	);
 
 create table participate
@@ -223,7 +226,7 @@ create table doctor_room_slot
 	--slot_id int,
 	dat date,
 	start_time time,
-	primary key (doc_id,room_no,dat,start_time),
+	primary key (doc_id,dat,start_time),  ----room_no confusiom
 	foreign key (doc_id) references doctor
 		on delete cascade,
 	foreign key (room_no) references room
@@ -246,17 +249,17 @@ create table meet
 	(app_id int,
 	patient_id int,
 	doc_id int,
-	room_no int,
+	--room_no int,
 	--slot_id int,
 	dat date,
 	start_time time,
 	patient_complaint text,
-	primary key (app_id, patient_id, doc_id,room_no,dat,start_time),
+	primary key (app_id, patient_id, doc_id,dat,start_time),
 	foreign key	(app_id) references appointment
 		on delete cascade,
 	foreign key (patient_id) references patient
 		on delete cascade,
-	foreign key (doc_id,room_no,dat,start_time) references doctor_room_slot
+	foreign key (doc_id,dat,start_time) references doctor_room_slot
 		on delete cascade
 	);
 
