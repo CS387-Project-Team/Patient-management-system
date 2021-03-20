@@ -123,12 +123,14 @@ create table prescription
 
 create table bill
 	(bill_no int,
-	person_id int,
+	paid_by int,
 	--paid int,
-	amt int,
+	--amt int,
 	purpose text,
-	discount int,
-	mode text,
+	discount int
+		check (dicount <= 100),
+	mode text
+		check (mode in ('cash','card','cheque','online')),
 	primary key (bill_no),
 	foreign key (person_id) references person
 		on delete cascade
