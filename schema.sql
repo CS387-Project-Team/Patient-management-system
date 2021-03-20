@@ -130,7 +130,7 @@ create table bill
 	discount int
 		check (dicount <= 100),
 	mode text
-		check (mode in ('cash','card','cheque','online')),
+		check (mode in ('cash','card','cheque','online',NULL)),
 	primary key (bill_no),
 	foreign key (person_id) references person
 		on delete cascade
@@ -196,8 +196,8 @@ create table medicine
 	descr text,
 	manufc text,
 	price int,
-	expiry_dt date,
-	mfg_dt date,
+	--expiry_dt date,
+	--mfg_dt date,
 	primary key (id)
 	);
 
@@ -398,10 +398,13 @@ create table occupies
 	bed_id int,
 	start_dt date,
 	end_dt date,
+	bill_no int,
 	primary key (patient_id),
 	foreign key (patient_id) references patient
 		on delete cascade,
 	foreign key (bed_id) references bed
+		on delete cascade,
+	foreign key (bill_no) references bill
 		on delete cascade
 	);
 

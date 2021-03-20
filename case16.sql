@@ -17,6 +17,6 @@ insert into equipment
 
 --3) add new medicines
 insert into medicine
-	values(10,'Calpol','Paracetamol, Fever relief','Cipla',50,2022-04-20,2021-03-20)
+	values(10,'Calpol','Paracetamol, Fever relief','Cipla',50)
 
 --check if med exists already

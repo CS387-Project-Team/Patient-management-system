@@ -44,20 +44,22 @@ with pt(patient_id) as
 	(select patient_id
 	from patient
 	where person.id = 10) --fill correct one
-(select amt, purpose, discount, 'unpaid'
-from (((meet natural join pt)
+((select opd_charges, purpose, discount, (case when person_id is null then 'unpaid' else 'paid')
+from ((((meet natural join pt)
 		natural join appointment)
-		natural join bill_no) as foo
-where person_id is null)
+		natural join bill_no)
+		natural join doctor) as foo)
 union
-(select amt,purpose,discount, 'unpaid'
-from ((pt natural join takes)
-		natural join bill) as bar
-where person_id is null) 
-
-select amt, purpose, discount, mode, 'paid'
-from bill
-where person_id = 10
+(select charges,purpose,discount, (case when person_id is null then 'unpaid' else 'paid')
+from (((pt natural join takes)
+		natural join bill)
+		natural join test) as bar))
+union
+(select charges*(end_dt-start_dt), purpose, discount, (case when person_id is null then 'unpaid' else 'paid')
+from (((pt natural join occupies)
+		natural join bill)
+		natural join bed)
+as foo) 
 
 --6) event??
 
