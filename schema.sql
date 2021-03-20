@@ -121,10 +121,29 @@ create table prescription
 	primary key (presc_id)
 	);
 
+create table bill
+	(bill_no int,
+	person_id int,
+	--paid int,
+	amt int,
+	purpose text,
+	discount int,
+	mode text,
+	primary key (bill_no),
+	foreign key (person_id) references person
+		on delete cascade
+	);
+
 create table appointment
 	(app_id int,
 	type text,
-	primary key (app_id)
+	bill_no int,
+	presc_id int,
+	primary key (app_id),
+	foreign key (bill_no) references bill 
+		on delete cascade,
+	foreign key (presc_id) references prescription
+		on delete cascade
 	);
 
 create table symptom
@@ -140,24 +159,33 @@ create table disease
 	primary key (id)
 	);
 
-create table test
-	(test_id int,
-	name varchar(30),
-	charges int,
-	primary key (test_id)
-	);
-
 create table bed
 	(bed_no int,
 	type varchar(20),
 	charges int,
-	primary key (bed_no)
+	room_no int,
+	primary key (bed_no),
+	foreign key (room_no) references room
+		on delete cascade
 	);
 
 create table equipment
 	(id int,
 	type text,
-	primary key (id)
+	room_no int,
+	primary key (id),
+	foreign key (room_no) references room
+		on delete cascade
+	);
+
+create table test
+	(test_id int,
+	name varchar(30),
+	charges int,
+	eqp_id int,
+	foreign key (eqp_id) references equipment
+		on delete cascade,
+	primary key (test_id)
 	);
 
 create table medicine
@@ -180,19 +208,6 @@ create table event
 	link text,
 	primary key (id)
 		);
-
-create table bill
-	(bill_no int,
-	person_id int,
-	--paid int,
-	amt int,
-	purpose text,
-	discount int,
-	mode text,
-	primary key (bill_no),
-	foreign key (person_id) references person_id
-		on delete cascade
-	);
 
 create table participate
 	(person_id int,
@@ -288,15 +303,15 @@ create table suffers
 		on delete cascade
 	);
 
-create table prescribes
-	(app_id int,
-	presc_id int,
-	primary key (app_id),
-	foreign key (app_id) references appointment
-		on delete cascade,
-	foreign key (presc_id) references prescription
-		on delete cascade
-	);
+-- create table prescribes
+-- 	(app_id int,
+-- 	presc_id int,
+-- 	primary key (app_id),
+-- 	foreign key (app_id) references appointment
+-- 		on delete cascade,
+-- 	foreign key (presc_id) references prescription
+-- 		on delete cascade
+-- 	);
 
 create table shows
 	(app_id int,
@@ -314,7 +329,10 @@ create table takes
 	result_file text,
 	comments text,
 	dat date,
-	primary key (patient_id,test_id),
+	bill_no int,
+	primary key (patient_id,test_id,dat),
+	foreign key (bill_no) references bill
+		on delete cascade,
 	foreign key (patient_id) references patient
 		on delete cascade,
 	foreign key (test_id) references test
@@ -353,25 +371,25 @@ create table bill_med
 -- 		 on delete cascade
 -- 	);
 
-create table bed_room 
-	(bed_no int,
-	room_no int,
-	primary key (bed_no),
-	foreign key (bed_no) references bed
-		on delete cascade,
-	foreign key (room_no) references room
-		on delete cascade
-	);
+-- create table bed_room 
+-- 	(bed_no int,
+-- 	room_no int,
+-- 	primary key (bed_no),
+-- 	foreign key (bed_no) references bed
+-- 		on delete cascade,
+-- 	foreign key (room_no) references room
+-- 		on delete cascade
+-- 	);
 
-create table facility
-	(room_no int,
-	eqp_id int,
-	primary key (room_no,eqp_id),
-	foreign key (room_no) references room
-		on delete cascade,
-	foreign key (eqp_id) references equipment
-		on delete cascade
-	);
+-- create table facility
+-- 	(room_no int,
+-- 	eqp_id int,
+-- 	primary key (room_no,eqp_id),
+-- 	foreign key (room_no) references room
+-- 		on delete cascade,
+-- 	foreign key (eqp_id) references equipment
+-- 		on delete cascade
+-- 	);
 
 create table occupies
 	(patient_id int,
@@ -397,15 +415,15 @@ create table meds
 		on delete cascade
 	);
 
-create table needs
-	(test_id int,
-	eqp_id int,
-	primary key (test_id, eqp_id),
-	foreign key (test_id) references test
-		on delete cascade,
-	foreign key (eqp_id) references equipment
-		on delete cascade
-	);
+-- create table needs
+-- 	(test_id int,
+-- 	eqp_id int,
+-- 	primary key (test_id, eqp_id),
+-- 	foreign key (test_id) references test
+-- 		on delete cascade,
+-- 	foreign key (eqp_id) references equipment
+-- 		on delete cascade
+-- 	);
 
 create table assg_to
 	(supp_id int,
@@ -417,16 +435,16 @@ create table assg_to
 		on delete cascade
 	);
 
-create table test_bill
-	(bill_no int,
-	patient_id int,
-	test_id int,
-	primary key (bill_no,patient_id,test_id),
-	foreign key (bill_no) references bill
-		on delete cascade,
-	foreign key (patient_id, test_id) references takes
-		on delete cascade
-	);
+-- create table test_bill
+-- 	(bill_no int,
+-- 	patient_id int,
+-- 	test_id int,
+-- 	primary key (bill_no,patient_id,test_id),
+-- 	foreign key (bill_no) references bill
+-- 		on delete cascade,
+-- 	foreign key (patient_id, test_id) references takes
+-- 		on delete cascade
+-- 	);
 
 create table visits
 	(patient_id int,
