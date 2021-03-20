@@ -133,7 +133,7 @@ create table bill
 	mode text
 		check (mode in ('Cash','Card','Cheque','Online',NULL)),
 	primary key (bill_no),
-	foreign key (person_id) references person
+	foreign key (paid_by) references person
 		on delete cascade
 	);
 
