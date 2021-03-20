@@ -128,11 +128,11 @@ create table bill
 	--amt int,
 	purpose text,
 	discount int
-		check (dicount <= 100),
+		check (discount <= 100),
 	mode text
 		check (mode in ('cash','card','cheque','online',NULL)),
 	primary key (bill_no),
-	foreign key (person_id) references person
+	foreign key (paid_by) references person
 		on delete cascade
 	);
 
