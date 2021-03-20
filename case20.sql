@@ -14,3 +14,8 @@ union
 from ((pt natural join takes)
 		natural join bill)
 where person_no is null)
+
+--when paid
+update bill
+set person_id = 10
+where bill_no = 1
