@@ -38,6 +38,8 @@
 -- drop table test_bill;
 -- drop table visits;
 
+CREATE EXTENSION pgcrypto;
+
 create table person
 	(id int,
 	name varchar(30) not NULL,
@@ -48,7 +50,7 @@ create table person
 		check (gender in ('M','F',NULL)),
 
 	username varchar(30),
-	password varchar(30),
+	password text,
 	email_id varchar(50)
 		check (email_id like '%@%'),
 	dob date

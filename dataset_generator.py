@@ -27,7 +27,7 @@ for i in range(no_ppl):
 
 	pswd_length=random.randrange(1,31)
 	pswd=''.join([random.choice(list(string.ascii_letters)+['_','0','1','2','3','4','5','6','7','8','9']) for i in range(pswd_length)])
-	persons.append((i+1,first_names[fname],random.choice(last_names),areas[ar],pin[ar],number,gender,random.randrange(101),uname,pswd,uname+"@bla.com",random.choice(qualification)))
+	persons.append((i+1,first_names[fname],random.choice(last_names),areas[ar],pin[ar],number,gender,uname,pswd,uname+"@bla.com","01-01-"+str(2021-random.randrange(101)),random.choice(qualification)))
 	# print(persons[-1])
 
 
@@ -172,8 +172,8 @@ beds_allotted=0
 
 for i in range(int(no_rooms*0.6)):
 	rooms.append((rooms_alotted+1,"Examination"))
-	beds.append((beds_allotted,"Examination",0))
-	bed_room.append((beds_allotted+1,rooms_alotted+1))
+	beds.append((beds_allotted,"Examination",0,rooms_alotted+1))
+	# bed_room.append((beds_allotted+1,rooms_alotted+1))
 	rooms_alotted+=1
 	beds_allotted+=1
 
@@ -181,21 +181,21 @@ for i in range(int(no_rooms*0.6)):
 
 for i in range(int(no_rooms*0.15)):
 	rooms.append((rooms_alotted+1,"OT"))
-	beds.append((beds_allotted+1,"OT",0))
-	bed_room.append((beds_allotted+1,rooms_alotted+1))
+	beds.append((beds_allotted+1,"OT",0,rooms_alotted+1))
+	# bed_room.append((beds_allotted+1,rooms_alotted+1))
 	rooms_alotted+=1
 	beds_allotted+=1
 
 for i in range(int(no_rooms*0.20)):
 	rooms.append((rooms_alotted+1,"Ward"))
 	for j in range(8):
-		beds.append((beds_allotted+1,"Type1",1000))
-		bed_room.append((beds_allotted+1,rooms_alotted+1))
+		beds.append((beds_allotted+1,"Type1",1000,rooms_alotted+1))
+		# bed_room.append((beds_allotted+1,rooms_alotted+1))
 		# print(beds[-1])
 		beds_allotted+=1
 	for j in range(2):
-		beds.append((beds_allotted+1,"Type1s",1500))
-		bed_room.append((beds_allotted+1,rooms_alotted+1))
+		beds.append((beds_allotted+1,"Type1s",1500,rooms_alotted+1))
+		# bed_room.append((beds_allotted+1,rooms_alotted+1))
 		# print(beds[-1])
 		beds_allotted+=1
 	rooms_alotted+=1
@@ -203,18 +203,18 @@ for i in range(int(no_rooms*0.20)):
 for i in range(int(no_rooms*0.05)):
 	rooms.append((rooms_alotted+1,"Spl Ward"))
 	for j in range(4):
-		beds.append((beds_allotted+1,"Type2",2000))
-		bed_room.append((beds_allotted+1,rooms_alotted+1))
+		beds.append((beds_allotted+1,"Type2",2000,rooms_alotted+1))
+		# bed_room.append((beds_allotted+1,rooms_alotted+1))
 		# print(beds[-1])
 		beds_allotted+=1
 	for j in range(1):
-		beds.append((beds_allotted+1,"Type2s",2500))
-		bed_room.append((beds_allotted+1,rooms_alotted+1))
+		beds.append((beds_allotted+1,"Type2s",2500,rooms_alotted+1))
+		# bed_room.append((beds_allotted+1,rooms_alotted+1))
 		# print(beds[-1])
 		beds_allotted+=1
 	rooms_alotted+=1
 
-
+assert(bed_room==[])
 
 disease_list=["Hypertension", "Diabetes", "Back pain", "Anxiety", "Obesity", "Allergy", "Esophagitis", "Asthma", "Visual refractive errors", "Osteoarthritis", "Joint pain", "Sinusitis", "Depression", "Bronchitis", "Fungal infection"]
 disease_link=["https://www.medicalnewstoday.com/articles/150109", "https://www.medicalnewstoday.com/articles/323627", "https://www.medicalnewstoday.com/articles/172943",
@@ -528,9 +528,76 @@ for pat in patients:
 			historys.append((pat[0],random.choice(diseases)[0],random.choice(["Self","Relative"]),date.strftime("%d-%m-%Y")))
 			# print(historys[-1])
 
+def g(val):
+	try:
+		x=val+1
+		return str(val)
+	except:
+		if val=="NULL" or val is None:
+			return "NULL"
+		else:
+			return "'"+val+"'"
 
 
-
+with open('data.sql','w') as f:
+	for rec in persons:
+		f.write("insert into person values("+g(rec[0])+','+g(rec[1])+','+g(rec[2])+','+g(rec[3])+','+g(rec[4])+','+g(rec[5])+','+g(rec[6])+','+"crypt("+g(rec[7])+",gen_salt('bf'))"+','+g(rec[8])+','+g(rec[9])+','+g(rec[10])+");\n")
+	for rec in docs:
+		f.write("insert into doctor values("+g(rec[0])+','+g(rec[1])+','+g(rec[2])+','+g(rec[3])+','+g(rec[4])+','+g(rec[5])+','+g(rec[6])+");\n")
+	for rec in support_staffs:
+		f.write("insert into support_staff values("+g(rec[0])+','+g(rec[1])+','+g(rec[2])+','+g(rec[3])+','+g(rec[4])+','+g(rec[5])+','+g(rec[6])+");\n")
+	for rec in admins:
+		f.write("insert into admin values("+g(rec[0])+','+g(rec[1])+");\n")
+	for rec in patients:
+		f.write("insert into patient values("+g(rec[0])+','+g(rec[1])+");\n")
+	for rec in slots:
+		f.write("insert into slot values("+g(rec[0])+','+g(rec[1])+");\n")
+	for rec in rooms:
+		f.write("insert into room values("+g(rec[0])+','+g(rec[1])+");\n")
+	for rec in prescriptions:
+		f.write("insert into prescription values("+g(rec[0])+','+g(rec[1])+");\n")
+	for rec in bills:
+		f.write("insert into bill values("+g(rec[0])+','+g(rec[1])+','+g(rec[2])+','+g(rec[3])+','+g(rec[4])+");\n")
+	for rec in appointments:
+		f.write("insert into appointment values("+g(rec[0])+','+g(rec[1])+','+g(rec[2])+','+g(rec[3])+");\n")
+	for rec in symptoms:
+		f.write("insert into symptom values("+g(rec[0])+','+g(rec[1])+");\n")
+	for rec in diseases:
+		f.write("insert into disease values("+g(rec[0])+','+g(rec[1])+");\n")
+	for rec in beds:
+		f.write("insert into doctor values("+g(rec[0])+','+g(rec[1])+','+g(rec[2])+','+g(rec[3])+");\n")
+	for rec in equipments:
+		f.write("insert into equipment values("+g(rec[0])+','+g(rec[1])+','+g(rec[2])+','+g(rec[3])+");\n")
+	for rec in tests:
+		f.write("insert into test values("+g(rec[0])+','+g(rec[1])+','+g(rec[2])+");\n")
+	for rec in medicines:
+		f.write("insert into medicine values("+g(rec[0])+','+g(rec[1])+','+g(rec[2])+','+g(rec[3])+','+g(rec[4])+");\n")
+	for rec in doc_room_slots:
+		f.write("insert into doctor_room_slot values("+g(rec[0])+','+g(rec[1])+','+g(rec[2])+','+g(rec[3])+");\n")
+	for rec in handles:
+		f.write("insert into handle values("+g(rec[0])+','+g(rec[1])+");\n")
+	for rec in meets:
+		f.write("insert into meet values("+g(rec[0])+','+g(rec[1])+','+g(rec[2])+','+g(rec[3])+','+g(rec[4])+','+g(rec[5])+");\n")
+	for rec in historys:
+		f.write("insert into history values("+g(rec[0])+','+g(rec[1])+','+g(rec[2])+','+g(rec[3])+");\n")
+	for rec in suffers:
+		f.write("insert into suffers values("+g(rec[0])+','+g(rec[1])+");\n")
+	for rec in shows:
+		f.write("insert into shows values("+g(rec[0])+','+g(rec[1])+");\n")
+	for rec in takess:
+		f.write("insert into takes values("+g(rec[0])+','+g(rec[1])+','+g(rec[2])+','+g(rec[3])+','+g(rec[4])+','+g(rec[5])+");\n")
+	for rec in should_takes:
+		f.write("insert into should_take values("+g(rec[0])+','+g(rec[1])+");\n")
+	for rec in bill_meds:
+		f.write("insert into bill_med values("+g(rec[0])+','+g(rec[1])+','+g(rec[2])+");\n")
+	for rec in occupiess:
+		f.write("insert into occupies values("+g(rec[0])+','+g(rec[1])+','+g(rec[2])+','+g(rec[3])+','+g(rec[4])+");\n")
+	for rec in medss:
+		f.write("insert into meds values("+g(rec[0])+','+g(rec[1])+','+g(rec[2])+','+g(rec[3])+");\n")
+	for rec in assg_tos:
+		f.write("insert into assg_to values("+g(rec[0])+','+g(rec[1])+");\n")
+	for rec in visitss:
+		f.write("insert into visits values("+g(rec[0])+','+g(rec[1])+','+g(rec[2])+','+g(rec[3])+");\n")
 
 
 
