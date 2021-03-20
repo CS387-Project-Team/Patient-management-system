@@ -13,7 +13,7 @@ insert into room
 
 --2) add new equipments
 insert into equipment
-	values(10,'CT Scan',20)
+	values(10,'CT Scan',20,1)
 
 --3) add new medicines
 insert into medicine

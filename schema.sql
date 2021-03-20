@@ -126,11 +126,12 @@ create table bill
 	paid_by int,
 	--paid int,
 	--amt int,
-	purpose text,
-	discount int
+	purpose text
+		check (purpose in ('OPD','Pharmacy','Admission','Diagnosis'))
+	discount int default 0
 		check (dicount <= 100),
 	mode text
-		check (mode in ('cash','card','cheque','online',NULL)),
+		check (mode in ('Cash','Card','Cheque','Online',NULL)),
 	primary key (bill_no),
 	foreign key (person_id) references person
 		on delete cascade
@@ -175,8 +176,11 @@ create table equipment
 	(id int,
 	type text,
 	room_no int,
+	test_id int,
 	primary key (id),
 	foreign key (room_no) references room
+		on delete cascade,
+	foreign key (test_id) references test
 		on delete cascade
 	);
 
@@ -184,9 +188,9 @@ create table test
 	(test_id int,
 	name varchar(30),
 	charges int,
-	eqp_id int,
-	foreign key (eqp_id) references equipment
-		on delete cascade,
+	--eqp_id int,
+	--foreign key (eqp_id) references equipment
+	--	on delete cascade,
 	primary key (test_id)
 	);
 
@@ -201,45 +205,45 @@ create table medicine
 	primary key (id)
 	);
 
-create table event
-	(id int,
-	name varchar(30),
-	start_dt timestamp,
-	end_dt timestamp,
-	descr text,
-	link text,
-	primary key (id)
-		);
+-- create table event
+-- 	(id int,
+-- 	name varchar(30),
+-- 	start_dt timestamp,
+-- 	end_dt timestamp,
+-- 	descr text,
+-- -- 	link text,
+-- -- 	primary key (id)
+-- -- 		);
 
-create table participate
-	(person_id int,
-	event_id int,
-	primary key (person_id,event_id),
-	foreign key (person_id) references person
-		on delete cascade,
-	foreign key (event_id) references event
-		on delete cascade
-	);
+-- create table participate
+-- 	(person_id int,
+-- 	event_id int,
+-- 	primary key (person_id,event_id),
+-- 	foreign key (person_id) references person
+-- 		on delete cascade,
+-- 	foreign key (event_id) references event
+-- 		on delete cascade
+-- 	);
 
-create table organised
-	(person_id int,
-	event_id int,
-	primary key (person_id,event_id),
-	foreign key (person_id) references person
-		on delete cascade,
-	foreign key (event_id) references event
-		on delete cascade
-	);
+-- create table organised
+-- 	(person_id int,
+-- 	event_id int,
+-- 	primary key (person_id,event_id),
+-- 	foreign key (person_id) references person
+-- 		on delete cascade,
+-- 	foreign key (event_id) references event
+-- 		on delete cascade
+-- 	);
 
-create table doc_in_chrg
-	(doc_id int,
-	event_id int,
-	primary key (doc_id, event_id),
-	foreign key (doc_id) references doctor
-		on delete cascade,
-	foreign key (event_id) references event
-		on delete cascade
-	);
+-- create table doc_in_chrg
+-- 	(doc_id int,
+-- 	event_id int,
+-- 	primary key (doc_id, event_id),
+-- 	foreign key (doc_id) references doctor
+-- 		on delete cascade,
+-- 	foreign key (event_id) references event
+-- 		on delete cascade
+-- 	);
 
 create table doctor_room_slot
 	(doc_id int,
