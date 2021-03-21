@@ -1,42 +1,33 @@
--- drop table person;
--- drop table doctor;
--- drop table support_staff;
--- drop table admin;
--- drop table patient;
--- drop table slot;
--- drop table room;
--- drop table prescription;
--- drop table appointment;
--- drop table symptom;
--- drop table disease;
--- drop table test;
--- drop table bed;
--- drop table equipment;
--- drop table medicine;
--- drop table event;
--- drop table bill;
--- drop table participate;
--- drop table organised;
--- drop table doc_in_chrg;
--- drop table doctor_room_slot;
--- drop table handle;
--- drop table meet;
--- drop table history;
--- drop table suffers;
--- drop table prescribes;
--- drop table shows;
--- drop table takes;
--- drop table should_take;
--- drop table bill_med;
--- drop table pays;
--- drop table bed_room; 
--- drop table facility;
--- drop table occupies;
--- drop table meds;
--- drop table needs;
--- drop table assg_to;
--- drop table test_bill;
--- drop table visits;
+drop table if exists visits;
+drop table if exists assg_to;
+drop table if exists meds;
+drop table if exists occupies;
+drop table if exists bill_med;
+drop table if exists should_take;
+drop table if exists takes;
+drop table if exists shows;
+drop table if exists suffers;
+drop table if exists history;
+drop table if exists meet;
+drop table if exists handle;
+drop table if exists doctor_room_slot;
+drop table if exists medicine;
+drop table if exists equipment;
+drop table if exists test;
+drop table if exists bed;
+drop table if exists disease;
+drop table if exists symptom;
+drop table if exists appointment;
+drop table if exists bill;
+drop table if exists prescription;
+drop table if exists room;
+drop table if exists slot;
+drop table if exists patient;
+drop table if exists admin;
+drop table if exists support_staff;
+drop table if exists doctor;
+drop table if exists person;
+
 
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
@@ -80,8 +71,8 @@ create table support_staff
 	-- qualification text,
 	experience int,
 	salary int,
-	start_hr time,
-	end_hr time,
+	start_hr int,
+	end_hr int,
 	days_of_week text,
 	primary key (id),
 	foreign key (id) references person
@@ -148,7 +139,7 @@ create table appointment
 	foreign key (bill_no) references bill 
 		on delete cascade,
 	foreign key (presc_id) references prescription
-		on delete cascade,
+		on delete cascade
 	);
 
 create table symptom
