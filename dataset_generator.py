@@ -540,6 +540,7 @@ def g(val):
 
 
 with open('data.sql','w') as f:
+	f.write('begin\n')
 	for rec in persons:
 		f.write("insert into person values("+g(rec[0])+','+g(rec[1])+','+g(rec[2])+','+g(rec[3])+','+g(rec[4])+','+g(rec[5])+','+g(rec[6])+','+"crypt("+g(rec[7])+",gen_salt('bf'))"+','+g(rec[8])+','+g(rec[9])+','+g(rec[10])+");\n")
 	for rec in docs:
@@ -598,6 +599,7 @@ with open('data.sql','w') as f:
 		f.write("insert into assg_to values("+g(rec[0])+','+g(rec[1])+");\n")
 	for rec in visitss:
 		f.write("insert into visits values("+g(rec[0])+','+g(rec[1])+','+g(rec[2])+','+g(rec[3])+");\n")
+	f.write('commit\n')
 
 
 

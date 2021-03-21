@@ -1,0 +1,1 @@
+insert into disease (id, name, info_link) values ($1, $2, $3); 

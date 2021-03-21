@@ -1,0 +1,1 @@
+insert into symptom (id, name, desc) values ($1, $2, $3)

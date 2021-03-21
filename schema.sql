@@ -38,7 +38,7 @@
 -- drop table test_bill;
 -- drop table visits;
 
-CREATE EXTENSION pgcrypto;
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
 create table person
 	(id int,
@@ -129,9 +129,9 @@ create table bill
 	--paid int,
 	--amt int,
 	purpose text
-		check (purpose in ('OPD','Pharmacy','Admission','Diagnosis'))
+		check (purpose in ('OPD','Pharmacy','Admission','Diagnosis')),
 	discount int default 0
-		check (dicount <= 100),
+		check (discount <= 100),
 	mode text
 		check (mode in ('Cash','Card','Cheque','Online',NULL)),
 	primary key (bill_no),
@@ -148,7 +148,7 @@ create table appointment
 	foreign key (bill_no) references bill 
 		on delete cascade,
 	foreign key (presc_id) references prescription
-		on delete cascade
+		on delete cascade,
 	);
 
 create table symptom
@@ -174,6 +174,16 @@ create table bed
 		on delete cascade
 	);
 
+create table test
+	(test_id int,
+	name varchar(30),
+	charges int,
+	--eqp_id int,
+	--foreign key (eqp_id) references equipment
+	--	on delete cascade,
+	primary key (test_id)
+	);
+
 create table equipment
 	(id int,
 	type text,
@@ -184,16 +194,6 @@ create table equipment
 		on delete cascade,
 	foreign key (test_id) references test
 		on delete cascade
-	);
-
-create table test
-	(test_id int,
-	name varchar(30),
-	charges int,
-	--eqp_id int,
-	--foreign key (eqp_id) references equipment
-	--	on delete cascade,
-	primary key (test_id)
 	);
 
 create table medicine
