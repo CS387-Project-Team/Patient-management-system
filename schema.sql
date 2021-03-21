@@ -33,19 +33,19 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
 create table person
 	(id int,
-	name varchar(30) not NULL,
+	name text not NULL,
 	address text,
 	pincode int,
 	contact varchar(10),
 	gender varchar(2)
 		check (gender in ('M','F',NULL)),
 
-	username varchar(30),
+	username text,
 	password text,
-	email_id varchar(50)
+	email_id text
 		check (email_id like '%@%'),
-	dob date
-		check (dob <= date(now())),
+	dob date,
+		--check (dob <= date(now())),
 	qualification text,
 	primary key(id)
 	);
@@ -150,14 +150,14 @@ create table symptom
 
 create table disease
 	(id int,
-	name varchar(20),
+	name text,
 	info_link text,
 	primary key (id)
 	);
 
 create table bed
 	(bed_no int,
-	type varchar(20),
+	type text,
 	charges int,
 	room_no int,
 	primary key (bed_no),
@@ -167,7 +167,7 @@ create table bed
 
 create table test
 	(test_id int,
-	name varchar(30),
+	name text,
 	charges int,
 	--eqp_id int,
 	--foreign key (eqp_id) references equipment
@@ -189,7 +189,7 @@ create table equipment
 
 create table medicine
 	(id int,
-	name varchar(30),
+	name text,
 	descr text,
 	manufc text,
 	price int,
@@ -200,7 +200,7 @@ create table medicine
 
 -- create table event
 -- 	(id int,
--- 	name varchar(30),
+-- 	name text,
 -- 	start_dt timestamp,
 -- 	end_dt timestamp,
 -- 	descr text,

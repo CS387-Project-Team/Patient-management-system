@@ -157,7 +157,7 @@ slots=[]
 
 for d in date_generated:
 	for t in time_generated:
-		slots.append((d.strftime("%d-%m-%Y"),t.strftime("%H:%M")))
+		slots.append((d.strftime("%Y-%m-%d"),t.strftime("%H:%M")))
 
 
 no_rooms=20
@@ -566,11 +566,11 @@ with open('data.sql','w') as f:
 	for rec in diseases:
 		f.write("insert into disease values("+g(rec[0])+','+g(rec[1])+");\n")
 	for rec in beds:
-		f.write("insert into doctor values("+g(rec[0])+','+g(rec[1])+','+g(rec[2])+','+g(rec[3])+");\n")
-	for rec in equipments:
-		f.write("insert into equipment values("+g(rec[0])+','+g(rec[1])+','+g(rec[2])+','+g(rec[3])+");\n")
+		f.write("insert into bed values("+g(rec[0])+','+g(rec[1])+','+g(rec[2])+','+g(rec[3])+");\n")
 	for rec in tests:
 		f.write("insert into test values("+g(rec[0])+','+g(rec[1])+','+g(rec[2])+");\n")
+	for rec in equipments:
+		f.write("insert into equipment values("+g(rec[0])+','+g(rec[1])+','+g(rec[2])+','+g(rec[3])+");\n")
 	for rec in medicines:
 		f.write("insert into medicine values("+g(rec[0])+','+g(rec[1])+','+g(rec[2])+','+g(rec[3])+','+g(rec[4])+");\n")
 	for rec in doc_room_slots:
