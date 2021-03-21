@@ -145,7 +145,7 @@ end=start_date+datetime.timedelta(weeks=no_weeks)
 date_generated = [start_date + datetime.timedelta(days=x) for x in range(0, (end-start_date).days)]
 
 # for date in date_generated:
-#     print(date.strftime("%d-%m-%Y"))
+#     print(date.strftime("%Y-%m-%d"))
 
 start_time=datetime.datetime.strptime("00:00","%H:%M")
 time_generated=[start_time+datetime.timedelta(minutes=i*30) for i in range(48)]
@@ -294,7 +294,7 @@ for (i,doc) in enumerate(docs):
 	for j in range(no_weeks): #no of weeks
 		# print("bla")
 		for k in slots_chosen:
-			doc_room_slots.append((doc[0],doc_room[i],slots[j*7*48+k][0],slots[j*7*48+k][1]))
+			doc_room_slots.append((doc[0],doc_room[i]+1,slots[j*7*48+k][0],slots[j*7*48+k][1]))
 			doc_free_slots[doc[0]].append(no_drs_entries)
 			# print(doc_room_slots[-1])
 			no_drs_entries+=1
@@ -457,7 +457,7 @@ for pat in patients[int(len(patients)*0.8):]:
 	occ_start=start_date+datetime.timedelta(days=days_group_travelled*days_group+start_offset)
 	occ_end=start_date+datetime.timedelta(days=days_group_travelled*days_group+no_days)
 	bills_generated+=1
-	occupiess.append((pat[1],beds_assigned+1+int(0.75*no_rooms),occ_start.strftime("%d-%m-%Y"),occ_end.strftime("%d-%m-%Y"),bills_generated))
+	occupiess.append((pat[1],beds_assigned+1+int(0.75*no_rooms),occ_start.strftime("%Y-%m-%d"),occ_end.strftime("%Y-%m-%d"),bills_generated))
 
 	# print("Occ: ",occupiess[-1])
 
@@ -477,7 +477,7 @@ for pat in patients[int(len(patients)*0.8):]:
 	
 
 	if random.choices([True,False],weights=[0.4,0.6])[0]:# if the doctor visits
-		visitss.append((pat[1],random.choice(docs)[0],occ_start.strftime("%d-%m-%Y"),""))
+		visitss.append((pat[1],random.choice(docs)[0],occ_start.strftime("%Y-%m-%d"),""))
 		# print("Vis:",visitss[-1])
 
 
@@ -487,7 +487,7 @@ takess=[]
 for i in range(no_tests_taken):
 	dat=start_date+datetime.timedelta(days=random.randrange(no_weeks*7))
 	bills_generated+=1
-	takess.append((random.choice(patients)[1],random.choice(tests)[0],random.choice(["NULL","results/test"+str(i)+".pdf"]),"",dat.strftime("%d-%m-%Y"),bills_generated))
+	takess.append((random.choice(patients)[1],random.choice(tests)[0],random.choice(["NULL","results/test"+str(i)+".pdf"]),"",dat.strftime("%Y-%m-%d"),bills_generated))
 	# print(takess[-1])
 	paid=random.choices([True,False],weights=[0.8,0.2])[0]
 	if paid:
@@ -520,12 +520,13 @@ for i in range(no_outside_purchases):
 historys=[]
 
 smallest_date=datetime.datetime.strptime("01-02-2019", "%d-%m-%Y")
-for pat in patients:
+for per in persons:
 	if random.choice([True,False]):
 		no_hist=random.randrange(1,len(disease_list))
-		for i in range(no_hist):
+		hist_dis=random.sample(diseases,k=no_hist)
+		for h in hist_dis:
 			date=smallest_date+datetime.timedelta(days=random.randrange(500))
-			historys.append((pat[0],random.choice(diseases)[0],random.choice(["Self","Relative"]),date.strftime("%d-%m-%Y")))
+			historys.append((per[0],h[0],random.choice(["Self","Relative"]),date.strftime("%Y-%m-%d")))
 			# print(historys[-1])
 
 def g(val):
