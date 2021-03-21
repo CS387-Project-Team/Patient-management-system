@@ -1,0 +1,6 @@
+* We have excluded some of the entities as well as their usecases because of their less relevance to Patient Management as a result of which files case'i'.sql are sparse.
+* Indices are present in indices.sql
+* usecases.pdf contains usecases(textual) and ER diagram (old)
+* Screen_design.pdf contains screens for usecases not crossed out in usecases.sql
+* Each usecase has a sql file case'i'.sql
+* dataset_generator.py is the data generating file details of which are in CS387-Deliverable3.pdf
