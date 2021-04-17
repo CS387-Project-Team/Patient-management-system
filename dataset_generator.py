@@ -278,7 +278,7 @@ for (i,s) in enumerate(symptom_list):
 
 doc_free_slots={}
 
-doc_room=random.sample(list(range(int(no_rooms*0.6))),k=no_docs)
+doc_room=random.sample(list(range(1,1+int(no_rooms*0.6))),k=no_docs)
 
 doc_room_slots=[]
 no_drs_entries=0
@@ -457,7 +457,7 @@ for pat in patients[int(len(patients)*0.8):]:
 	occ_start=start_date+datetime.timedelta(days=days_group_travelled*days_group+start_offset)
 	occ_end=start_date+datetime.timedelta(days=days_group_travelled*days_group+no_days)
 	bills_generated+=1
-	occupiess.append((pat[1],beds_assigned+1+int(0.75*no_rooms),occ_start.strftime("%d-%m-%Y"),occ_end.strftime("%d-%m-%Y"),bills_generated))
+	occupiess.append((pat[1],beds_assigned+1+int(0.75*no_rooms),occ_start.strftime("%Y-%m-%d"),occ_end.strftime("%Y-%m-%d"),bills_generated))
 
 	# print("Occ: ",occupiess[-1])
 
@@ -477,7 +477,7 @@ for pat in patients[int(len(patients)*0.8):]:
 	
 
 	if random.choices([True,False],weights=[0.4,0.6])[0]:# if the doctor visits
-		visitss.append((pat[1],random.choice(docs)[0],occ_start.strftime("%d-%m-%Y"),""))
+		visitss.append((pat[1],random.choice(docs)[0],occ_start.strftime("%Y-%m-%d"),""))
 		# print("Vis:",visitss[-1])
 
 
@@ -487,7 +487,7 @@ takess=[]
 for i in range(no_tests_taken):
 	dat=start_date+datetime.timedelta(days=random.randrange(no_weeks*7))
 	bills_generated+=1
-	takess.append((random.choice(patients)[1],random.choice(tests)[0],random.choice(["NULL","results/test"+str(i)+".pdf"]),"",dat.strftime("%d-%m-%Y"),bills_generated))
+	takess.append((random.choice(patients)[1],random.choice(tests)[0],random.choice(["NULL","results/test"+str(i)+".pdf"]),"",dat.strftime("%Y-%m-%d"),bills_generated))
 	# print(takess[-1])
 	paid=random.choices([True,False],weights=[0.8,0.2])[0]
 	if paid:
@@ -525,7 +525,7 @@ for pat in patients:
 		no_hist=random.randrange(1,len(disease_list))
 		for i in range(no_hist):
 			date=smallest_date+datetime.timedelta(days=random.randrange(500))
-			historys.append((pat[0],random.choice(diseases)[0],random.choice(["Self","Relative"]),date.strftime("%d-%m-%Y")))
+			historys.append((pat[0],random.choice(diseases)[0],random.choice(["Self","Relative"]),date.strftime("%Y-%m-%d")))
 			# print(historys[-1])
 
 def g(val):
@@ -600,7 +600,3 @@ with open('data.sql','w') as f:
 	for rec in visitss:
 		f.write("insert into visits values("+g(rec[0])+','+g(rec[1])+','+g(rec[2])+','+g(rec[3])+");\n")
 	# f.write('commit;\n')
-
-
-
-
