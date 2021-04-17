@@ -1,4 +1,4 @@
-name = 'play'
+name = 'postgres'
 user = 'postgres'
 pswd = 'postgres'
 host = 'localhost'

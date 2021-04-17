@@ -1,1 +1,2 @@
 connect = None
+DictCursor = None

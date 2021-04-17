@@ -2,7 +2,6 @@ import functools
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
-from werkzeug.security import check_password_hash, generate_password_hash
 import application
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -12,7 +11,7 @@ def register():
         username = request.form['username']
         password = request.form['password']
         conn = application.connect()
-        db = conn.cursor()
+        db = conn.cursor(cursor_factory=application.DictCursor)
         error = None
 
         if not username:
@@ -21,15 +20,15 @@ def register():
             error = 'Password is required.'
         else:
             db.execute(
-                'SELECT id FROM login WHERE username = %s',(username,)
+                'SELECT id FROM person WHERE username = %s',(username,)
             ) 
             if db.fetchone() is not None:
                 error = 'User {} is already registered.'.format(username)
-
+        hashed = application.bcrypt.generate_password_hash(password)
         if error is None:
             db.execute(
-                'INSERT INTO login (username, password) VALUES (%s, %s)',
-                (username, generate_password_hash(password),)
+                "INSERT INTO person (username, password) VALUES (%s, %s)",
+                (username, hashed.decode('UTF-8'),)
             )
             conn.commit()
             return redirect(url_for('auth.login'))
@@ -44,21 +43,21 @@ def login():
         username = request.form['username']
         password = request.form['password']
         conn = application.connect()
-        db = conn.cursor()
+        db = conn.cursor(cursor_factory=application.DictCursor)
         error = None
         db.execute(
-            'SELECT * FROM login WHERE username = %s', (username,)
+            'SELECT * FROM person WHERE username = %s', (username,)
         )
         user = db.fetchone()
 
         if user is None:
             error = 'Incorrect username.'
-        elif not check_password_hash(user[2], password):
+        elif not application.bcrypt.check_password_hash(user['password'], password):
             error = 'Incorrect password.'
 
         if error is None:
             session.clear()
-            session['user_id'] = user[0]
+            session['user_id'] = user['id']
             return redirect(url_for('hello'))
         conn.close()
         flash(error)
@@ -73,9 +72,9 @@ def load_logged_in_user():
         g.user = None
     else:
         conn = application.connect()
-        db = conn.cursor()
+        db = conn.cursor(cursor_factory=application.DictCursor)
         db.execute(
-            'SELECT * FROM login WHERE id = %s', (user_id,)
+            'SELECT * FROM person WHERE id = %s', (user_id,)
         )
         g.user = db.fetchone()
         conn.close()
