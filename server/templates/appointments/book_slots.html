@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Book appointment{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="doctor_id">Doctor id</label>
+    <input name="doctor_id" id="doctor_id" required>
+    <label for="date">Date</label>
+    <input name="date" id="date" required>
+    <label for="time">Time</label>
+    <input name="time" id="time" required>
+    <label for="type">Type</label>
+    <input name="type" id="type" required>
+    <label for="complaint">Complaint</label>
+    <input name="complaint" id="complaint">
+    <input type="submit" value="Book">
+  </form>
+{% endblock %}
