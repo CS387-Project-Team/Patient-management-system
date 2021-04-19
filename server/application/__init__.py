@@ -1,5 +1,6 @@
 connect = None
 DictCursor = None
+MAX_BOOKING_RANGE = 7
 
 def default(o):
     if isinstance(o, datetime.datetime):

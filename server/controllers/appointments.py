@@ -31,29 +31,54 @@ def book_appointment(request):
     time = request.get('time')
     appo_type = request.get('type')
     complaint = request.get('complaint')
+    try:
+        followup = int(request.get('followup'))
+    except:
+        followup = 0
+    try:
+        patient_id = int(request.get('patient_id'))
+    except:
+        patient_id = -1
+    try:
+        parent_app_id = int(request.get('parent_app_id'))
+    except:
+        parent_app_id = -1
     user_id = g.user['id']
     conn = application.connect()
     db = conn.cursor(cursor_factory=application.DictCursor)
     try:
-        sql = '''select 1+max(patient_id) as new_id
-                from patient'''
-        db.execute(sql)
-        row = db.fetchone()
-        patient_id = row['new_id']
+        if followup == 0:
+            sql = '''select 1+max(patient_id) as new_id
+                    from patient'''
+            db.execute(sql)
+            row = db.fetchone()
+            patient_id = row['new_id']
+            sql = '''insert into patient(id, patient_id)
+                    values (%s, %s);'''
+            db.execute(sql, (user_id, patient_id,))
+        else:
+            assert parent_app_id >= 0, 'invalid parent appo id'
+            sql = '''select dat, start_time from meet
+                    where app_id = %s'''
+            db.execute(sql, (parent_app_id,))
+            row = db.fetchone()
+            parent_appo_datetime = datetime.datetime.strptime(row['dat'].isoformat() + ' ' + row['start_time'].isoformat(), '%Y-%m-%d %H:%M:%S')
+            assert parent_appo_datetime < datetime.datetime.now(), 'attempting to book a follow up for an appointment which is yet to take place'
+        
+        assert patient_id >= 0, "invalid patient id"
         sql = '''select 1+max(app_id) as new_id
                 from appointment'''
         db.execute(sql)
         row = db.fetchone()
         app_id = row['new_id']
-        sql = '''insert into patient(id, patient_id)
-                values (%s, %s);'''
-        db.execute(sql, (user_id, patient_id,))
         sql = '''insert into appointment(app_id, type)
                 values (%s, %s);'''
+        appo_datetime = datetime.datetime.strptime(date + ' ' + time, '%Y-%m-%d %H:%M:%S')
+        assert appo_datetime >= datetime.datetime.now() and appo_datetime.datetime.date <= datetime.date.today()+datetime.timedelta(days=application.MAX_BOOKING_RANGE), 'invalid date for booking a new appointment'
         db.execute(sql, (app_id, appo_type,))
         sql = '''insert into meet(app_id, patient_id, doc_id, dat, start_time, patient_complaint)
                 values (%s, %s, %s, %s, %s, %s);'''
-        db.execute(sql, (app_id, patient_id, doctor_id, date,time, complaint,))
+        db.execute(sql, (app_id, patient_id, doctor_id, date, time, complaint,))
         conn.commit()
         conn.close()
     except Exception as e:
@@ -62,3 +87,38 @@ def book_appointment(request):
         conn.close()
         return jsonify({'status':'Failed to book a new appointment', 'code':401})    
     return jsonify({'status':'Successfully booked a new appointment', 'code':200})
+
+
+def cancel_appointment(request):
+    app_id = int(request.get('app_id'))
+    patient_id = int(request.get('patient_id'))
+    conn = application.connect()
+    db = conn.cursor(cursor_factory=application.DictCursor)
+    try:
+        
+        sql = '''delete from meet
+                where app_id = %s returning *;'''
+        db.execute(sql, (app_id,))
+        deleted_meet = db.fetchone() 
+        if deleted_meet is None:
+            raise Exception('no appointment deleted')
+        assert datetime.datetime.strptime(deleted_meet['dat'].isoformat() + ' ' + deleted_meet['start_time'].isoformat(), '%Y-%m-%d %H:%M:%S') > datetime.datetime.now(), 'attempting to cancel an appointment which has taken place'
+        sql = '''delete from appointment
+                where app_id = %s;'''
+        db.execute(sql, (app_id,))
+        sql = '''select * from meet
+                where patient_id = %s;'''
+        db.execute(sql, (patient_id,))
+        row = db.fetchone()
+        if row is None:
+            sql = '''delete from patient
+                    where patient_id = %s;'''
+            db.execute(sql, (patient_id,))
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(e)
+        conn.rollback()
+        conn.close()
+        return jsonify({'status':'Failed to cancel appointment', 'code':401})    
+    return jsonify({'status':'Successfully cancelled appointment', 'code':200})

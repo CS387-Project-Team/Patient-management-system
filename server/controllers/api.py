@@ -27,3 +27,11 @@ def book_appointment():
         return controllers.appointments.book_appointment(request_data)
     elif request.method == 'GET':
         return render_template('appointments/book_slots.html')
+
+@login_required
+def cancel_appointment():
+    if request.method == 'POST':
+        request_data = request.form
+        return controllers.appointments.cancel_appointment(request_data)
+    elif request.method == 'GET':
+        return render_template('appointments/cancel_appo.html')

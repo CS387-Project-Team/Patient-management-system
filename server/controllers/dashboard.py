@@ -18,14 +18,15 @@ def get_dashboard():
                 (select patient_id
                 from patient
                 where patient.id = %s)
-            select foo.type, d.name, foo.instr, foo.dat, foo.start_time, foo.name as medicine, foo.dosage, foo.frequency
+            select foo.type, d.name, foo.instr, foo.dat, foo.start_time, foo.name as medicine, foo.dosage, foo.frequency, patient_id, med_id, app_id, doc_id
             from ((((((meet natural join pt)
                     natural join doctor_room_slot) 
                     natural join appointment) 
-                    natural join prescription)
-                    natural join meds)
-                    natural join medicine) as foo, (person natural join doctor) as d
-            where foo.doc_id = d.id'''
+                    natural left join prescription)
+                    natural left join meds)
+                    left outer join medicine on medicine.id = meds.med_id) as foo, (person natural join doctor) as d
+            where foo.doc_id = d.id
+            order by foo.dat desc'''
     db.execute(sql, (g.user.get('id'),))
     rows = db.fetchall()
     data['appointments'] = my_jsonify(rows)

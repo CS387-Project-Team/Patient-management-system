@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Cancel appointment{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="patient_id">Patient id</label>
+    <input name="patient_id" id="patient_id" required>
+    <label for="app_id">Appo Id</label>
+    <input name="app_id" id="app_id">
+    <input type="submit" value="Cancel">
+  </form>
+{% endblock %}
