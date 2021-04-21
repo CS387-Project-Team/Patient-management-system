@@ -50,6 +50,17 @@ create table person
 	primary key(id)
 	);
 
+-- insert into person values(0,'Admin','IITB',123456,1234567890,'M','Ramu','Ramu','foo@gmail.com','2000-01-01','Btech');
+-- insert into person values(1,'P0','IITB',123456,1234567890,'M','Ramu','Ramu','foo@gmail.com','2000-01-01','Btech');
+-- insert into person values(2,'P1','IITB',123456,1234567890,'M','Ramu','Ramu','foo@gmail.com','2000-01-01','Btech');
+-- insert into person values(3,'P2','IITB',123456,1234567890,'M','Ramu','Ramu','foo@gmail.com','2000-01-01','Btech');
+-- insert into person values(4,'D1','IITB',123456,1234567890,'M','Ramu','Ramu','foo@gmail.com','2000-01-01','Btech');
+-- insert into person values(5,'D2','IITB',123456,1234567890,'M','Ramu','Ramu','foo@gmail.com','2000-01-01','Btech');
+-- insert into person values(6,'S1','IITB',123456,1234567890,'M','Ramu','Ramu','foo@gmail.com','2000-01-01','Btech');
+-- insert into person values(7,'S2','IITB',123456,1234567890,'M','Ramu','Ramu','foo@gmail.com','2000-01-01','Btech');
+-- insert into person values(8,'S3','IITB',123456,1234567890,'M','Ramu','Ramu','foo@gmail.com','2000-01-01','Btech');
+-- insert into person values(9,'S4','IITB',123456,1234567890,'M','Ramu','Ramu','foo@gmail.com','2000-01-01','Btech');
+
 create table doctor
 	(id int,
 	speciality text,
@@ -65,6 +76,9 @@ create table doctor
 		on delete set null
 	);
 
+-- insert into doctor values(4,'Phys',22222,NULL,10,200,2000);
+-- insert into doctor values(5,'Card',22222,NULL,10,200,2000);
+
 create table support_staff
 	(id int,
 	role text,
@@ -79,6 +93,11 @@ create table support_staff
 		on delete set null
 	);
 
+-- insert into support_staff values(6,'Nursing',10,10000,8,14,'Mon-Fri');
+-- insert into support_staff values(7,'Nursing',10,10000,8,14,'Mon-Fri');
+-- insert into support_staff values(8,'Equipment',10,10000,8,14,'Mon-Fri');
+-- insert into support_staff values(9,'Equipment',10,10000,8,14,'Mon-Fri');
+
 create table admin
 	(id int,
 	salary int,
@@ -87,6 +106,7 @@ create table admin
 	foreign key (id) references person
 		on delete set null
 	);
+-- insert into admin values(0,1000000);
 
 create table patient
 	(id int,
@@ -95,24 +115,47 @@ create table patient
 	foreign key (id) references person
 		on delete set null
 	);
+-- insert into patient values(1,1);
+-- insert into patient values(2,2);
+-- insert into patient values(2,3);
+-- insert into patient values(1,4);
 
 create table slot
 	(dat date,
 	start_time time,
 	primary key (dat,start_time)
 	);
+-- insert into slot values('2020-04-21','12:00');
+-- insert into slot values('2020-04-21','12:30');
+-- insert into slot values('2020-04-21','13:00');
+-- insert into slot values('2020-04-21','13:30');
+
+-- insert into slot values('2020-04-22','12:00');
+-- insert into slot values('2020-04-22','12:30');
+-- insert into slot values('2020-04-22','13:00');
+-- insert into slot values('2020-04-22','13:30');
 
 create table room
 	(room_no int,
 	type text,
 	primary key (room_no)
 	);
+-- insert into room values(1,'Examination');
+-- insert into room values(2,'Examination');
+-- insert into room values(3,'OT');
+-- insert into room values(4,'Ward');
+-- insert into room values(5,'Test');
+-- insert into room values(6,'Test');
 
 create table prescription
 	(presc_id int,
 	instr text,
 	primary key (presc_id)
 	);
+-- insert into prescription values(1,'Sleep early');
+-- insert into prescription values(2,'Sleep early');
+-- insert into prescription values(3,'Sleep early');
+-- insert into prescription values(4,'Sleep early');
 
 create table bill
 	(bill_no int,
@@ -129,6 +172,13 @@ create table bill
 	foreign key (paid_by) references person
 		on delete cascade
 	);
+-- insert into bill values(1,NULL,'OPD',20,'Cash');
+-- insert into bill values(2,NULL,'OPD',20,'Cash');
+-- insert into bill values(3,NULL,'OPD',20,'Cash');
+-- insert into bill values(4,NULL,'Admission',20,'Online');
+-- insert into bill values(5,NULL,'OPD',20,'Cash');
+-- insert into bill values(6,NULL,'Diagnosis',10,'Cash');
+-- insert into bill values(7,NULL,'Pharmacy',10,'Card');
 
 create table appointment
 	(app_id int,
@@ -141,12 +191,20 @@ create table appointment
 	foreign key (presc_id) references prescription
 		on delete cascade
 	);
+-- insert into appointment values(1,'OPD',1,1);
+-- insert into appointment values(2,'OPD',2,2);
+-- insert into appointment values(3,'OPD',3,3);
+-- insert into appointment values(4,'OPD',5,4); 
 
 create table symptom
 	(id int,
 	name text,
 	primary key (id)
 	);
+-- insert into symptom values(1,'Headache');
+-- insert into symptom values(2,'Fatigue');
+-- insert into symptom values(3,'Chest Pain');
+-- insert into symptom values(4,'Breathing difficulty');
 
 create table disease
 	(id int,
@@ -154,6 +212,11 @@ create table disease
 	info_link text,
 	primary key (id)
 	);
+-- insert into disease values(1,'Hypertension');
+-- insert into disease values(2,'Migrane');
+-- insert into disease values(3,'Back pain');
+-- insert into disease values(4,'Anxiety');
+-- insert into disease values(5,'Obesity');
 
 create table bed
 	(bed_no int,
@@ -164,6 +227,10 @@ create table bed
 	foreign key (room_no) references room
 		on delete cascade
 	);
+-- insert into bed values(1,'Normal',300,4);
+-- insert into bed values(2,'Normal',300,4);
+-- insert into bed values(3,'Normal',300,4);
+-- insert into bed values(4,'Normal',300,4);
 
 create table test
 	(test_id int,
@@ -174,6 +241,9 @@ create table test
 	--	on delete cascade,
 	primary key (test_id)
 	);
+-- insert into test values(1,'Blood test',200);
+-- insert into test values(2,'MRI',6000);
+-- insert into test values(3,'X-Ray',500);
 
 create table equipment
 	(id int,
@@ -186,6 +256,8 @@ create table equipment
 	foreign key (test_id) references test
 		on delete cascade
 	);
+-- insert into equipment values(1,'MRI1',5,2);
+-- insert into equipment values(2,'X-Ray1',6,3);
 
 create table medicine
 	(id int,
@@ -197,46 +269,10 @@ create table medicine
 	--mfg_dt date,
 	primary key (id)
 	);
-
--- create table event
--- 	(id int,
--- 	name text,
--- 	start_dt timestamp,
--- 	end_dt timestamp,
--- 	descr text,
--- -- 	link text,
--- -- 	primary key (id)
--- -- 		);
-
--- create table participate
--- 	(person_id int,
--- 	event_id int,
--- 	primary key (person_id,event_id),
--- 	foreign key (person_id) references person
--- 		on delete cascade,
--- 	foreign key (event_id) references event
--- 		on delete cascade
--- 	);
-
--- create table organised
--- 	(person_id int,
--- 	event_id int,
--- 	primary key (person_id,event_id),
--- 	foreign key (person_id) references person
--- 		on delete cascade,
--- 	foreign key (event_id) references event
--- 		on delete cascade
--- 	);
-
--- create table doc_in_chrg
--- 	(doc_id int,
--- 	event_id int,
--- 	primary key (doc_id, event_id),
--- 	foreign key (doc_id) references doctor
--- 		on delete cascade,
--- 	foreign key (event_id) references event
--- 		on delete cascade
--- 	);
+-- insert into medicine values(1,'Aspirin','dawa','Zydus',10);
+-- insert into medicine values(2,'Vitamin C','dawa','Neo',50);
+-- insert into medicine values(3,'Riboflavin','dawa','Nostrum',30);
+-- insert into medicine values(4,'Tetracycline','dawa','Pharm',100);
 
 create table doctor_room_slot
 	(doc_id int,
@@ -252,6 +288,14 @@ create table doctor_room_slot
 	foreign key (dat,start_time) references slot
 		on delete cascade
 	);
+-- insert into doctor_room_slot values(4,1,'2020-04-21','12:00');
+-- insert into doctor_room_slot values(4,1,'2020-04-21','12:30');
+-- insert into doctor_room_slot values(4,1,'2020-04-22','12:00');
+-- insert into doctor_room_slot values(4,1,'2020-04-22','12:30');
+-- insert into doctor_room_slot values(5,2,'2020-04-21','12:00');
+-- insert into doctor_room_slot values(5,2,'2020-04-21','12:30');
+-- insert into doctor_room_slot values(5,2,'2020-04-22','12:00');
+-- insert into doctor_room_slot values(5,2,'2020-04-22','12:30');
 
 create table handle
 	(staff_id int,
@@ -262,6 +306,8 @@ create table handle
 	foreign key (eqp_id) references equipment
 		on delete cascade
 	);
+-- insert into handle values(8,1);
+-- insert into handle values(9,2);
 
 create table meet
 	(app_id int,
@@ -279,6 +325,10 @@ create table meet
 	foreign key (doc_id,dat,start_time) references doctor_room_slot
 		on delete cascade
 	);
+-- insert into meet values(1,1,4,'2020-04-21','12:00',NULL);
+-- insert into meet values(2,2,5,'2020-04-21','12:00',NULL);
+-- insert into meet values(3,3,5,'2020-04-22','12:00',NULL);
+-- insert into meet values(4,4,4,'2020-04-22','12:00',NULL);
 
 create table history
 	(person_id int,
@@ -291,6 +341,8 @@ create table history
 	foreign key (disease_id) references disease
 		on delete cascade
 	);
+-- insert into history values(1,1,'','2020-01-01');
+-- insert into history values(2,2,'','2020-04-01');
 
 create table suffers
 	(patient_id int,
@@ -301,16 +353,8 @@ create table suffers
 	foreign key (disease_id) references disease
 		on delete cascade
 	);
-
--- create table prescribes
--- 	(app_id int,
--- 	presc_id int,
--- 	primary key (app_id),
--- 	foreign key (app_id) references appointment
--- 		on delete cascade,
--- 	foreign key (presc_id) references prescription
--- 		on delete cascade
--- 	);
+-- insert into suffers values(1,3);
+-- insert into suffers values(2,1);
 
 create table shows
 	(app_id int,
@@ -321,6 +365,9 @@ create table shows
 	foreign key (symp_id) references symptom
 		on delete cascade
 	);
+-- insert into shows values(1,2);
+-- insert into shows values(2,3);
+-- insert into shows values(3,3);
 
 create table takes
 	(patient_id int,
@@ -337,6 +384,7 @@ create table takes
 	foreign key (test_id) references test
 		on delete cascade
 	);
+-- insert into takes values(1,1,'foo.com','NP','2021-04-01',6);
 
 create table should_take
 	(presc_id int,
@@ -347,6 +395,7 @@ create table should_take
 	foreign key (test_id) references test
 		on delete cascade
 	);
+-- insert into should_take values(1,1);
 
 create table bill_med
 	(bill_no int,
@@ -358,37 +407,8 @@ create table bill_med
 	foreign key (med_id) references medicine
 		on delete cascade
 	);
-
--- create table pays
--- 	(person_id int,
--- 	bill_no int,
--- 	mode text,
--- 	primary key (person_id, bill_no),
--- 	foreign key (person_id) references person
--- 		on delete cascade,
--- 	foreign key (bill_no) references bill
--- 		 on delete cascade
--- 	);
-
--- create table bed_room 
--- 	(bed_no int,
--- 	room_no int,
--- 	primary key (bed_no),
--- 	foreign key (bed_no) references bed
--- 		on delete cascade,
--- 	foreign key (room_no) references room
--- 		on delete cascade
--- 	);
-
--- create table facility
--- 	(room_no int,
--- 	eqp_id int,
--- 	primary key (room_no,eqp_id),
--- 	foreign key (room_no) references room
--- 		on delete cascade,
--- 	foreign key (eqp_id) references equipment
--- 		on delete cascade
--- 	);
+-- insert into bill_med values(7,1,10);
+-- insert into bill_med values(7,2,15);
 
 create table occupies
 	(patient_id int,
@@ -404,6 +424,7 @@ create table occupies
 	foreign key (bill_no) references bill
 		on delete cascade
 	);
+-- insert into occupies values(3,1,'2021-04-22',NULL,NULL);
 
 create table meds
 	(med_id int,
@@ -416,16 +437,8 @@ create table meds
 	foreign key (presc_id) references prescription
 		on delete cascade
 	);
-
--- create table needs
--- 	(test_id int,
--- 	eqp_id int,
--- 	primary key (test_id, eqp_id),
--- 	foreign key (test_id) references test
--- 		on delete cascade,
--- 	foreign key (eqp_id) references equipment
--- 		on delete cascade
--- 	);
+-- insert into meds values(1,1,'','Need');
+-- insert into meds values(2,1,'','W');
 
 create table assg_to
 	(supp_id int,
@@ -436,17 +449,7 @@ create table assg_to
 	foreign key (room_no) references room
 		on delete cascade
 	);
-
--- create table test_bill
--- 	(bill_no int,
--- 	patient_id int,
--- 	test_id int,
--- 	primary key (bill_no,patient_id,test_id),
--- 	foreign key (bill_no) references bill
--- 		on delete cascade,
--- 	foreign key (patient_id, test_id) references takes
--- 		on delete cascade
--- 	);
+-- insert into assg_to values(6,1);
 
 create table visits
 	(patient_id int,
@@ -462,3 +465,4 @@ create table visits
 	foreign key (doc_id) references doctor
 		on delete cascade
 	);
+-- insert into visits values(3,5,'2020-04-22',NULL);
