@@ -24,14 +24,14 @@ insert into patient values(2,2);
 insert into patient values(2,3);
 insert into patient values(1,4);
 
-insert into slot values('2020-04-21','12:00');
-insert into slot values('2020-04-21','12:30');
-insert into slot values('2020-04-21','13:00');
-insert into slot values('2020-04-21','13:30');
-insert into slot values('2020-04-22','12:00');
-insert into slot values('2020-04-22','12:30');
-insert into slot values('2020-04-22','13:00');
-insert into slot values('2020-04-22','13:30');
+insert into slot values('2021-04-21','12:00');
+insert into slot values('2021-04-21','12:30');
+insert into slot values('2021-04-21','13:00');
+insert into slot values('2021-04-21','13:30');
+insert into slot values('2021-04-22','12:00');
+insert into slot values('2021-04-22','12:30');
+insert into slot values('2021-04-22','13:00');
+insert into slot values('2021-04-22','13:30');
 
 insert into room values(1,'Examination');
 insert into room values(2,'Examination');
@@ -86,28 +86,29 @@ insert into medicine values(2,'Vitamin C','dawa','Neo',50);
 insert into medicine values(3,'Riboflavin','dawa','Nostrum',30);
 insert into medicine values(4,'Tetracycline','dawa','Pharm',100);
 
-insert into doctor_room_slot values(4,1,'2020-04-21','12:00');
-insert into doctor_room_slot values(4,1,'2020-04-21','12:30');
-insert into doctor_room_slot values(4,1,'2020-04-22','12:00');
-insert into doctor_room_slot values(4,1,'2020-04-22','12:30');
-insert into doctor_room_slot values(5,2,'2020-04-21','12:00');
-insert into doctor_room_slot values(5,2,'2020-04-21','12:30');
-insert into doctor_room_slot values(5,2,'2020-04-22','12:00');
-insert into doctor_room_slot values(5,2,'2020-04-22','12:30');
+insert into doctor_room_slot values(4,1,'2021-04-21','12:00');
+insert into doctor_room_slot values(4,1,'2021-04-21','12:30');
+insert into doctor_room_slot values(4,1,'2021-04-22','12:00');
+insert into doctor_room_slot values(4,1,'2021-04-22','12:30');
+insert into doctor_room_slot values(5,2,'2021-04-21','12:00');
+insert into doctor_room_slot values(5,2,'2021-04-21','12:30');
+insert into doctor_room_slot values(5,2,'2021-04-22','12:00');
+insert into doctor_room_slot values(5,2,'2021-04-22','12:30');
 
 insert into handle values(8,1);
 insert into handle values(9,2);
 
-insert into meet values(1,1,4,'2020-04-21','12:00',NULL);
-insert into meet values(2,2,5,'2020-04-21','12:00',NULL);
-insert into meet values(3,3,5,'2020-04-22','12:00',NULL);
-insert into meet values(4,4,4,'2020-04-22','12:00',NULL);
+insert into meet values(1,1,4,'2021-04-21','12:00',NULL);
+insert into meet values(2,2,5,'2021-04-21','12:00',NULL);
+insert into meet values(3,3,5,'2021-04-22','12:00',NULL);
+insert into meet values(4,4,4,'2021-04-22','12:00',NULL);
 
-insert into history values(1,1,'','2020-01-01');
-insert into history values(2,2,'','2020-04-01');
+insert into history values(1,1,'','2021-01-01');
+insert into history values(2,2,'','2021-04-01');
 
 insert into suffers values(1,3);
 insert into suffers values(2,1);
+insert into suffers values(3,1);
 
 insert into shows values(1,2);
 insert into shows values(2,3);
@@ -120,11 +121,11 @@ insert into should_take values(1,1);
 insert into bill_med values(7,1,10);
 insert into bill_med values(7,2,15);
 
-insert into occupies values(3,1,'2021-04-22',NULL,NULL);
+insert into occupies values(3,1,'2021-04-22',NULL,4);
 
 insert into meds values(1,1,'','Need');
 insert into meds values(2,1,'','W');
 
-insert into assg_to values(6,1);
+insert into assg_to values(6,4);
 
-insert into visits values(3,5,'2020-04-22',NULL);
+insert into visits values(3,5,'2021-04-22',NULL);

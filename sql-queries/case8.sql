@@ -1,1 +1,1 @@
-insert into disease (id, name, info_link) values ($1, $2, $3); 
+insert into disease (disease_id, disease_name, info_link) values ($1, $2, $3); 

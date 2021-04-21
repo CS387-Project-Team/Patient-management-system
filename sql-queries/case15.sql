@@ -4,7 +4,7 @@
 -- shows all room types
 select distinct type from room where type is not null;
 
--- shows all room types
+-- shows all bed types
 select distinct type from bed where type is not null;
 
 -- if this returns 0, display pop-up. 

@@ -62,7 +62,7 @@ create table person
 -- insert into person values(9,'S4','IITB',123456,1234567890,'M','Ramu','Ramu','foo@gmail.com','2000-01-01','Btech');
 
 create table doctor
-	(id int,
+	(doc_id int,
 	speciality text,
 		--check (speciality in ("Physician","Cardiology","Nephrology","Orthopaedic","Skin","Neurology")),
 	-- qualification text,
@@ -71,8 +71,8 @@ create table doctor
 	experience int,
 	opd_charges int,
 	ot_charges int,
-	primary key (id),
-	foreign key (id) references person
+	primary key (doc_id),
+	foreign key (doc_id) references person
 		on delete set null
 	);
 
@@ -80,7 +80,7 @@ create table doctor
 -- insert into doctor values(5,'Card',22222,NULL,10,200,2000);
 
 create table support_staff
-	(id int,
+	(staff_id int,
 	role text,
 	-- qualification text,
 	experience int,
@@ -88,8 +88,8 @@ create table support_staff
 	start_hr int,
 	end_hr int,
 	days_of_week text,
-	primary key (id),
-	foreign key (id) references person
+	primary key (staff_id),
+	foreign key (staff_id) references person
 		on delete set null
 	);
 
@@ -197,9 +197,9 @@ create table appointment
 -- insert into appointment values(4,'OPD',5,4); 
 
 create table symptom
-	(id int,
-	name text,
-	primary key (id)
+	(symp_id int,
+	symp_name text,
+	primary key (symp_id)
 	);
 -- insert into symptom values(1,'Headache');
 -- insert into symptom values(2,'Fatigue');
@@ -207,10 +207,10 @@ create table symptom
 -- insert into symptom values(4,'Breathing difficulty');
 
 create table disease
-	(id int,
-	name text,
+	(disease_id int,
+	disease_name text,
 	info_link text,
-	primary key (id)
+	primary key (disease_id)
 	);
 -- insert into disease values(1,'Hypertension');
 -- insert into disease values(2,'Migrane');
@@ -246,11 +246,11 @@ create table test
 -- insert into test values(3,'X-Ray',500);
 
 create table equipment
-	(id int,
+	(eqp_id int,
 	type text,
 	room_no int,
 	test_id int,
-	primary key (id),
+	primary key (eqp_id),
 	foreign key (room_no) references room
 		on delete cascade,
 	foreign key (test_id) references test
@@ -260,14 +260,14 @@ create table equipment
 -- insert into equipment values(2,'X-Ray1',6,3);
 
 create table medicine
-	(id int,
+	(med_id int,
 	name text,
 	descr text,
 	manufc text,
 	price int,
 	--expiry_dt date,
 	--mfg_dt date,
-	primary key (id)
+	primary key (med_id)
 	);
 -- insert into medicine values(1,'Aspirin','dawa','Zydus',10);
 -- insert into medicine values(2,'Vitamin C','dawa','Neo',50);
@@ -412,14 +412,14 @@ create table bill_med
 
 create table occupies
 	(patient_id int,
-	bed_id int,
+	bed_no int,
 	start_dt date,
 	end_dt date,
 	bill_no int,
 	primary key (patient_id),
 	foreign key (patient_id) references patient
 		on delete cascade,
-	foreign key (bed_id) references bed
+	foreign key (bed_no) references bed
 		on delete cascade,
 	foreign key (bill_no) references bill
 		on delete cascade
@@ -441,15 +441,15 @@ create table meds
 -- insert into meds values(2,1,'','W');
 
 create table assg_to
-	(supp_id int,
+	(staff_id int,
 	room_no int,
-	primary key (supp_id),
-	foreign key (supp_id) references support_staff
+	primary key (staff_id),
+	foreign key (staff_id) references support_staff
 		 on delete cascade,
 	foreign key (room_no) references room
 		on delete cascade
 	);
--- insert into assg_to values(6,1);
+-- insert into assg_to values(6,4);
 
 create table visits
 	(patient_id int,

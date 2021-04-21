@@ -2,16 +2,17 @@
 
 --1) View doctors
 select name, speciality, experience, opd_charges, ot_charges
-from (doctor natural join person) as foo
+from doctor,person 
+where doc_id = id
 order by speciality asc, name asc
 
 --2) View staff
-select role, count(id)
+select role, count(staff_id)
 from support_staff
 group by role
 
 --3) Departments
-select speciality, count(id)
+select speciality, count(doc_id)
 from doctor
 group by speciality
 
@@ -26,6 +27,6 @@ select distinct(type)
 from room
 
 --Number_of_beds
-select type, count(id)
-from beds 
+select type, count(bed_no)
+from bed
 group by type
