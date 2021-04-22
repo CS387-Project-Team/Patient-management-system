@@ -1,4 +1,4 @@
-from flask import g, Response, jsonify
+from flask import g, Response, jsonify, render_template
 import application
 from application import default, my_jsonify
 import datetime
@@ -18,7 +18,7 @@ def get_dashboard():
                 (select patient_id
                 from patient
                 where patient.id = %s)
-            select foo.type, d.name, foo.instr, foo.dat, foo.start_time, foo.name as medicine, foo.dosage, foo.frequency, patient_id, med_id, app_id, doc_id
+            select foo.type, d.name, foo.instr, foo.dat, foo.start_time, foo.name as medicine, foo.dosage, foo.frequency, patient_id, med_id, app_id, doc_id, patient_complaint as complaint
             from ((((((meet natural join pt)
                     natural join doctor_room_slot) 
                     natural join appointment) 
@@ -26,7 +26,8 @@ def get_dashboard():
                     natural left join meds)
                     left outer join medicine on medicine.id = meds.med_id) as foo, (person natural join doctor) as d
             where foo.doc_id = d.id
-            order by foo.dat desc'''
+            order by foo.dat desc
+            limit 3'''
     db.execute(sql, (g.user.get('id'),))
     rows = db.fetchall()
     data['appointments'] = my_jsonify(rows)
@@ -36,21 +37,27 @@ def get_dashboard():
                 (select patient_id
                 from patient
                 where patient.id = %s)
-            (select opd_charges, purpose, discount, (case when paid_by is null then 'unpaid' else 'paid' end)
-            from ((((meet natural join pt)
-                    natural join appointment)
-                    natural join bill)
-                    natural join doctor) as foo)
-            union
-            (select charges,purpose,discount, (case when paid_by is null then 'unpaid' else 'paid' end)
-            from (((pt natural join takes)
-                    natural join bill)
-                    natural join test) as bar)
-            union
-            (select charges*(end_dt-start_dt), purpose, discount, (case when paid_by is null then 'unpaid' else 'paid' end)
-            from (((pt natural join occupies)
-                    natural join bill)
-                    natural join bed) as foo)'''
+            select * 
+            from
+            (
+                (select opd_charges as net_charges, purpose, discount, (case when paid_by is null then 'unpaid' else 'paid' end) as status, dat
+                from ((((meet natural join pt)
+                        natural join appointment)
+                        natural join bill)
+                        natural join doctor) as foo)
+                union
+                (select charges  as net_charges, purpose, discount, (case when paid_by is null then 'unpaid' else 'paid' end) as status, dat
+                from (((pt natural join takes)
+                        natural join bill)
+                        natural join test) as bar)
+                union
+                (select charges*(end_dt-start_dt) as net_charges, purpose, discount, (case when paid_by is null then 'unpaid' else 'paid' end) as status, start_dt as dat
+                from (((pt natural join occupies)
+                        natural join bill)
+                        natural join bed) as foo)
+            ) as foo
+            order by status desc, dat desc
+            limit 3'''
     db.execute(sql, (g.user.get('id'),))
     rows = db.fetchall()
     data['bills'] = my_jsonify(rows)
@@ -61,7 +68,8 @@ def get_dashboard():
                 from patient
                 where patient.id = %s)
             select name as test, result_file , comments, dat
-            from (takes natural join pt natural join test) as foo'''
+            from (takes natural join pt natural join test) as foo
+            '''
     db.execute(sql, (g.user.get('id'),))
     rows = db.fetchall()
     data['tests'] = my_jsonify(rows)
@@ -76,19 +84,26 @@ def get_dashboard():
                 from ((history natural join pt)
                         natural join disease)
                 where person_id = %s)
-            (select name, min(dat) as detected
-            from (select name, dat
-                    from (((suffers natural join pt)
-                        natural join disease)
-                        natural join meet) as bar
-                    where not exists(select 1 from foo
-                                    where foo.name = bar.name)) as bar group by name)
-            union
-            select * from foo'''
+            select * 
+            from
+            (
+                (select name, min(dat) as detected
+                from (select name, dat
+                        from (((suffers natural join pt)
+                                natural join disease)
+                                natural join meet) as bar
+                        where not exists(select 1 from foo
+                                        where foo.name = bar.name)) as bar group by name)
+                union
+                select * from foo
+            ) as foo
+            order by detected desc
+            limit 3'''
     id = g.user.get('id')
     db.execute(sql, (id,id,))
     rows = db.fetchall()
     data['history'] = my_jsonify(rows)
 
     conn.close()
-    return jsonify(data)
+    print(data['appointments'])
+    return render_template('dashboard/dashboard.html', data=data) #jsonify(data)
