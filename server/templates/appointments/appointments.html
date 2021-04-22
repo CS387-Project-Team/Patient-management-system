@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Appointments{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- appointments -->
+    <div class="table-responsive app">
+        <table class="table table-light table-hover">
+            <tr>
+                <th>Doctor</th>
+                <th>Date</th> 
+                <th>Time</th>
+                <th>Complaint</th>
+            </tr>
+            {% for appo in data['appointments'] %}
+                <tr>
+                    <td>{{ appo['name'] }}</td>
+                    <td>{{ appo['dat'] }}</td>
+                    <td>{{ appo['start_time'] }}</td>
+                    {% if appo['complaint'] %}
+                        <td>{{ appo['complaint'] }}</td>
+                    {% else %}
+                        <td> None </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+{% endblock %}

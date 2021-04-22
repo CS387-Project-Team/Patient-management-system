@@ -1,11 +1,37 @@
-from flask import g, Response, jsonify
+from flask import g, Response, jsonify, render_template
 import application
 from application import default, my_jsonify
 import datetime
 from pandas import DataFrame
 
+def get_appointments():
+    data = {}
+    conn = application.connect()
+    db = conn.cursor(cursor_factory=application.DictCursor)
+    # appointments and prescription
+    sql = '''with pt(patient_id) as
+                (select patient_id
+                from patient
+                where patient.id = %s)
+            select foo.type, d.name, foo.instr, foo.dat, foo.start_time, foo.name as medicine, foo.dosage, foo.frequency, patient_id, med_id, app_id, doc_id, patient_complaint as complaint
+            from ((((((meet natural join pt)
+                    natural join doctor_room_slot) 
+                    natural join appointment) 
+                    natural left join prescription)
+                    natural left join meds)
+                    left outer join medicine on medicine.id = meds.med_id) as foo, (person natural join doctor) as d
+            where foo.doc_id = d.id
+            order by foo.dat desc'''
+    db.execute(sql, (g.user.get('id'),))
+    rows = db.fetchall()
+    data['appointments'] = my_jsonify(rows)
+    conn.close()
+    return render_template('appointments/appointments.html', data=data)
+
 def get_available_slots(date_str):
     data = {}
+    if date_str == None:
+        date_str = "2021-02-06"
     # date = datetime.datetime.strptime(date_str, '%Y-%m-%d').date
     conn = application.connect()
     db = conn.cursor(cursor_factory=application.DictCursor)
@@ -23,7 +49,10 @@ def get_available_slots(date_str):
     df.columns = rows[0].keys()
     df = df.groupby('id', as_index=False).agg({'name':'first', 'speciality':'first', 'date':'first', 'start_time': lambda x: list(x)})
     conn.close()
-    return jsonify(df.to_dict(orient='records'))
+    data['slots'] = df.to_dict(orient='records')
+    data['today'] = date_str
+    print(data)
+    return render_template('appointments/available_slots.html', data=data) #jsonify(df.to_dict(orient='records'))
 
 def book_appointment(request):
     doctor_id = int(request.get('doctor_id'))
@@ -31,6 +60,7 @@ def book_appointment(request):
     time = request.get('time')
     appo_type = request.get('type')
     complaint = request.get('complaint')
+    print(request)
     try:
         followup = int(request.get('followup'))
     except:
@@ -39,10 +69,6 @@ def book_appointment(request):
         patient_id = int(request.get('patient_id'))
     except:
         patient_id = -1
-    try:
-        parent_app_id = int(request.get('parent_app_id'))
-    except:
-        parent_app_id = -1
     user_id = g.user['id']
     conn = application.connect()
     db = conn.cursor(cursor_factory=application.DictCursor)
@@ -57,10 +83,12 @@ def book_appointment(request):
                     values (%s, %s);'''
             db.execute(sql, (user_id, patient_id,))
         else:
-            assert parent_app_id >= 0, 'invalid parent appo id'
+            assert patient_id >= 0, 'invalid patient id'
             sql = '''select dat, start_time from meet
-                    where app_id = %s'''
-            db.execute(sql, (parent_app_id,))
+                    where patient_id = %s
+                    order by dat desc, start_time desc
+                    limit 1'''
+            db.execute(sql, (patient_id,))
             row = db.fetchone()
             parent_appo_datetime = datetime.datetime.strptime(row['dat'].isoformat() + ' ' + row['start_time'].isoformat(), '%Y-%m-%d %H:%M:%S')
             assert parent_appo_datetime < datetime.datetime.now(), 'attempting to book a follow up for an appointment which is yet to take place'
@@ -74,7 +102,8 @@ def book_appointment(request):
         sql = '''insert into appointment(app_id, type)
                 values (%s, %s);'''
         appo_datetime = datetime.datetime.strptime(date + ' ' + time, '%Y-%m-%d %H:%M:%S')
-        assert appo_datetime >= datetime.datetime.now() and appo_datetime.datetime.date <= datetime.date.today()+datetime.timedelta(days=application.MAX_BOOKING_RANGE), 'invalid date for booking a new appointment'
+        # To uncomment this when database updates doctor_room_slot
+        # assert appo_datetime >= datetime.datetime.now() and appo_datetime.datetime.date <= datetime.date.today()+datetime.timedelta(days=application.MAX_BOOKING_RANGE), 'invalid date for booking a new appointment'
         db.execute(sql, (app_id, appo_type,))
         sql = '''insert into meet(app_id, patient_id, doc_id, dat, start_time, patient_complaint)
                 values (%s, %s, %s, %s, %s, %s);'''
@@ -86,7 +115,7 @@ def book_appointment(request):
         conn.rollback()
         conn.close()
         return jsonify({'status':'Failed to book a new appointment', 'code':401})    
-    return jsonify({'status':'Successfully booked a new appointment', 'code':200})
+    return render_template('appointments/appointments.html') #jsonify({'status':'Successfully booked a new appointment', 'code':200})
 
 
 def cancel_appointment(request):

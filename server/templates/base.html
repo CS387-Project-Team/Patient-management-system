@@ -24,8 +24,15 @@
             <li class="nav-item">
               <a class="nav-link active" aria-current="page" href="{{ url_for('dashboard') }}">Dashboard</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link disabled" href="#">Appointments</a>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="appointments" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Appointments
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="appointments">
+                <li><a class="dropdown-item" href="{{ url_for('get_appointments') }}">View all</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('book_appointment') }}">Book</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('cancel_appointment') }}">Cancel</a></li>
+              </ul>
             </li>
             <li class="nav-item">
               <a class="nav-link disabled" href="#">Tests</a>

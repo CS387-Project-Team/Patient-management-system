@@ -13,12 +13,15 @@ def dashboard():
     return controllers.dashboard.get_dashboard()
 
 @login_required
+def get_appointments():
+    return controllers.appointments.get_appointments()
+
+@login_required
 def available_slots():
+    date = None
     if request.method == 'POST':
         date = request.form.get('date')
-        return controllers.appointments.get_available_slots(date)
-    elif request.method == 'GET':
-        return render_template('appointments/available_slots.html')
+    return controllers.appointments.get_available_slots(date)
 
 @login_required
 def book_appointment():
