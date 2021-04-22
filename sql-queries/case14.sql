@@ -1,7 +1,7 @@
 -- Use case: Fill prescription, disease, symptoms after an appointment
 
 -- Show all appointments of this doc so that they can choose which appointment to exter info for
-select * from meet where doc_id = $1;
+select * from meet where doc_id = 4;
 
 -- Show all symptoms in the database, UI will have a multi select box 
 select * from symptom;

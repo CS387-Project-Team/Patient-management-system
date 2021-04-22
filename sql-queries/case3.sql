@@ -10,7 +10,7 @@ set (name,address,pincode,contact) = ('Binod','IITB',400096,'1234567890')
 where id = 10;
 
 --2.5) add disease history---------------------------------------
-select id
+select disease_id
 from disease
 where name = 'Flu'
 
@@ -21,23 +21,24 @@ values (10,12,'this.com','2020-03-15')
 with pt(patient_id) as
 	(select patient_id
 	from patient
-	where person.id = 10) --fill correct one
-select foo.app_type, d.doc_name, foo.instr, foo.dat, foo.start_time
-from ((((((meet natural join pt)
+	where id = 1) --fill correct one
+select foo.type, p.name, foo.instr, foo.dat, foo.start_time
+from ((((meet natural join pt)
 		natural join doctor_room_slot) 
 		natural join appointment) 
-		natural join prescription) as foo, doctor as d
-where foo.doc_id = d.id
+		natural join prescription) as foo, person as p
+where foo.doc_id = p.id
 
 --4) future appointments--------------------------------------------
 with pt(patient_id) as
 	(select patient_id
 	from patient
-	where person.id = 10) --fill correct one
-select foo.app_type, d.doc_name, foo.dat, foo.start_time
-from ((meet natural join pt)
-		natural join doctor_room_slot) as foo, doctor as doctor_room_slot
-where foo.doc_id = d.id and foo.dat >= date(now())
+	where id = 1) --fill correct one
+select foo.type, p.name, foo.dat, foo.start_time
+from (((meet natural join pt)
+		natural join doctor_room_slot)
+		natural join appointment) as foo, person as p
+where foo.doc_id = p.id and foo.dat >= date(now())
 
 --5) bill status-----------------------------------------------------
 with pt(patient_id) as
@@ -67,8 +68,8 @@ as foo)
 with pt(patient_id) as
 	(select patient_id
 	from patient
-	where person.id = 10) --fill correct one
-select foo.name, foo.start_dt, foo.end_dt
+	where id = 2) --fill correct one
+select foo.disease_name, foo.start_dt, foo.end_dt
 from ((((meet natural join pt)
 		natural join occupies)
 		natural join suffers)
@@ -78,17 +79,16 @@ from ((((meet natural join pt)
 with pt(patient_id) as 
 	(select patient_id
 	from patient
-	where person.id = 10) --fill correct one
-(select name, detected
-from ((history natural join pt)
-		natural join disease)
-where person_id = 10) as foo
-union
-(select name, min(dat) as detected
-from (select name, dat
-		from (((suffers natural join pt)
-			natural join disease)
-			natural join meet) as bar
-		where not exists(select 1 from foo
-						where foo.name = bar.name)) as bar
-group by name)
+	where id = 2) --fill correct one
+select disease_name, min(detected)
+from	((select disease_name, detected
+		from history natural join disease
+		where person_id = 2)
+		union
+		(select disease_name, min(dat) as detected
+		from (select disease_name, dat
+				from (((suffers natural join pt)
+					natural join disease)
+					natural join meet) as foo) as bar
+		group by disease_name)) as foo
+group by disease_name

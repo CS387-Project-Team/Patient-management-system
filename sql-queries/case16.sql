@@ -9,7 +9,7 @@ where bed_no = 10
 --check if bed exists already
 
 insert into room
-	values(10,'NICU')
+	values(7,'NICU')
 
 --2) add new equipments
 insert into equipment

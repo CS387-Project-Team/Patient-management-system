@@ -1,1 +1,1 @@
-insert into symptom (id, name, desc) values ($1, $2, $3)
+insert into symptom (symp_id, symp_name, desc) values ($1, $2, $3)
