@@ -1,28 +1,87 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}View available slots{% endblock %}</h1>
+  <!-- <h1>{% block title %}View available slots{% endblock %}</h1> -->
 {% endblock %}
 
 {% block content %}
-  <form method="post">
-    <label for="date">Date</label>
-    <input type="date" name="date" id="date" value="{{ data['today'] }}" required>
-    <input type="submit" value="View">
-  </form>
-  <div class="row">
-    {% for doc_slot in data['slots'] %}
-      <p>{{ doc_slot['name'] }}</p>
-      <p>{{ doc_slot['speciality'] }}</p>
-      {% for start_time in doc_slot['start_time'] %}
-        <form action="{{ url_for('book_appointment') }}" method="post">
-          <input type="hidden" id="doctor_id" name="doctor_id" value="{{ doc_slot['id'] }}">
-          <input type="hidden" id="date" name="date" value="{{ doc_slot['date'] }}">
-          <input type="hidden" id="type" name="type" value="OPD">
-          <input type="hidden" id="complaint" name="complaint" value="">
-          <input type="submit" id="time" name="time" value="{{ start_time }}">
-        </form>
-      {% endfor %}
-    {% endfor %}
+<div class="card mt-5">
+  <div class="card-header p-3 bg-secondary bg-gradient">
+      <h3> View available slots </h3>
   </div>
+  <div class="card-body">
+      <div class="row mt-3 mb-2">
+        <div class="row">
+          <div class="col-lg-3 col-sm-6">
+            <div class="input-group">
+              <input class="form-control" type="text" id="search_input" onkeyup="myFunction()" placeholder="Search for doctors.." title="Type in a name">
+              <button type="button" class="btn btn-outline-secondary disabled"><i class="bi bi-search"></i></button>
+            </div>
+          </div>
+          <div class="col-lg-3 col-sm-6 mt-3 mt-sm-0">
+            <form class="input-group" method="post" action="{{ url_for('update_date_free_slots') }}">
+              <input class="form-select" type="date" name="date" id="date" value="{{ data['today'] }}" required>
+              <button class="btn btn-secondary" type="submit"><i class="bi bi-search"></i></button>
+            </form>
+          </div>
+        </div>
+        <div class="mt-5" id="all_doc_slots">
+          {% for doc_slot in data['slots'] %}
+            <div class="card" id="doc_slots">
+              <div class="row g-0">
+                <div class="col-lg-2 col-md-4 bg-light">
+                  <div class="card-body">
+                    <h5 id="name">{{ doc_slot['name'] }}</h5>
+                    <h5 id="speciality">{{ doc_slot['speciality'] }}</h5>
+                  </div>
+                </div>
+                <div class="col-lg-10 col-md-8">
+                  <div class="card-body">
+                    <div class="row row-cols-auto g-0">
+                      {% for start_time in doc_slot['start_time'] %}
+                        <div class="col">          
+                          <form action="{{ url_for('book_appointment') }}" method="post">
+                            <input class="form-control" type="hidden" id="doctor_id" name="doctor_id" value="{{ doc_slot['id'] }}">
+                            <input class="form-control" type="hidden" id="date" name="date" value="{{ doc_slot['date'] }}">
+                            <input class="form-control" type="hidden" id="type" name="type" value="OPD">
+                            <input class="form-control" type="hidden" id="complaint" name="complaint" value="">
+                            <button class="btn btn-outline-secondary" type="submit" id="time" name="time" value="{{ start_time }}">{{ start_time }}</button>
+                          </form>
+                        </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+  </div>
+</div>
+<script>
+  function myFunction() {
+      var input, filter, all_doc_slots, doc_slots, doc_name, doc_speciality, name_txt, speciality_txt, i;
+      input = document.getElementById("search_input");
+      filter = input.value.toUpperCase();
+      all_doc_slots = document.getElementById("all_doc_slots");
+      doc_slots = all_doc_slots.getElementsByClassName("card");
+
+      for (i = 0; i < doc_slots.length; i++) {
+          doc_name = doc_slots[i].getElementsByTagName("h5")[0];
+          doc_speciality = doc_slots[i].getElementsByTagName("h5")[1];
+          name_txt = doc_name.textContent || doc_name.innerText;
+          speciality_txt = doc_speciality.textContent || doc_speciality.innerText;
+          if (name_txt.toUpperCase().indexOf(filter) > -1) {
+            console.log("Matched name ...", name_txt)
+            doc_slots[i].style.display = "";
+          } else if(speciality_txt.toUpperCase().indexOf(filter) > -1) {
+            console.log("Matched speciality ...", speciality_txt)
+            doc_slots[i].style.display = "";
+          } else {
+            doc_slots[i].style.display = "none";
+          }
+      }
+  }
+  </script>
 {% endblock %}

@@ -1,6 +1,6 @@
 import flask
 import application
-from flask import request, make_response, render_template
+from flask import request, make_response, render_template, url_for, redirect
 from controllers.auth import login_required
 import controllers.dashboard, controllers.appointments
 
@@ -17,10 +17,13 @@ def get_appointments():
     return controllers.appointments.get_appointments()
 
 @login_required
+def update_date_free_slots():
+    date = request.form.get('date', None)
+    return redirect(url_for('available_slots', date=date))
+
+@login_required
 def available_slots():
-    date = None
-    if request.method == 'POST':
-        date = request.form.get('date')
+    date = request.args.get("date")
     return controllers.appointments.get_available_slots(date)
 
 @login_required
