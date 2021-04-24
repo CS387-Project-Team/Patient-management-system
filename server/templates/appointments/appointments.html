@@ -5,6 +5,46 @@
 {% endblock %}
 
 {% block content %}
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Confirm cancellation</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="post" action="{{ url_for('cancel_appointment') }}">
+            <div class="mb-3">
+              <div class="input-group mb-3">
+                <span class="input-group-text">Doctor</span>
+                <input type="text" readonly class="form-control bg-light" id="doctor_name" name="doctor_name">
+              </div>
+              <input type="hidden" class="form-control" id="app_id" name="app_id">
+              <input type="hidden" class="form-control" id="patient_id" name="patient_id">
+              <div class="input-group">
+                <span class="input-group-text">Date</span>
+                <input type="date" readonly class="form-control bg-light" id="date" name="date">
+                <span class="input-group-text">Time</span>
+                <input type="text" readonly class="form-control bg-light" id="time" name="time">
+              </div>
+            </div>
+            <div class="mb-3">
+              <div class="input-group mb-3">
+                <span class="input-group-text">Appo Type</span>
+                <input type="text" readonly class="form-control bg-light" id="type" name="type" value="OPD">
+              </div>
+              <label for="complaint" class="col-form-label">Complaint:</label>
+              <textarea readonly class="form-control bg-light" id="complaint" name="complaint"></textarea>
+            </div>
+            <button class="btn btn-outline-secondary" type="submit">Confirm</button>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 <div class="card mt-5">
     <div class="card-header p-3 bg-secondary bg-gradient">
         <h3> My Appointments </h3>
@@ -22,6 +62,13 @@
                         <th style="white-space: nowrap; width: 1%;"><span class="float-end">Actions</span></th>
                     </tr>
                     {% for appo in data['appointments'] %}
+                        {% set doc_name = appo['name'] %}
+                        {% set app_id = appo['app_id'] %}
+                        {% set patient_id = appo['patient_id'] %}
+                        {% set date = appo['dat'] %}
+                        {% set time = appo['start_time'] %}
+                        {% set app_type = appo['type'] %}
+                        {% set complaint = appo['complaint'] %}
                         <tr>
                             <td>{{ appo['name'] }}</td>
                             <td>{{ appo['dat'] }}</td>
@@ -33,9 +80,9 @@
                             {% endif %}
                             <td style="white-space: nowrap; width: 1%;">
                                 <div class="btn-group float-end" role="group" aria-label="actions">
-                                    <button type="button" class="btn btn-border-secondary"><i class="bi bi-card-list"></i></button>
-                                    <button type="button" class="btn btn-border-secondary"><i class="bi bi-pencil-square"></i></button>
-                                    <button type="button" class="btn btn-border-secondary"><i class="bi bi-arrow-right-square"></i></button>
+                                    <button type="button" class="btn"><i class="bi bi-card-list"></i></button>
+                                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-name="{{ doc_name }}" data-bs-appid="{{ app_id }}" data-bs-patientid="{{ patient_id }}" data-bs-date="{{ date }}" data-bs-time="{{ time }}" data-bs-type="{{ app_type }}" data-bs-complaint="{{ complaint }}"><i class="bi bi-trash"></i></button>
+                                    <button type="button" class="btn"><i class="bi bi-arrow-right-square"></i></button>
                                 </div>
                             </td>
                         </tr>
@@ -45,4 +92,42 @@
        </div>
     </div>
 </div>
+<script>
+    var exampleModal = document.getElementById('exampleModal')
+  exampleModal.addEventListener('show.bs.modal', function (event) {
+    // Button that triggered the modal
+    var button = event.relatedTarget
+    // Extract info from data-bs-* attributes
+    var doc_name = button.getAttribute('data-bs-name')
+    var app_id = button.getAttribute('data-bs-appid')
+    var patient_id = button.getAttribute('data-bs-patientid')
+    var doc_speciality = button.getAttribute('data-bs-speciality')
+    var time = button.getAttribute('data-bs-time')
+    var date = button.getAttribute('data-bs-date')
+    var appo_type = button.getAttribute('data-bs-type')
+    var complaint = button.getAttribute('data-bs-complaint')
+
+    // If necessary, you could initiate an AJAX request here
+    // and then do the updating in a callback.
+    //
+    // Update the modal's content.
+    var modalTitle = exampleModal.querySelector('.modal-title')
+    var modal_body_doc_name = exampleModal.querySelector('#doctor_name')
+    var modal_body_app_id = exampleModal.querySelector('#app_id')
+    var modal_body_patient_id = exampleModal.querySelector('#patient_id')
+    var modal_body_time = exampleModal.querySelector('#time')
+    var modal_body_date = exampleModal.querySelector('#date')
+    var modal_body_type = exampleModal.querySelector('#type')
+    var modal_body_complaint = exampleModal.querySelector('#complaint')
+
+    modal_body_doc_name.value = doc_name
+    modal_body_app_id.value = app_id
+    modal_body_patient_id.value = patient_id
+    modal_body_date.value = date
+    modal_body_time.value = time
+    modal_body_type.value = appo_type
+    modal_body_complaint.innerHTML = complaint
+
+  })
+</script>
 {% endblock %}

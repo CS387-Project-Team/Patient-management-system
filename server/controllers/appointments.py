@@ -1,4 +1,4 @@
-from flask import g, Response, jsonify, render_template, redirect
+from flask import flash, g, Response, jsonify, render_template, redirect, url_for
 import application
 from application import default, my_jsonify
 import datetime
@@ -26,6 +26,7 @@ def get_appointments():
     rows = db.fetchall()
     data['appointments'] = my_jsonify(rows)
     conn.close()
+    print(data)
     return render_template('appointments/appointments.html', data=data)
 
 def get_available_slots(date_str):
@@ -54,7 +55,16 @@ def get_available_slots(date_str):
     print(data)
     return render_template('appointments/available_slots.html', data=data) #jsonify(df.to_dict(orient='records'))
 
+def confirm_booking(request):
+    data = {}
+    data['doctor_name'] = request.get('doctor_name')
+    data['doctor_id'] = int(request.get('doctor_id'))
+    data['date'] = request.get('date')
+    data['time'] = request.get('time')
+    return render_template('appointments/confirm_booking.html', data=data)
+
 def book_appointment(request):
+    print(request)
     doctor_id = int(request.get('doctor_id'))
     date = request.get('date')
     time = request.get('time')
@@ -115,7 +125,8 @@ def book_appointment(request):
         conn.rollback()
         conn.close()
         return jsonify({'status':'Failed to book a new appointment', 'code':401})    
-    return render_template('appointments/appointments.html') #jsonify({'status':'Successfully booked a new appointment', 'code':200})
+    flash('Apoointment booked successfully!', 'success')
+    return redirect(url_for('get_appointments')) #render_template('appointments/appointments.html') #jsonify({'status':'Successfully booked a new appointment', 'code':200})
 
 
 def cancel_appointment(request):
@@ -131,7 +142,7 @@ def cancel_appointment(request):
         deleted_meet = db.fetchone() 
         if deleted_meet is None:
             raise Exception('no appointment deleted')
-        assert datetime.datetime.strptime(deleted_meet['dat'].isoformat() + ' ' + deleted_meet['start_time'].isoformat(), '%Y-%m-%d %H:%M:%S') > datetime.datetime.now(), 'attempting to cancel an appointment which has taken place'
+        # assert datetime.datetime.strptime(deleted_meet['dat'].isoformat() + ' ' + deleted_meet['start_time'].isoformat(), '%Y-%m-%d %H:%M:%S') > datetime.datetime.now(), 'attempting to cancel an appointment which has taken place'
         sql = '''delete from appointment
                 where app_id = %s;'''
         db.execute(sql, (app_id,))
@@ -150,4 +161,5 @@ def cancel_appointment(request):
         conn.rollback()
         conn.close()
         return jsonify({'status':'Failed to cancel appointment', 'code':401})    
-    return jsonify({'status':'Successfully cancelled appointment', 'code':200})
+    flash('Apoointment cancelled successfully!', 'danger')
+    return redirect(url_for('get_appointments'))

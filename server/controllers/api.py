@@ -26,13 +26,34 @@ def available_slots():
     date = request.args.get("date")
     return controllers.appointments.get_available_slots(date)
 
+# @login_required
+# def confirm_appointment_post():
+#     data = request.form
+#     doc_name = data.get('doctor_name')
+#     doc_id = int(data.get('doctor_id'))
+#     date = data.get('date')
+#     time = data.get('time')
+#     print(data)
+#     return redirect(url_for('confirm_appointment_get', doctor_name=doc_name, doctor_id=doc_id, date=date, time=time))
+
+# @login_required
+# def confirm_appointment_get():
+#     if request.args.get('doctor_id') is None:
+#         return redirect(url_for('available_slots'))
+#     data = {}
+#     data['doctor_name'] = request.args.get('doctor_name')
+#     data['doctor_id'] = int(request.args.get('doctor_id'))
+#     data['date'] = request.args.get('date')
+#     data['time'] = request.args.get('time')    
+#     return controllers.appointments.confirm_booking(data)
+
 @login_required
 def book_appointment():
     if request.method == 'POST':
         request_data = request.form
         return controllers.appointments.book_appointment(request_data)
     elif request.method == 'GET':
-        return render_template('appointments/book_slots.html')
+        return redirect(url_for('available_slots'))
 
 @login_required
 def cancel_appointment():
@@ -40,4 +61,4 @@ def cancel_appointment():
         request_data = request.form
         return controllers.appointments.cancel_appointment(request_data)
     elif request.method == 'GET':
-        return render_template('appointments/cancel_appo.html')
+        return redirect(url_for('get_appointments'))

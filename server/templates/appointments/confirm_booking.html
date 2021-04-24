@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Log In{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post" action="{{ url_for('book_appointment') }}">
+    <label for="doctor_name">{{ data['doctor_name'] }}</label>
+    <label for="date">{{ data['date'] }}</label>
+    <label for="time">{{ data['time'] }}</label>
+    <input type="hidden" id="doctor_id" name="doctor_id" value="{{ data['doctor_id'] }}">
+    <input type="hidden" id="date" name="date" value="{{ data['date'] }}">
+    <input type="hidden" id="time" name="time" value="{{ data['time'] }}">
+    <label for="complaint">Complaint</label>
+    <input name="complaint" id="complaint">
+    <label for="type">Appo Type</label>
+    <input type="type" name="type" id="type" required>
+    <input type="submit" value="Confirm booking">
+  </form>
+{% endblock %}
