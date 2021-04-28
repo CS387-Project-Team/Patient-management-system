@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <!-- <h1>{% block title %}Dashboard{% endblock %}</h1> -->
+{% endblock %}
+
+{% block content %}
+<div class="card mt-5">
+    <div class="card-header p-3 bg-secondary bg-gradient">
+        <h3> DB Hospital </h3>
+    </div>
+    <div class="card-body">
+        <div class="row mt-5">
+            <div class="col-sm-12 col-md-6 col-lg-6 mb-4">
+                <div class="card mx-4-md mx-4-lg">
+                    <div class="card-header">
+                        <h4>
+                            Doctors
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive app">
+                            <table class="table table-light table-hover">
+                                <tr>
+                                    <th>Doctor</th>
+                                    <th>Speciality</th> 
+                                    <th>Experience</th>
+                                    <th>OPD Charges</th>
+                                    <th>OT Charges</th>
+                                </tr>
+                                {% for doc in data['doctors'] %}
+                                    <tr>
+                                        <td>{{ doc['name'] }}</td>
+                                        <td>{{ doc['speciality'] }}</td>
+                                        <td>{{ doc['experience'] }}</td>
+                                        <td>{{ doc['opd_charges'] }}</td>
+                                        <td>{{ doc['ot_charges'] }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-6 mb-4">
+                <div class="card mx-4-md mx-4-lg">
+                    <div class="card-header">
+                        <h4>
+                            Staff
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive app">
+                            <table class="table table-light table-hover">
+                                <tr>
+                                    <th>Role</th>
+                                    <th>Num of Employees</th> 
+                                </tr>
+                                {% for staff in data['staff'] %}
+                                    <tr>
+                                        <td>{{ staff['role'] }}</td>
+                                        <td>{{ staff['cnt'] }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-6 mb-4">
+                <div class="card mx-4-md mx-4-lg">
+                    <div class="card-header">
+                        <h4>
+                            Departments
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive app">
+                            <table class="table table-light table-hover">
+                                <tr>
+                                    <th>Department</th>
+                                    <th>Num of Doctors</th> 
+                                </tr>
+                                {% for dep in data['departments'] %}
+                                    <tr>
+                                        <td>{{ dep['speciality'] }}</td>
+                                        <td>{{ dep['cnt'] }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-6 mb-4">
+                <div class="card mx-4-md mx-4-lg">
+                    <div class="card-header">
+                        <h4>
+                            Test Facilities
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive app">
+                            <table class="table table-light table-hover">
+                                <tr>
+                                    <th>Test</th>
+                                </tr>
+                                {% for eqp in data['equipments'] %}
+                                    <tr>
+                                        <td>{{ eqp['type'] }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-6 mb-4">
+                <div class="card mx-4-md mx-4-lg">
+                    <div class="card-header">
+                        <h4>
+                            Room Types
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive app">
+                            <table class="table table-light table-hover">
+                                <tr>
+                                    <th>Room</th>
+                                </tr>
+                                {% for room in data['rooms'] %}
+                                    <tr>
+                                        <td>{{ room['type'] }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-6 mb-4">
+                <div class="card mx-4-md mx-4-lg">
+                    <div class="card-header">
+                        <h4>
+                            Bed Types
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive app">
+                            <table class="table table-light table-hover">
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Total</th> 
+                                </tr>
+                                {% for bed in data['beds'] %}
+                                    <tr>
+                                        <td>{{ bed['type'] }}</td>
+                                        <td>{{ bed['cnt'] }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+</div>
+{% endblock %}

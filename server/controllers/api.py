@@ -3,6 +3,7 @@ import application
 from flask import request, make_response, render_template, url_for, redirect
 from controllers.auth import login_required
 import controllers.dashboard, controllers.appointments
+import controllers.generic_info
 
 @login_required
 def hello():
@@ -62,3 +63,6 @@ def cancel_appointment():
         return controllers.appointments.cancel_appointment(request_data)
     elif request.method == 'GET':
         return redirect(url_for('get_appointments'))
+
+def view_info():
+    return controllers.generic_info.get_info()
