@@ -13,15 +13,16 @@ def get_appointments():
                 (select patient_id
                 from patient
                 where patient.id = %s)
-            select foo.type, d.name, foo.instr, foo.dat, foo.start_time, foo.name as medicine, foo.dosage, foo.frequency, patient_id, med_id, app_id, doc_id, patient_complaint as complaint
+            select foo.type, d.name, foo.instr, foo.dat, foo.start_time, foo.name as medicine, foo.dosage, foo.frequency, patient_id, foo.med_id, app_id, foo.doc_id, patient_complaint as complaint
             from ((((((meet natural join pt)
                     natural join doctor_room_slot) 
                     natural join appointment) 
                     natural left join prescription)
                     natural left join meds)
-                    left outer join medicine on medicine.id = meds.med_id) as foo, (person natural join doctor) as d
+                    natural left outer join medicine) as foo, (person join doctor on doctor.doc_id=person.id) as d
             where foo.doc_id = d.id
             order by foo.dat desc'''
+            # left outer join medicine on medicine.med_id = meds.med_id) as foo, (person natural join doctor) as d
     db.execute(sql, (g.user.get('id'),))
     rows = db.fetchall()
     data['appointments'] = my_jsonify(rows)
@@ -37,10 +38,10 @@ def get_available_slots(date_str):
     conn = application.connect()
     db = conn.cursor(cursor_factory=application.DictCursor)
     sql = '''select doctor.id, doctor.name, doctor.speciality, start_time, %s as date 
-            from doctor_room_slot, (doctor natural join person) as doctor
-            where doc_id = doctor.id and dat = %s and not exists (
+            from doctor_room_slot as drs, (doctor join person on doc_id=id) as doctor
+            where drs.doc_id = doctor.id and dat = %s and not exists (
                 select * from meet
-                where doc_id = doctor.id and dat = %s and meet.start_time = doctor_room_slot.start_time
+                where drs.doc_id = doctor.id and dat = %s and meet.start_time = drs.start_time
             )'''
     db.execute(sql, (date_str, date_str, date_str,))
     rows = db.fetchall()

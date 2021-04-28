@@ -18,16 +18,17 @@ def get_dashboard():
                 (select patient_id
                 from patient
                 where patient.id = %s)
-            select foo.type, d.name, foo.instr, foo.dat, foo.start_time, foo.name as medicine, foo.dosage, foo.frequency, patient_id, med_id, app_id, doc_id, patient_complaint as complaint
+            select foo.type, d.name, foo.instr, foo.dat, foo.start_time, foo.name as medicine, foo.dosage, foo.frequency, patient_id, med_id, app_id, foo.doc_id, patient_complaint as complaint
             from ((((((meet natural join pt)
                     natural join doctor_room_slot) 
                     natural join appointment) 
                     natural left join prescription)
                     natural left join meds)
-                    left outer join medicine on medicine.id = meds.med_id) as foo, (person natural join doctor) as d
-            where foo.doc_id = d.id
+                    natural left outer join medicine) as foo, (person join doctor on doctor.doc_id=person.id) as d
+            where foo.doc_id = d.doc_id
             order by foo.dat desc
             limit 3'''
+        #     left outer join medicine on medicine.med_id = meds.med_id) as foo, (person natural join doctor) as d
     db.execute(sql, (g.user.get('id'),))
     rows = db.fetchall()
     data['appointments'] = my_jsonify(rows)
@@ -80,7 +81,7 @@ def get_dashboard():
                 from patient
                 where patient.id = %s),
                 foo(name, detected) as 
-                (select name, detected
+                (select disease_name, detected
                 from ((history natural join pt)
                         natural join disease)
                 where person_id = %s)
@@ -88,12 +89,12 @@ def get_dashboard():
             from
             (
                 (select name, min(dat) as detected
-                from (select name, dat
+                from (select disease_name as name, dat
                         from (((suffers natural join pt)
                                 natural join disease)
                                 natural join meet) as bar
                         where not exists(select 1 from foo
-                                        where foo.name = bar.name)) as bar group by name)
+                                        where foo.name = bar.disease_name)) as bar group by name)
                 union
                 select * from foo
             ) as foo
