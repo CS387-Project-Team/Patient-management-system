@@ -14,6 +14,14 @@ def dashboard():
     return controllers.dashboard.get_dashboard()
 
 @login_required
+def profile():
+    if request.method == 'GET':
+        return controllers.dashboard.get_profile()
+    else:
+        data = request.form
+        return controllers.dashboard.update_profile(data)
+
+@login_required
 def get_appointments():
     return controllers.appointments.get_appointments()
 

@@ -46,7 +46,7 @@
                   {{ g.user['username'] }}
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                  <li><a class="dropdown-item disabled" href="#">My profile</a></li>
+                  <li><a class="dropdown-item" href="{{ url_for('profile')}}">My profile</a></li>
                   <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Log out</a></li>
                 </ul>
               </li>

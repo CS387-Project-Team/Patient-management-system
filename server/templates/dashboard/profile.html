@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Profile{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<div class="row mt-5 justify-content-center">
+    <div class="col-sm-8">
+      <div class="card">
+        <div class="card-header">
+          My Profile
+        </div>
+        <div class="card-body">
+          <form method="post">
+            <div class="mb-3 row">
+              <label for="name" class="col-sm-5 col-form-label">Name</label>
+              <div class="col-sm-7">
+                <input type="text" class="form-control bg-light" name="name" id="name" value="{{data['user']['name']}}" required>
+              </div>
+            </div>
+
+            <div class="mb-3 row">
+              <label for="username" class="col-sm-5 col-form-label">Username</label>
+              <div class="col-sm-7">
+                <input type="text" class="form-control bg-light" name="username" id="username" value="{{data['user']['username']}}" required>
+              </div>
+            </div>
+
+            <div class="mb-3 row">
+              <label for="contact" class="col-sm-5 col-form-label">Contact</label>
+              <div class="col-sm-7">
+                <input type="text" class="form-control bg-light" name="contact" id="contact" value="{{data['user']['contact']}}" required>
+              </div>
+            </div>
+
+            <div class="mb-3 row">
+              <label for="email_id" class="col-sm-5 col-form-label">Email Id</label>
+              <div class="col-sm-7">
+                <input type="text" class="form-control bg-light" name="email_id" id="email_id" value="{{data['user']['email_id']}}" required>
+              </div>
+            </div>
+
+            <div class="mb-3 row">
+              <label for="pincode" class="col-sm-5 col-form-label">Pincode</label>
+              <div class="col-sm-7">
+                <input type="text" class="form-control bg-light" name="pincode" id="pincode" value="{{data['user']['pincode']}}" required>
+              </div>
+            </div>
+
+            <div class="mb-3 row">
+              <label for="address" class="col-sm-5 col-form-label">Address</label>
+              <div class="col-sm-7">
+                <input type="text" class="form-control bg-light" name="address" id="address" value="{{data['user']['address']}}" required>
+              </div>
+            </div>
+
+            <div class="mb-3 row">
+              <label for="dob" class="col-sm-5 col-form-label">Date of Birth</label>
+              <div class="col-sm-7">
+                <input class="form-control bg-light form-select" type="date" name="dob" id="dob" value="{{data['user']['dob']}}" required>
+              </div>
+            </div>
+
+            <div class="form-check">
+              {% if 'M' == data['user']['gender'] %}
+                <input class="form-check-input" type="radio" name="gender" id="male" value="M" checked required>
+              {% else %}
+                <input class="form-check-input" type="radio" name="gender" id="male" value="M" required>
+              {% endif %}
+              <label class="form-check-label" for="male">
+                Male
+              </label>
+            </div>
+            <div class="form-check">
+              {% if 'F' == data['user']['gender'] %}
+                <input class="form-check-input" type="radio" name="gender" id="female" value="F" checked required>
+              {% else %}
+                <input class="form-check-input" type="radio" name="gender" id="female" value="F" required>
+              {% endif %}
+              <label class="form-check-label" for="female">
+                Female
+              </label>
+            </div>
+
+            <input type="submit" class="btn btn-outline-secondary mt-5" value="Update profile">
+          </form>
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock %}

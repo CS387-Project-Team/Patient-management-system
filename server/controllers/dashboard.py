@@ -1,8 +1,43 @@
-from flask import g, Response, jsonify, render_template
+from flask import g, Response, jsonify, render_template, redirect, url_for
 import application
 from application import default, my_jsonify
 import datetime
-   
+
+
+def get_profile():
+    data = {}
+
+    # user profile
+    conn = application.connect()
+    db = conn.cursor(cursor_factory=application.DictCursor)
+    db.execute('select * from person where id = %s', (g.user.get('id'),))
+    row = db.fetchone()
+    data['user'] = my_jsonify(row, multiple=False)
+
+    conn.close()
+    print(data['user'])
+    return render_template('dashboard/profile.html', data=data)
+
+def update_profile(request):
+    # user profile
+    conn = application.connect()
+    db = conn.cursor(cursor_factory=application.DictCursor)
+    try:
+        sql = '''update person
+                set (name, username, address, pincode, contact, gender, email_id, dob) = (%s, %s, %s, %s, %s, %s, %s)
+                where id = %s;
+                '''
+        db.execute(sql, (request.get('name'), request.get('username'), request.get('address'), request.get('pincode'), request.get('contact'), request.get('gender'), request.get('email_id'), request.get('dob'), g.user.get('id'),))
+    except Exception as e:
+        print(e)
+        conn.rollback()
+        conn.close()
+        redirect(url_for('profile'))
+    
+    conn.commit()
+    conn.close()
+    return redirect(url_for('profile'))
+
 def get_dashboard():
     data = {}
 
