@@ -7,7 +7,7 @@
 {% block content %}
 <div class="row">
     <div class="col-lg-6">
-        <div class="card mt-5">
+        <div class="card mt-5 mx-5">
             <div class="card-header">
                 Bed Occupancy
             </div>
@@ -17,7 +17,7 @@
         </div>
     </div>
     <div class="col-lg-6">
-      <div class="card mt-5">
+      <div class="card mt-5 mx-5">
           <div class="card-header">
               Appointments
           </div>
@@ -25,7 +25,27 @@
               <div id="appos" style="height: 450px; width: 100%;"></div>
           </div>
       </div>
-  </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card mt-5 mx-5">
+          <div class="card-header">
+              New admits
+          </div>
+          <div class="card-body">
+              <div id="admits" style="height: 450px; width: 100%;"></div>
+          </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card mt-5 mx-5">
+          <div class="card-header">
+              Discharges
+          </div>
+          <div class="card-body">
+              <div id="discharges" style="height: 450px; width: 100%;"></div>
+          </div>
+      </div>
+    </div>
 </div>
 <script type="text/javascript" src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.stock.min.js"></script>
@@ -56,31 +76,59 @@ window.onload = function () {
         name: "beds",
         legendText: "Total beds",
       }]
-    }, {
+    }],
+    navigator: {
+      slider: {
+        minimum: new Date(2021, 04, 01),
+        maximum: new Date(2021, 04, 25)
+      }
+    }
+  });
+  
+  var admits = new CanvasJS.StockChart("admits",{
+    animationEnabled: true,
+    title: {
+        text: "New Admits"
+      },
+    charts: [{
       data: [{        
         type: "line", //Change it to "spline", "area", "column"
         dataPoints : admitted,
-        showInLegend: true, 
+        showInLegend: false, 
         name: "admitted",
         legendText: "New admissions",
-      }],
-    }, { 
+      }]
+    }],
+    navigator: {
+      slider: {
+        minimum: new Date(2021, 04, 01),
+        maximum: new Date(2021, 04, 25)
+      }
+    }
+  });
+
+  var discharges = new CanvasJS.StockChart("discharges",{
+    animationEnabled: true,
+    title: {
+        text: "Discharges"
+      },
+    charts: [{
       data: [{        
         type: "line", //Change it to "spline", "area", "column"
         dataPoints : discharged,
-        showInLegend: true, 
+        showInLegend: false, 
         name: "discharged",
         legendText: "Discharges",
       }]
     }],
     navigator: {
       slider: {
-        minimum: new Date(2021, 01, 01),
-        maximum: new Date(2021, 03, 31)
+        minimum: new Date(2021, 04, 01),
+        maximum: new Date(2021, 04, 25)
       }
     }
   });
-  
+
   var appointments = new CanvasJS.StockChart("appos",{
     animationEnabled: true,
     title: {
@@ -97,8 +145,8 @@ window.onload = function () {
     }],
     navigator: {
       slider: {
-        minimum: new Date(2021, 01, 01),
-        maximum: new Date(2021, 03, 31)
+        minimum: new Date(2021, 04, 01),
+        maximum: new Date(2021, 04, 25)
       }
     }
   });
@@ -116,6 +164,8 @@ window.onload = function () {
     
     occupancy.render();
     appointments.render();
+    admits.render();
+    discharges.render();
   });
 }
 </script>
