@@ -9,59 +9,63 @@
   <!-- <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-glyphicons.css" rel="stylesheet"> -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<!-- <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> -->
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 <body>
-  <div class="container-fluid">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#">PMS</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNavDropdown">
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="{{ url_for('dashboard') }}">Dashboard</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="{{ url_for('view_info') }}">Get_Info</a>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="appointments" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Appointments
+  <nav class="container-fluid navbar navbar-expand-lg navbar-light" style="background-color: rgb(158, 240, 158);">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#" style="font-size: xx-large;">PMS</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown" style="font-size: large;">
+        <ul class="navbar-nav">
+          <li class="nav-item p-lg-3">
+            <a class="nav-link active middle" aria-current="page" href="{{ url_for('dashboard') }}">Dashboard</a>
+          </li>
+          <li class="nav-item p-lg-3">
+            <a class="nav-link middle" aria-current="page" href="{{ url_for('view_info') }}">About Us</a>
+          </li>
+          <li class="nav-item dropdown p-lg-3">
+            <a class="nav-link dropdown-toggle middle" href="#" id="appointments" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Appointments
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="appointments">
+              <li><a class="dropdown-item" href="{{ url_for('get_appointments') }}">View all</a></li>
+              <li><a class="dropdown-item" href="{{ url_for('book_appointment') }}">Book</a></li>
+              <li><a class="dropdown-item" href="{{ url_for('cancel_appointment') }}">Cancel</a></li>
+            </ul>
+          </li>
+          <li class="nav-item p-lg-3">
+            <a class="nav-link middle disabled" href="#">Tests</a>
+          </li>
+        </ul>
+        <ul class="navbar-nav ms-auto">
+          {% if g.user %}
+            <li class="nav-item dropdown p-lg-3">
+              <a class="nav-link middle dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {{ g.user['username'] }}
               </a>
-              <ul class="dropdown-menu" aria-labelledby="appointments">
-                <li><a class="dropdown-item" href="{{ url_for('get_appointments') }}">View all</a></li>
-                <li><a class="dropdown-item" href="{{ url_for('book_appointment') }}">Book</a></li>
-                <li><a class="dropdown-item" href="{{ url_for('cancel_appointment') }}">Cancel</a></li>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <li><a class="dropdown-item p-lg-2" href="{{ url_for('profile')}}">My profile</a></li>
+                <li><a class="dropdown-item p-lg-2" href="{{ url_for('auth.logout') }}">Log out</a></li>
               </ul>
             </li>
-            <li class="nav-item">
-              <a class="nav-link disabled" href="#">Tests</a>
+          {% else %}
+            <li class="nav-item p-lg-3">
+              <a class="nav-link middle" href="{{ url_for('auth.login') }}">Log in</a>
             </li>
-            {% if g.user %}
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  {{ g.user['username'] }}
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                  <li><a class="dropdown-item" href="{{ url_for('profile')}}">My profile</a></li>
-                  <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Log out</a></li>
-                </ul>
-              </li>
-            {% else %}
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('auth.login') }}">Log in</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('auth.register') }}">Sign up</a>
-              </li>
-            {% endif %}
-          </ul>
-        </div>
+            <li class="nav-item p-lg-3">
+              <a class="nav-link middle" href="{{ url_for('auth.register') }}">Sign up</a>
+            </li>
+          {% endif %}
+        </ul>
       </div>
-    </nav>
+    </div>
+  </nav>
+  <div class="container-fluid">
     <section class="container-fluid">
       <header>
         {% block header %}{% endblock %}
