@@ -36,9 +36,7 @@ a.middle:before {
     transition: all 0.3s ease-in-out;
 }
 
-.green {
-    background-color: black;
-}
+
 @media screen and (min-width: 992px) {
     a.left:hover:before {
         visibility: visible;
