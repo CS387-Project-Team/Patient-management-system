@@ -36,6 +36,9 @@ a.middle:before {
     transition: all 0.3s ease-in-out;
 }
 
+.card-header {
+    background-color: rgb(170, 240, 170);
+}
 
 @media screen and (min-width: 992px) {
     a.left:hover:before {
