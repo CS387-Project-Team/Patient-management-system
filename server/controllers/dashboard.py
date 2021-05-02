@@ -140,6 +140,73 @@ def get_dashboard():
     rows = db.fetchall()
     data['history'] = my_jsonify(rows)
 
+    # user analytics
+    ## cost split
+    data['expenses'] = {}
+    sql = '''select  coalesce(sum(opd_charges),0) as opd_charges
+            from person natural join patient natural join meet natural join doctor
+            where person.id = %s
+            '''
+    db.execute(sql, (id,))
+    data['expenses']['doctor'] = db.fetchone()['opd_charges']
+    sql = '''select  coalesce(sum(charges),0) as test_charges
+            from person natural join patient natural join takes natural join test
+            where person.id = %s
+            '''
+    db.execute(sql, (id,))
+    data['expenses']['test'] = db.fetchone()['test_charges']
+    sql = '''select  coalesce(sum(qty*price),0) as med_charges
+            from person natural join bill natural join bill_med natural join medicine
+            where person.id = %s
+            '''
+    db.execute(sql, (id,))
+    data['expenses']['meds'] = db.fetchone()['med_charges']
+    sql = '''select coalesce(sum((end_dt-start_dt)*charges),0) as bed_charges
+            from person natural join patient natural join occupies natural join bed
+            where person.id = %s
+            '''
+    db.execute(sql, (id,))
+    data['expenses']['bed'] = db.fetchone()['bed_charges']
+
+    ## top 5 diseases suffered by person
+    sql = '''select disease_name as name, count(*) as freq
+            from person natural join patient natural join suffers natural join disease
+            where person.id = %s
+            group by disease_name
+            order by freq desc;
+            '''
+    db.execute(sql, (id,))
+    top_diseases = db.fetchall()
+    total = 0
+    data['top_diseases'] = []
+    for s in top_diseases:
+        total += s['freq']
+    
+    iter_ = 0
+    perc_cum = 0
+    for s in top_diseases:
+        iter_ += 1
+        cur_disease = {}
+        cur_disease['name'] = s['name']
+        cur_disease['perc'] = s['freq'] / total * 100
+        perc_cum += cur_disease['perc']
+        if iter_ == application.MAX_NUM_DISEASES + 1:
+            cur_disease['name'] = 'Others'
+            cur_disease['perc'] = 100 - perc_cum
+        
+        data['top_diseases'].append(cur_disease)
+    if top_diseases == []:
+        dummy = {}
+        dummy['name'] = 'Others'
+        dummy['perc'] = 100
+        data['top_diseases'].append(dummy)
     conn.close()
-    print(data['appointments'])
+    
+    total_expenses = sum(data['expenses'].values())
+    if total_expenses != 0:
+        for k in data['expenses'].keys():
+            data['expenses'][k] *= 100 / total_expenses
+    data['expenses']['total'] = total_expenses
+    print(data['expenses'])
+    print(data['top_diseases'])
     return render_template('dashboard/dashboard.html', data=data) #jsonify(data)
