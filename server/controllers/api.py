@@ -2,7 +2,7 @@ import flask
 import application
 from flask import request, make_response, render_template, url_for, redirect
 from controllers.auth import login_required
-import controllers.dashboard, controllers.appointments
+import controllers.dashboard, controllers.appointments, controllers.analytics
 import controllers.generic_info
 
 @login_required
@@ -74,3 +74,9 @@ def cancel_appointment():
 
 def view_info():
     return controllers.generic_info.get_info()
+
+def get_analytics():
+    return controllers.analytics.get_analytics()
+
+def show_analytics():
+    return render_template('analytics/daywise.html')

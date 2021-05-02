@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Analytics{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6 col-md-10">
+        <div class="card">
+            <div class="card-header">
+                Daily trends
+            </div>
+            <div class="card-body">
+                <div id="chartContainer" style="height: 450px; width: 100%;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.stock.min.js"></script>
+<script type="text/javascript">
+window.onload = function () {
+  var occupied = [];
+  var admitted = [];
+  var discharged = [];
+  var appos = [];
+  var beds = []
+  
+  var stockChart = new CanvasJS.StockChart("chartContainer",{
+    title: {
+        text: "Daily trends"
+      },
+    charts: [{      
+      data: [{        
+        type: "line", //Change it to "spline", "area", "column"
+        dataPoints : occupied,
+        showInLegend: true, 
+        name: "occupied",
+        legendText: "Beds Occupied",
+      }, {        
+        type: "line", //Change it to "spline", "area", "column"
+        dataPoints : admitted,
+        showInLegend: true, 
+        name: "admitted",
+        legendText: "New admissions",
+      }, {        
+        type: "line", //Change it to "spline", "area", "column"
+        dataPoints : discharged,
+        showInLegend: true, 
+        name: "discharged",
+        legendText: "Discharges",
+      }, {        
+        type: "line", //Change it to "spline", "area", "column"
+        dataPoints : appos,
+        showInLegend: true, 
+        name: "appos",
+        legendText: "Appointments/OPD",
+      }, {        
+        type: "line", //Change it to "spline", "area", "column"
+        dataPoints : beds,
+        showInLegend: true, 
+        name: "beds",
+        legendText: "Total beds",
+      }]
+    }],
+    navigator: {
+      slider: {
+        minimum: new Date(2021, 01, 01),
+        maximum: new Date(2021, 03, 31)
+      }
+    }
+  }); 
+
+  $.getJSON("http://127.0.0.1:5000/analytics-data", function(data) {  
+    console.log("hello I am receving analytics data")
+    console.log("data")
+    for(var i = 0; i < data.daywise.length; i++){
+      occupied.push({x: new Date(data.daywise[i].date), y: Number(data.daywise[i].occupied)});
+      admitted.push({x: new Date(data.daywise[i].date), y: Number(data.daywise[i].admissions)});
+      discharged.push({x: new Date(data.daywise[i].date), y: Number(data.daywise[i].discharges)});
+      appos.push({x: new Date(data.daywise[i].date), y: Number(data.daywise[i].appos)});
+      beds.push({x: new Date(data.daywise[i].date), y: Number(data.total_beds)});
+    }
+	
+    stockChart.render();
+  });
+}
+</script>
+{% endblock %}
