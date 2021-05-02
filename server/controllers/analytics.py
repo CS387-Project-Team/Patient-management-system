@@ -64,5 +64,39 @@ def get_analytics():
         cur_date += datetime.timedelta(days=1)
         if cur_date >= datetime.date.today():
             break
+    conn.close()
+    return jsonify(data)
+
+
+def get_disease_analytics(disease_id):
+    data = {}
+    # data about disease and symptoms
+    conn = application.connect()
+    db = conn.cursor(cursor_factory=application.DictCursor)
+    sql = '''select symp_name, count(*) as frac
+            from symptom natural join shows natural join meet natural join patient natural join suffers natural join disease
+            group by symp_name
+            order by frac desc; 
+            '''
+    db.execute(sql)
+    symptoms = db.fetchall()
+    total = 0
+    data['symptoms'] = []
+    for s in symptoms:
+        total += s['frac']
     
-    return jsonify(data)  
+    iter_ = 0
+    perc_cum = 0
+    for s in symptoms:
+        iter_ += 1
+        cur_symptom = {}
+        cur_symptom['name'] = s['symp_name']
+        cur_symptom['perc'] = s['frac'] / total * 100
+        perc_cum += cur_symptom['perc']
+        if iter_ == 10:
+            cur_symptom['name'] = 'Others'
+            cur_symptom['perc'] = 100 - perc_cum
+        
+        data['symptoms'].append(cur_symptom)
+    conn.close()
+    return jsonify(data)

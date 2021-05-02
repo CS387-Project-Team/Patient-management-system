@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<script>
+window.onload = function() {
+    var disease_id = $('#disease_id').data("disease");
+    var symptoms = []
+    var chart = new CanvasJS.Chart("chartContainer", {
+        animationEnabled: true,
+        title: {
+            text: "Symptoms"
+        },
+        data: [{
+            type: "pie",
+            startAngle: 240,
+            yValueFormatString: "##0.00\"%\"",
+            indexLabel: "{label} {y}",
+            dataPoints: symptoms 
+        }]
+    });
+    console.log("http://127.0.0.1:5000/analytics-disease-data/" + String(disease_id))
+    $.getJSON("http://127.0.0.1:5000/analytics-disease-data/" + String(disease_id), function(data) {  
+        console.log("hello I am receving analytics data")
+        console.log("data")
+        for(var i = 0; i < data.symptoms.length; i++){
+        symptoms.push({y: data.symptoms[i].perc, label: data.symptoms[i].name});
+        }
+
+        chart.render();
+
+    });
+
+}
+</script>
+</head>
+<body>
+<meta id="disease_id" data-disease="{{ disease_id }}">
+<div id="chartContainer" style="height: 370px; width: 100%;"></div>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<script type="text/javascript" src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+</body>
+</html>
