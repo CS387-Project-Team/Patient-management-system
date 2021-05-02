@@ -17,3 +17,4 @@ def routes(app):
     app.add_url_rule('/analytics',view_func=api.show_analytics,methods=['GET'])
     app.add_url_rule('/analytics-disease-data/<int:disease_id>',view_func=api.get_disease_analytics,methods=['GET'])
     app.add_url_rule('/analytics-disease/<int:disease_id>',view_func=api.show_disease_analytics,methods=['GET'])
+    app.add_url_rule('/analytics-disease-post',view_func=api.post_disease_for_analytics,methods=['POST'])

@@ -88,4 +88,8 @@ def show_disease_analytics(disease_id):
     # disease_id = request.args.get('disease_id', None)
     # if disease_id is None:
     #     return render_template('analytics/disease-wise.html')
-    return render_template('analytics/disease-wise.html', disease_id=disease_id)
+    return controllers.analytics.show_disease_analytics(disease_id)
+
+def post_disease_for_analytics():
+    disease_name = request.form.get('disease')
+    return controllers.analytics.post_disease_for_analytics(disease_name)

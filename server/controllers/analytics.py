@@ -75,10 +75,11 @@ def get_disease_analytics(disease_id):
     db = conn.cursor(cursor_factory=application.DictCursor)
     sql = '''select symp_name, count(*) as frac
             from symptom natural join shows natural join meet natural join patient natural join suffers natural join disease
+            where disease_id = %s
             group by symp_name
             order by frac desc; 
             '''
-    db.execute(sql)
+    db.execute(sql, (disease_id,))
     symptoms = db.fetchall()
     total = 0
     data['symptoms'] = []
@@ -98,7 +99,7 @@ def get_disease_analytics(disease_id):
             cur_symptom['perc'] = 100 - perc_cum
         
         data['symptoms'].append(cur_symptom)
-    if symptoms is []:
+    if symptoms == []:
         dummy = {}
         dummy['name'] = 'Others'
         dummy['perc'] = 100
@@ -107,10 +108,11 @@ def get_disease_analytics(disease_id):
     # data about disease and medicines
     sql = '''select medicine.name as med_name, count(*) as frac
             from medicine natural join meds natural join prescription natural join appointment natural join meet natural join patient natural join suffers natural join disease
+            where disease_id = %s
             group by med_name
             order by frac desc; 
             '''
-    db.execute(sql)
+    db.execute(sql, (disease_id,))
     medicines = db.fetchall()
     total = 0
     data['medicines'] = []
@@ -130,12 +132,14 @@ def get_disease_analytics(disease_id):
             cur_medicine['perc'] = 100 - perc_cum
         
         data['medicines'].append(cur_medicine)
-    if medicines is []:
+    if medicines == []:
         dummy = {}
         dummy['name'] = 'Others'
         dummy['perc'] = 100
         data['medicines'].append(dummy)
+    
     conn.close()
+
     daily_trends = get_disease_daily_trends(disease_id)
     data['daywise'] = daily_trends['daywise']
     data['total_beds'] = daily_trends['total_beds']
@@ -212,3 +216,34 @@ def convert_analytics_data(total_beds, appos, discharges, admissions, cur_date):
             break
     
     return data
+
+def show_disease_analytics(disease_id):
+    data = {}
+    data['disease_id'] = disease_id
+    # data about all disease names
+    conn = application.connect()
+    db = conn.cursor(cursor_factory=application.DictCursor)
+    sql = '''select disease_name from disease; 
+            '''
+    db.execute(sql)
+    diseases = db.fetchall()
+    data['diseases'] = my_jsonify(diseases)
+    db = conn.cursor(cursor_factory=application.DictCursor)
+    sql = '''select disease_name from disease where disease_id=%s; 
+            '''
+    db.execute(sql, (disease_id,))
+    row = db.fetchone()
+    data['disease_name'] = row['disease_name']
+    conn.close()
+    return render_template('analytics/disease-wise.html', data=data)
+
+def post_disease_for_analytics(disease_name):
+    conn = application.connect()
+    db = conn.cursor(cursor_factory=application.DictCursor)
+    sql = '''select disease_id from disease where disease_name = %s; 
+            '''
+    db.execute(sql, (disease_name,))
+    diseases = db.fetchone()
+    disease_id = diseases['disease_id']
+    conn.close()
+    return redirect(url_for('show_disease_analytics', disease_id=disease_id)) #render_template('analytics/disease-wise.html', data=data)

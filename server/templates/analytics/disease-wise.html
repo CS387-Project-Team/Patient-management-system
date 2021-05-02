@@ -1,62 +1,220 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-<script>
-window.onload = function() {
-    var disease_id = $('#disease_id').data("disease");
-    var symptoms = []
-    var medicines = []
-    var sym_chart = new CanvasJS.Chart("Symptoms", {
-        animationEnabled: true,
-        title: {
-            text: "Symptoms"
-        },
-        data: [{
-            type: "pie",
-            startAngle: 240,
-            yValueFormatString: "##0.00\"%\"",
-            indexLabel: "{label} {y}",
-            dataPoints: symptoms 
-        }]
-    });
+{% extends 'base.html' %}
 
-    var med_chart = new CanvasJS.Chart("Medicines", {
-        animationEnabled: true,
-        title: {
-            text: "Medicines"
-        },
-        data: [{
-            type: "pie",
-            startAngle: 240,
-            yValueFormatString: "##0.00\"%\"",
-            indexLabel: "{label} {y}",
-            dataPoints: medicines 
-        }]
-    });
+{% block header %}
+  <!-- <h1>{% block title %}Analytics{% endblock %}</h1> -->
+{% endblock %}
 
-    console.log("http://127.0.0.1:5000/analytics-disease-data/" + String(disease_id))
-    $.getJSON("http://127.0.0.1:5000/analytics-disease-data/" + String(disease_id), function(data) {  
-        console.log("hello I am receving analytics data")
-        console.log("data")
-        for(var i = 0; i < data.symptoms.length; i++){
-        symptoms.push({y: data.symptoms[i].perc, label: data.symptoms[i].name});
-        }
-        for(var i = 0; i < data.medicines.length; i++){
-        medicines.push({y: data.medicines[i].perc, label: data.medicines[i].name});
-        }
+{% block content %}
 
-        sym_chart.render();
-        med_chart.render();
-    });
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <form class="input-group mt-5" method="post" action="{{ url_for('post_disease_for_analytics') }}">
+            <div class="input-group">
+                <input class="form-control form-select" id="search_input" list="disease" placeholder="Search for disease" title="Type in a name" name="disease">
+                <datalist class="custom-select" id="disease">
+                    {% for disease in data['diseases'] %}
+                        <option value="{{ disease['disease_name'] }}">
+                    {% endfor %}
+                </datalist>
+                <button type="submit" class="btn btn-outline-secondary"><i class="bi bi-search"></i></button>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12 text-center">
+        <p class="h3 mt-5">{{data['disease_name']}}</p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card mt-5">
+            <div class="card-header">
+                Bed Occupancy
+            </div>
+            <div class="card-body">
+                <div id="beds" style="height: 450px; width: 100%;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card mt-5">
+          <div class="card-header">
+              Appointments
+          </div>
+          <div class="card-body">
+              <div id="appos" style="height: 450px; width: 100%;"></div>
+          </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card mt-5">
+            <div class="card-header">
+                Symptoms
+            </div>
+            <div class="card-body">
+                <div id="Symptoms" style="height: 370px; width: 100%;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card mt-5">
+            <div class="card-header">
+                Medicines
+            </div>
+            <div class="card-body">
+                <div id="Medicines" style="height: 370px; width: 100%;"></div>
+            </div>
+        </div>
+    </div>
+</div>
 
-}
-</script>
-</head>
-<body>
-<meta id="disease_id" data-disease="{{ disease_id }}">
-<div id="Symptoms" style="height: 370px; width: 100%;"></div>
-<div id="Medicines" style="height: 370px; width: 100%;"></div>
-<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<meta id="disease_id" data-disease="{{ data['disease_id'] }}">
+
+<script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.stock.min.js"></script>
 <script type="text/javascript" src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
-</body>
-</html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript">
+    window.onload = function() {
+        var disease_id = $('#disease_id').data("disease");
+        var symptoms = []
+        var medicines = []
+        var sym_chart = new CanvasJS.Chart("Symptoms", {
+            animationEnabled: true,
+            title: {
+                text: "Symptoms"
+            },
+            data: [{
+                type: "pie",
+                startAngle: 240,
+                yValueFormatString: "##0.00\"%\"",
+                indexLabel: "{label} {y}",
+                dataPoints: symptoms 
+            }]
+        });
+    
+        var med_chart = new CanvasJS.Chart("Medicines", {
+            animationEnabled: true,
+            title: {
+                text: "Medicines"
+            },
+            data: [{
+                type: "pie",
+                startAngle: 240,
+                yValueFormatString: "##0.00\"%\"",
+                indexLabel: "{label} {y}",
+                dataPoints: medicines 
+            }]
+        });
+        var occupied = [];
+        var admitted = [];
+        var discharged = [];
+        var appos = [];
+        var beds = [];
+        
+        var occupancy = new CanvasJS.StockChart("beds",{
+            animationEnabled: true,
+            title: {
+                text: "Occupancy"
+            },
+            charts: [{      
+            data: [{        
+                type: "line", //Change it to "spline", "area", "column"
+                dataPoints : occupied,
+                showInLegend: true, 
+                name: "occupied",
+                legendText: "Beds Occupied",
+            }, {        
+                type: "line", //Change it to "spline", "area", "column"
+                dataPoints : beds,
+                showInLegend: false, 
+                name: "beds",
+                legendText: "Total beds",
+            }]
+            }, {
+            data: [{        
+                type: "line", //Change it to "spline", "area", "column"
+                dataPoints : admitted,
+                showInLegend: true, 
+                name: "admitted",
+                legendText: "New admissions",
+            }],
+            }, { 
+            data: [{        
+                type: "line", //Change it to "spline", "area", "column"
+                dataPoints : discharged,
+                showInLegend: true, 
+                name: "discharged",
+                legendText: "Discharges",
+            }]
+            }],
+            navigator: {
+            slider: {
+                minimum: new Date(2021, 01, 01),
+                maximum: new Date(2021, 03, 31)
+            }
+            }
+        });
+        
+        var appointments = new CanvasJS.StockChart("appos",{
+            animationEnabled: true,
+            title: {
+                text: "Appointments"
+            },
+            charts: [{
+            data: [{        
+                type: "line", //Change it to "spline", "area", "column"
+                dataPoints : appos,
+                showInLegend: true, 
+                name: "appos",
+                legendText: "Appointments/OPD",
+            }]
+            }],
+            navigator: {
+            slider: {
+                minimum: new Date(2021, 01, 01),
+                maximum: new Date(2021, 03, 31)
+            }
+            }
+        });
+
+//   $.getJSON("http://127.0.0.1:5000/analytics-data", function(data) {  
+//     console.log("hello I am receving analytics data")
+//     console.log("data")
+//     for(var i = 0; i < data.daywise.length; i++){
+//       occupied.push({x: new Date(data.daywise[i].date), y: Number(data.daywise[i].occupied)});
+//       admitted.push({x: new Date(data.daywise[i].date), y: Number(data.daywise[i].admissions)});
+//       discharged.push({x: new Date(data.daywise[i].date), y: Number(data.daywise[i].discharges)});
+//       appos.push({x: new Date(data.daywise[i].date), y: Number(data.daywise[i].appos)});
+//       beds.push({x: new Date(data.daywise[i].date), y: Number(data.total_beds)});
+//     }
+    
+    
+//   });
+        console.log("http://127.0.0.1:5000/analytics-disease-data/" + String(disease_id))
+        $.getJSON("http://127.0.0.1:5000/analytics-disease-data/" + String(disease_id), function(data) {  
+            console.log("hello I am receving analytics data")
+            console.log("data")
+            for(var i = 0; i < data.symptoms.length; i++){
+            symptoms.push({y: data.symptoms[i].perc, label: data.symptoms[i].name});
+            }
+            for(var i = 0; i < data.medicines.length; i++){
+            medicines.push({y: data.medicines[i].perc, label: data.medicines[i].name});
+            }
+            for(var i = 0; i < data.daywise.length; i++){
+            occupied.push({x: new Date(data.daywise[i].date), y: Number(data.daywise[i].occupied)});
+            admitted.push({x: new Date(data.daywise[i].date), y: Number(data.daywise[i].admissions)});
+            discharged.push({x: new Date(data.daywise[i].date), y: Number(data.daywise[i].discharges)});
+            appos.push({x: new Date(data.daywise[i].date), y: Number(data.daywise[i].appos)});
+            beds.push({x: new Date(data.daywise[i].date), y: Number(data.total_beds)});
+            }
+            sym_chart.render();
+            med_chart.render();
+            occupancy.render();
+            appointments.render();
+        });
+    
+    }
+</script>
+{% endblock %}
