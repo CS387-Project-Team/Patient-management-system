@@ -6,25 +6,55 @@
 
 {% block content %}
 <div class="row">
-    <div class="col-lg-6">
+    <div class="col-lg-12">
         <div class="card mt-5 mx-5">
             <div class="card-header">
                 Bed Occupancy
             </div>
             <div class="card-body">
-                <div id="beds" style="height: 450px; width: 100%;"></div>
+                <div class="row align-items-center justify-content-center">
+                  <div class="col-lg-6">
+                    <div id="beds" style="height: 450px; width: 100%;"></div>
+                  </div>
+                  <div class="col-lg-6">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="card p-3">
+                          <div class="card-body">
+                            <div class="card-title">Total beds</div>
+                            <p class="h3 text-center"> {{data['total_beds']}} </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="card p-3">
+                          <div class="card-body">
+                            <div class="card-title">Beds occupied</div>
+                            <p class="h3 text-center">{{data['occupied']}} </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="card p-3">
+                          <div class="card-body">
+                            <div class="card-title">Admits</div>
+                            <p class="h3 text-center">{{data['admits']}} </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="card p-3">
+                          <div class="card-body">
+                            <div class="card-title">Discharges</div>
+                            <p class="h3 text-center">{{data['discharges']}} </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="col-lg-6">
-      <div class="card mt-5 mx-5">
-          <div class="card-header">
-              Appointments
-          </div>
-          <div class="card-body">
-              <div id="appos" style="height: 450px; width: 100%;"></div>
-          </div>
-      </div>
     </div>
     <div class="col-lg-6">
       <div class="card mt-5 mx-5">
@@ -46,6 +76,69 @@
           </div>
       </div>
     </div>
+
+    <div class="col-lg-6">
+      <div class="card mt-5 mx-5">
+          <div class="card-header">
+              Appointments
+          </div>
+          <div class="card-body">
+              <div id="appos" style="height: 450px; width: 100%;"></div>
+          </div>
+      </div>
+    </div>
+    
+    <div class="col-lg-6">
+      <div class="card mt-5 mx-5">
+          <div class="card-header">
+              Top biological areas
+          </div>
+          <div class="card-body">
+              <div id="top_areas" style="height: 350px; width: 100%;"></div>
+          </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card mt-5 mx-5">
+          <div class="card-header">
+              Top doctors
+          </div>
+          <div class="card-body">
+              <div id="top_docs" style="height: 350px; width: 100%;"></div>
+          </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card mt-5 mx-5">
+          <div class="card-header">
+              Top tests
+          </div>
+          <div class="card-body">
+              <div id="top_tests" style="height: 350px; width: 100%;"></div>
+          </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card mt-5 mx-5">
+          <div class="card-header">
+              Top diseases
+          </div>
+          <div class="card-body">
+              <div id="top_diseases" style="height: 350px; width: 100%;"></div>
+          </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card mt-5 mx-5">
+          <div class="card-header">
+              Top medicines
+          </div>
+          <div class="card-body">
+              <div id="top_meds" style="height: 350px; width: 100%;"></div>
+          </div>
+      </div>
+    </div>
+
 </div>
 <script type="text/javascript" src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.stock.min.js"></script>
@@ -56,6 +149,7 @@ window.onload = function () {
   var discharged = [];
   var appos = [];
   var beds = [];
+  var top_docs = [], top_areas = [], top_diseases = [], top_meds = [], top_tests = [];
   
   var occupancy = new CanvasJS.StockChart("beds",{
     animationEnabled: true,
@@ -151,6 +245,72 @@ window.onload = function () {
     }
   });
 
+  var meds = new CanvasJS.Chart("top_meds", {
+            animationEnabled: true,
+            title: {
+                text: "Top Medicines"
+            },
+            data: [{
+                type: "doughnut",
+                startAngle: 60,
+                yValueFormatString: "##0.00\"%\"",
+                indexLabel: "{label} {y}",
+                dataPoints: top_meds
+            }]
+        });
+  
+  var docs = new CanvasJS.Chart("top_docs", {
+            animationEnabled: true,
+            title: {
+                text: "Top Doctors"
+            },
+            data: [{
+                type: "doughnut",
+                startAngle: 60,
+                yValueFormatString: "##0.00\"%\"",
+                indexLabel: "{label} {y}",
+                dataPoints: top_docs
+            }]
+        });
+  var areas = new CanvasJS.Chart("top_areas", {
+            animationEnabled: true,
+            title: {
+                text: "Top Biological Areas"
+            },
+            data: [{
+                type: "doughnut",
+                startAngle: 60,
+                yValueFormatString: "##0.00\"%\"",
+                indexLabel: "{label} {y}",
+                dataPoints: top_areas
+            }]
+        });
+  var tests = new CanvasJS.Chart("top_tests", {
+            animationEnabled: true,
+            title: {
+                text: "Top Tests"
+            },
+            data: [{
+                type: "doughnut",
+                startAngle: 60,
+                yValueFormatString: "##0.00\"%\"",
+                indexLabel: "{label} {y}",
+                dataPoints: top_tests
+            }]
+        });
+  var diseases = new CanvasJS.Chart("top_diseases", {
+            animationEnabled: true,
+            title: {
+                text: "Top Diseases"
+            },
+            data: [{
+                type: "doughnut",
+                startAngle: 60,
+                yValueFormatString: "##0.00\"%\"",
+                indexLabel: "{label} {y}",
+                dataPoints: top_diseases
+            }]
+        });
   $.getJSON("http://127.0.0.1:5000/analytics-data", function(data) {  
     console.log("hello I am receving analytics data")
     console.log("data")
@@ -161,11 +321,32 @@ window.onload = function () {
       appos.push({x: new Date(data.daywise[i].date), y: Number(data.daywise[i].appos)});
       beds.push({x: new Date(data.daywise[i].date), y: Number(data.total_beds)});
     }
-    
+    for(var i = 0; i < data.top_areas.length; i++){
+      top_areas.push({y: data.top_areas[i].y, label: data.top_areas[i].label});
+    }
+    for(var i = 0; i < data.top_docs.length; i++){
+      top_docs.push({y: data.top_docs[i].y, label: data.top_docs[i].label});
+    }
+    for(var i = 0; i < data.top_diseases.length; i++){
+      top_diseases.push({y: data.top_diseases[i].y, label: data.top_diseases[i].label});
+    }
+    for(var i = 0; i < data.top_meds.length; i++){
+      top_meds.push({y: data.top_meds[i].y, label: data.top_meds[i].label});
+    }
+    for(var i = 0; i < data.top_tests.length; i++){
+      top_tests.push({y: data.top_tests[i].y, label: data.top_tests[i].label});
+    }
+
     occupancy.render();
     appointments.render();
     admits.render();
     discharges.render();
+    console.log(top_meds)
+    areas.render();
+    docs.render();
+    diseases.render();
+    meds.render();
+    tests.render();
   });
 }
 </script>

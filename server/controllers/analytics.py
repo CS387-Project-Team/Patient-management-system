@@ -3,7 +3,7 @@ import application
 from application import default, my_jsonify
 import datetime
 
-def get_analytics():
+def get_analytics(json_=True):
     data = {}
     # data about bed occupancy vs date
     cur_date = datetime.datetime.strptime('2021-01-01', '%Y-%m-%d').date() # hardcoded for now
@@ -60,12 +60,73 @@ def get_analytics():
         occupied = occupied + daywise['admissions'] - daywise['discharges']
         daywise['occupied'] = occupied
 
+        data['admits'] = daywise['admissions']
+        data['discharges'] = daywise['discharges']
         data['daywise'].append(daywise)
         cur_date += datetime.timedelta(days=1)
         if cur_date >= datetime.date.today():
             break
+    data['occupied'] = occupied
+    
+    # top k areas/specialities
+    k = 5
+    sql = '''select speciality, count(*) as freq
+            from meet natural join doctor
+            group by speciality
+            order by freq desc
+            '''
+    db.execute(sql)
+    top_areas = db.fetchall()
+    top_areas = get_top_k(top_areas, k, key1='speciality', key2='freq')
+
+    # top k doctors
+    sql = '''select person.name as name, count(*) as freq
+            from (meet inner join doctor on doctor.doc_id=meet.doc_id) inner join person on doctor.doc_id=person.id
+            group by person.id, person.name
+            order by freq desc
+            '''
+    db.execute(sql)
+    top_docs = db.fetchall()
+    top_docs = get_top_k(top_docs, k, key1='name', key2='freq')
+
+    # top k tests
+    sql = '''select test.name as name, count(*) as freq
+            from takes natural join test
+            group by test_id, test.name
+            order by freq desc
+            '''
+    db.execute(sql)
+    top_tests = db.fetchall()
+    top_tests = get_top_k(top_tests, k, key1='name', key2='freq')
+
+    # top k diseases
+    sql = '''select disease_name, count(*) as freq
+            from meet natural join suffers natural join disease
+            group by doc_id, disease_name
+            order by freq desc
+            '''
+    db.execute(sql)
+    top_diseases = db.fetchall()
+    top_diseases = get_top_k(top_diseases, k, key1='disease_name', key2='freq')
+
+    # top k medicines
+    sql = '''select medicine.name as name, sum(qty) as qty
+            from bill_med natural join medicine
+            group by med_id, medicine.name
+            order by qty desc
+            '''
+    db.execute(sql)
+    top_meds = db.fetchall()
+    top_meds = get_top_k(top_meds, k, key1='name', key2='qty')
     conn.close()
-    return jsonify(data)
+    data['top_areas'] = top_areas
+    data['top_docs'] = top_docs
+    data['top_diseases'] = top_diseases
+    data['top_meds'] = top_meds
+    data['top_tests'] = top_tests
+    if json_:
+        return jsonify(data)
+    return data
 
 
 def get_disease_analytics(disease_id):
@@ -145,6 +206,29 @@ def get_disease_analytics(disease_id):
     data['total_beds'] = daily_trends['total_beds']
     return jsonify(data)
 
+def get_top_k(rows, k, key1='name', key2='freq'):
+    iter_ = 0
+    ret_list = []
+    perc_cum = 0
+    total = 0
+    for row in rows:
+        total += row[key2]
+
+    if total == 0:
+        return []
+    
+    for row in rows:
+        iter_ += 1
+        cur_dict = {}
+        cur_dict['label'] = row[key1]
+        cur_dict['y'] = row[key2] / total * 100
+        perc_cum += cur_dict['y']
+        ret_list.append(cur_dict)
+        if iter_ == k:
+            cur_dict['label'] = 'Others'
+            cur_dict['y'] = 100 - perc_cum
+    return ret_list
+    
 def get_disease_daily_trends(disease_id):
     # data about bed occupancy vs date
     cur_date = datetime.datetime.strptime('2021-01-01', '%Y-%m-%d').date() # hardcoded for now

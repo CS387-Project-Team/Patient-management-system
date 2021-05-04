@@ -79,7 +79,8 @@ def get_analytics():
     return controllers.analytics.get_analytics()
 
 def show_analytics():
-    return render_template('analytics/daywise.html')
+    data = controllers.analytics.get_analytics(json_=False)
+    return render_template('analytics/daywise.html', data=data)
 
 def get_disease_analytics(disease_id):
     return controllers.analytics.get_disease_analytics(disease_id)
