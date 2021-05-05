@@ -33,7 +33,7 @@ def get_appointments():
 def get_available_slots(date_str):
     data = {}
     if date_str == None:
-        date_str = "2021-02-06"
+        date_str = "2021-04-21"
     # date = datetime.datetime.strptime(date_str, '%Y-%m-%d').date
     conn = application.connect()
     db = conn.cursor(cursor_factory=application.DictCursor)
@@ -47,7 +47,7 @@ def get_available_slots(date_str):
     rows = db.fetchall()
     df = DataFrame(rows)
     if rows == []:
-        return jsonify({})
+        return jsonify({'msg':'No data found'})
     df.columns = rows[0].keys()
     df = df.groupby('id', as_index=False).agg({'name':'first', 'speciality':'first', 'date':'first', 'start_time': lambda x: list(x)})
     conn.close()

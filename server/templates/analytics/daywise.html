@@ -1,0 +1,593 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <!-- <h1>{% block title %}Analytics{% endblock %}</h1> -->
+{% endblock %}
+
+{% block content %}
+<div class="accordion mt-5" id="accordionExample">
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="occupancy-heading">
+      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#occupancy-body" aria-expanded="true" aria-controls="occupancy-body">
+        Bed occupancy
+      </button>
+    </h2>
+    <div id="occupancy-body" class="accordion-collapse collapse show" aria-labelledby="occupancy-heading" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        <div class="row align-items-center justify-content-center">
+          <div class="col-lg-6">
+            <div id="beds" style="height: 450px; width: 100%;"></div>
+          </div>
+          <div class="col-lg-6">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="card p-3">
+                  <div class="card-body">
+                    <div class="card-title">Total beds</div>
+                    <p class="h3 text-center"> {{data['total_beds']}} </p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="card p-3">
+                  <div class="card-body">
+                    <div class="card-title">Beds occupied</div>
+                    <p class="h3 text-center">{{data['occupied']}} </p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="card p-3">
+                  <div class="card-body">
+                    <div class="card-title">Admits</div>
+                    <p class="h3 text-center">{{data['admits']}} </p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="card p-3">
+                  <div class="card-body">
+                    <div class="card-title">Discharges</div>
+                    <p class="h3 text-center">{{data['discharges']}} </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-5 align-items-center">
+            <div class="col-lg-6">
+                <div id="admits" style="height: 450px; width: 100%;"></div>
+            </div>
+            <div class="col-lg-6">
+                <div id="discharges" style="height: 450px; width: 100%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="appointments-heading">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#appointments-body" aria-expanded="false" aria-controls="appointments-body">
+        Appointments
+      </button>
+    </h2>
+    <div id="appointments-body" class="accordion-collapse collapse" aria-labelledby="appointments-heading" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        <div id="appos" style="height: 450px; width: 100%;"></div>
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="top-areas-heading">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#top-areas-body" aria-expanded="false" aria-controls="top-areas-body">
+        Top biological areas
+      </button>
+    </h2>
+    <div id="top-areas-body" class="accordion-collapse collapse" aria-labelledby="top-areas-heading" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        <div class="row align-items-center justify-content-center">
+          <div class="col-lg-6">
+           <div id="top_areas" style="height: 350px; width: 100%;"></div>
+          </div>
+          <div class="col-lg-4 col-md-6">
+            <ol class="list-group list-group-numbered p-lg-3">
+              {% for top_area in data['top_areas'] %}
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                  <div class="ms-2 me-auto">
+                    <div class="fw-bold">{{top_area['label']}}</div>
+                  </div>
+                  <span class="badge bg-primary rounded-pill">{{top_area['y']}}%</span>
+                </li>
+              {% endfor %}
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="top-docs-heading">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#top-docs-body" aria-expanded="false" aria-controls="top-docs-body">
+        Top doctors
+      </button>
+    </h2>
+    <div id="top-docs-body" class="accordion-collapse collapse" aria-labelledby="top-docs-heading" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        <div class="row align-items-center justify-content-center">
+          <div class="col-lg-6">
+           <div id="top_docs" style="height: 350px; width: 100%;"></div>
+          </div>
+          <div class="col-lg-4 col-md-6">
+            <ol class="list-group list-group-numbered p-lg-3">
+              {% for top_doc in data['top_docs'] %}
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                  <div class="ms-2 me-auto">
+                    <div class="fw-bold">{{top_doc['label']}}</div>
+                  </div>
+                  <span class="badge bg-primary rounded-pill">{{top_doc['y']}}%</span>
+                </li>
+              {% endfor %}
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="top-meds-heading">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#top-meds-body" aria-expanded="false" aria-controls="top-meds-body">
+        Top medicines
+      </button>
+    </h2>
+    <div id="top-meds-body" class="accordion-collapse collapse" aria-labelledby="top-meds-heading" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        <div class="row align-items-center justify-content-center">
+          <div class="col-lg-6">
+           <div id="top_meds" style="height: 350px; width: 100%;"></div>
+          </div>
+          <div class="col-lg-4 col-md-6">
+            <ol class="list-group list-group-numbered p-lg-3">
+              {% for top_med in data['top_meds'] %}
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                  <div class="ms-2 me-auto">
+                    <div class="fw-bold">{{top_med['label']}}</div>
+                  </div>
+                  <span class="badge bg-primary rounded-pill">{{top_med['y']}}%</span>
+                </li>
+              {% endfor %}
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="top-tests-heading">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#top-tests-body" aria-expanded="false" aria-controls="top-tests-body">
+        Top tests
+      </button>
+    </h2>
+    <div id="top-tests-body" class="accordion-collapse collapse" aria-labelledby="top-tests-heading" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        <div class="row align-items-center justify-content-center">
+          <div class="col-lg-6">
+           <div id="top_tests" style="height: 350px; width: 100%;"></div>
+          </div>
+          <div class="col-lg-4 col-md-6">
+            <ol class="list-group list-group-numbered p-lg-3">
+              {% for top_test in data['top_tests'] %}
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                  <div class="ms-2 me-auto">
+                    <div class="fw-bold">{{top_test['label']}}</div>
+                  </div>
+                  <span class="badge bg-primary rounded-pill">{{top_test['y']}}%</span>
+                </li>
+              {% endfor %}
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="top-diseases-heading">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#top-diseases-body" aria-expanded="false" aria-controls="top-diseases-body">
+        Top diseases
+      </button>
+    </h2>
+    <div id="top-diseases-body" class="accordion-collapse collapse" aria-labelledby="top-diseases-heading" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        <div class="row align-items-center justify-content-center">
+          <div class="col-lg-6">
+           <div id="top_diseases" style="height: 350px; width: 100%;"></div>
+          </div>
+          <div class="col-lg-4 col-md-6">
+            <ol class="list-group list-group-numbered p-lg-3">
+              {% for top_disease in data['top_diseases'] %}
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                  <div class="ms-2 me-auto">
+                    <div class="fw-bold">{{top_disease['label']}}</div>
+                  </div>
+                  <span class="badge bg-primary rounded-pill">{{top_disease['y']}}%</span>
+                </li>
+              {% endfor %}
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+    <!-- <div class="col-lg-12">
+        <div class="card mt-5 mx-5">
+            <div class="card-header">
+                Bed Occupancy
+            </div>
+            <div class="card-body">
+                <div class="row align-items-center justify-content-center">
+                  <div class="col-lg-6">
+                    <div id="beds" style="height: 450px; width: 100%;"></div>
+                  </div>
+                  <div class="col-lg-6">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="card p-3">
+                          <div class="card-body">
+                            <div class="card-title">Total beds</div>
+                            <p class="h3 text-center"> {{data['total_beds']}} </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="card p-3">
+                          <div class="card-body">
+                            <div class="card-title">Beds occupied</div>
+                            <p class="h3 text-center">{{data['occupied']}} </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="card p-3">
+                          <div class="card-body">
+                            <div class="card-title">Admits</div>
+                            <p class="h3 text-center">{{data['admits']}} </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="card p-3">
+                          <div class="card-body">
+                            <div class="card-title">Discharges</div>
+                            <p class="h3 text-center">{{data['discharges']}} </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card mt-5 mx-5">
+          <div class="card-header">
+              New admits
+          </div>
+          <div class="card-body">
+              <div id="admits" style="height: 450px; width: 100%;"></div>
+          </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card mt-5 mx-5">
+          <div class="card-header">
+              Discharges
+          </div>
+          <div class="card-body">
+              <div id="discharges" style="height: 450px; width: 100%;"></div>
+          </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="card mt-5 mx-5">
+          <div class="card-header">
+              Appointments
+          </div>
+          <div class="card-body">
+              <div id="appos" style="height: 450px; width: 100%;"></div>
+          </div>
+      </div>
+    </div> -->
+    
+    <!-- <div class="col-lg-6">
+      <div class="card mt-5 mx-5">
+          <div class="card-header">
+              Top biological areas
+          </div>
+          <div class="card-body">
+              <div id="top_areas" style="height: 350px; width: 100%;"></div>
+          </div>
+      </div>
+    </div> -->
+    <!-- <div class="col-lg-6">
+      <div class="card mt-5 mx-5">
+          <div class="card-header">
+              Top doctors
+          </div>
+          <div class="card-body">
+              <div id="top_docs" style="height: 350px; width: 100%;"></div>
+          </div>
+      </div>
+    </div> -->
+    <!-- <div class="col-lg-6">
+      <div class="card mt-5 mx-5">
+          <div class="card-header">
+              Top tests
+          </div>
+          <div class="card-body">
+              <div id="top_tests" style="height: 350px; width: 100%;"></div>
+          </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card mt-5 mx-5">
+          <div class="card-header">
+              Top diseases
+          </div>
+          <div class="card-body">
+              <div id="top_diseases" style="height: 350px; width: 100%;"></div>
+          </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card mt-5 mx-5">
+          <div class="card-header">
+              Top medicines
+          </div>
+          <div class="card-body">
+              <div id="top_meds" style="height: 350px; width: 100%;"></div>
+          </div>
+      </div>
+    </div> -->
+
+</div>
+<script type="text/javascript" src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.stock.min.js"></script>
+<script type="text/javascript">
+var occupied = [];
+var admitted = [];
+var discharged = [];
+var appos = [];
+var beds = [];
+var top_docs = [], top_areas = [], top_diseases = [], top_meds = [], top_tests = [];
+var occupancy, admits, discharges, areas, docs, diseases, meds, tests;
+window.onload = function () {
+  occupancy = new CanvasJS.StockChart("beds",{
+    zoomEnabled: true,
+    title: {
+        text: "Occupancy"
+      },
+    charts: [{      
+      data: [{        
+        type: "line", //Change it to "spline", "area", "column"
+        dataPoints : occupied,
+        showInLegend: true, 
+        name: "occupied",
+        legendText: "Beds Occupied",
+      }, {        
+        type: "line", //Change it to "spline", "area", "column"
+        dataPoints : beds,
+        showInLegend: false, 
+        name: "beds",
+        legendText: "Total beds",
+      }]
+    }],
+    navigator: {
+      slider: {
+        minimum: new Date(2021, 04, 01),
+        maximum: new Date(2021, 04, 25)
+      }
+    }
+  });
+  
+  admits = new CanvasJS.StockChart("admits",{
+    zoomEnabled: true,
+    title: {
+        text: "New Admits"
+      },
+    charts: [{
+      data: [{        
+        type: "line", //Change it to "spline", "area", "column"
+        dataPoints : admitted,
+        showInLegend: false, 
+        name: "admitted",
+        legendText: "New admissions",
+      }]
+    }],
+    navigator: {
+      slider: {
+        minimum: new Date(2021, 04, 01),
+        maximum: new Date(2021, 04, 25)
+      }
+    }
+  });
+
+  discharges = new CanvasJS.StockChart("discharges",{
+    zoomEnabled: true,
+    title: {
+        text: "Discharges"
+      },
+    charts: [{
+      data: [{        
+        type: "line", //Change it to "spline", "area", "column"
+        dataPoints : discharged,
+        showInLegend: false, 
+        name: "discharged",
+        legendText: "Discharges",
+      }]
+    }],
+    navigator: {
+      slider: {
+        minimum: new Date(2021, 04, 01),
+        maximum: new Date(2021, 04, 25)
+      }
+    }
+  });
+
+  meds = new CanvasJS.Chart("top_meds", {
+            animationEnabled: true,
+            title: {
+                text: "Top Medicines"
+            },
+            data: [{
+                type: "doughnut",
+                startAngle: 60,
+                yValueFormatString: "##0.00\"%\"",
+                indexLabel: "{label} {y}",
+                dataPoints: top_meds
+            }]
+        });
+  
+  docs = new CanvasJS.Chart("top_docs", {
+            animationEnabled: true,
+            title: {
+                text: "Top Doctors"
+            },
+            data: [{
+                type: "doughnut",
+                startAngle: 60,
+                yValueFormatString: "##0.00\"%\"",
+                indexLabel: "{label} {y}",
+                dataPoints: top_docs
+            }]
+        });
+  areas = new CanvasJS.Chart("top_areas", {
+            animationEnabled: true,
+            title: {
+                text: "Top Biological Areas"
+            },
+            data: [{
+                type: "doughnut",
+                startAngle: 60,
+                yValueFormatString: "##0.00\"%\"",
+                indexLabel: "{label} {y}",
+                dataPoints: top_areas
+            }]
+        });
+  tests = new CanvasJS.Chart("top_tests", {
+            animationEnabled: true,
+            title: {
+                text: "Top Tests"
+            },
+            data: [{
+                type: "doughnut",
+                startAngle: 60,
+                yValueFormatString: "##0.00\"%\"",
+                indexLabel: "{label} {y}",
+                dataPoints: top_tests
+            }]
+        });
+  diseases = new CanvasJS.Chart("top_diseases", {
+            animationEnabled: true,
+            title: {
+                text: "Top Diseases"
+            },
+            data: [{
+                type: "doughnut",
+                startAngle: 60,
+                yValueFormatString: "##0.00\"%\"",
+                indexLabel: "{label} {y}",
+                dataPoints: top_diseases
+            }]
+        });
+  $.getJSON("http://127.0.0.1:5000/analytics-data", function(data) {  
+    console.log("hello I am receving analytics data")
+    console.log("data")
+    for(var i = 0; i < data.daywise.length; i++){
+      occupied.push({x: new Date(data.daywise[i].date), y: Number(data.daywise[i].occupied)});
+      admitted.push({x: new Date(data.daywise[i].date), y: Number(data.daywise[i].admissions)});
+      discharged.push({x: new Date(data.daywise[i].date), y: Number(data.daywise[i].discharges)});
+      appos.push({x: new Date(data.daywise[i].date), y: Number(data.daywise[i].appos)});
+      beds.push({x: new Date(data.daywise[i].date), y: Number(data.total_beds)});
+    }
+    for(var i = 0; i < data.top_areas.length; i++){
+      top_areas.push({y: data.top_areas[i].y, label: data.top_areas[i].label});
+    }
+    for(var i = 0; i < data.top_docs.length; i++){
+      top_docs.push({y: data.top_docs[i].y, label: data.top_docs[i].label});
+    }
+    for(var i = 0; i < data.top_diseases.length; i++){
+      top_diseases.push({y: data.top_diseases[i].y, label: data.top_diseases[i].label});
+    }
+    for(var i = 0; i < data.top_meds.length; i++){
+      top_meds.push({y: data.top_meds[i].y, label: data.top_meds[i].label});
+    }
+    for(var i = 0; i < data.top_tests.length; i++){
+      top_tests.push({y: data.top_tests[i].y, label: data.top_tests[i].label});
+    }
+    occupancy.render();
+    admits.render();
+    discharges.render();
+    // appointments.render();
+    console.log(top_meds)
+    areas.render();
+    docs.render();
+    diseases.render();
+    meds.render();
+    tests.render();
+  });
+}
+$('#occupancy-body').on("shown.bs.collapse",function(){
+  occupancy.render();
+  admits.render();
+  discharges.render();  
+  // $('#collapseTwo').off(); // to remove the binded event after the initial rendering if needed
+});
+$('#top-areas-body').on("shown.bs.collapse",function(){
+  areas.render();  
+});
+$('#top-docs-body').on("shown.bs.collapse",function(){
+  docs.render();  
+});
+$('#top-meds-body').on("shown.bs.collapse",function(){
+  meds.render();  
+});
+$('#top-diseases-body').on("shown.bs.collapse",function(){
+  diseases.render();  
+});
+$('#top-tests-body').on("shown.bs.collapse",function(){
+  tests.render();  
+});
+$('#appointments-body').on("shown.bs.collapse",function(){
+  var appointments = new CanvasJS.StockChart("appos",{
+    zoomEnabled: true,
+    title: {
+        text: "Appointments"
+      },
+    charts: [{
+      data: [{        
+        type: "line", //Change it to "spline", "area", "column"
+        dataPoints : appos,
+        showInLegend: true, 
+        name: "appos",
+        legendText: "Appointments/OPD",
+      }]
+    }],
+    navigator: {
+      slider: {
+        minimum: new Date(2021, 04, 01),
+        maximum: new Date(2021, 04, 25)
+      }
+    }
+  });
+  appointments.render();
+});
+</script>
+{% endblock %}

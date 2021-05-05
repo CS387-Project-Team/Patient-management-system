@@ -26,9 +26,15 @@ def register():
                 error = 'User {} is already registered.'.format(username)
         hashed = application.bcrypt.generate_password_hash(password)
         if error is None:
+            sql = 'select 1+max(id) as id from person'
+            db.execute(sql)
+            row = db.fetchone()
+            new_id = row['id']
+            sql = '''INSERT INTO person (id, name, address, pincode, contact, gender, email_id, dob, qualification, username, password)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    '''
             db.execute(
-                "INSERT INTO person (username, password) VALUES (%s, %s)",
-                (username, hashed.decode('UTF-8'),)
+                sql, (new_id, request.form.get('name'), request.form.get('address'), request.form.get('pincode'), request.form.get('contact'), request.form.get('gender'), request.form.get('email_id'), request.form.get('dob'), request.form.get('qualification'), username, hashed.decode('UTF-8'),)
             )
             conn.commit()
             return redirect(url_for('auth.login'))

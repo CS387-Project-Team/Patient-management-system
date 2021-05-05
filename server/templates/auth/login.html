@@ -1,15 +1,35 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Log In{% endblock %}</h1>
+  <!-- <h1>{% block title %}Log In{% endblock %}</h1> -->
 {% endblock %}
 
 {% block content %}
-  <form method="post">
-    <label for="username">Username</label>
-    <input name="username" id="username" required>
-    <label for="password">Password</label>
-    <input type="password" name="password" id="password" required>
-    <input type="submit" value="Log In">
-  </form>
+  <div class="row justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header p-sm-3" style="background-color: lightgreen;">
+          Log In
+        </div>
+        <div class="card-body">
+          <form method="post">
+            <div class="mb-3 row">
+              <label for="username" class="col-sm-5 col-form-label">Username</label>
+              <div class="col-sm-7">
+                <input type="text" class="form-control bg-light" name="username" id="username" required>
+              </div>
+            </div>
+            <div class="mb-3 row">
+              <label for="password" class="col-sm-5 col-form-label">Password</label>
+              <div class="col-sm-7">
+                <input class="form-control bg-light" type="password" name="password" id="password" required>
+              </div>
+            </div>
+            <input type="submit" class="btn btn-outline-secondary" value="Log In">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
 {% endblock %}

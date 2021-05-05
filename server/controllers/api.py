@@ -2,7 +2,7 @@ import flask
 import application
 from flask import request, make_response, render_template, url_for, redirect
 from controllers.auth import login_required
-import controllers.dashboard, controllers.appointments
+import controllers.dashboard, controllers.appointments, controllers.analytics
 import controllers.generic_info
 
 @login_required
@@ -12,6 +12,14 @@ def hello():
 @login_required
 def dashboard():
     return controllers.dashboard.get_dashboard()
+
+@login_required
+def profile():
+    if request.method == 'GET':
+        return controllers.dashboard.get_profile()
+    else:
+        data = request.form
+        return controllers.dashboard.update_profile(data)
 
 @login_required
 def get_appointments():
@@ -66,3 +74,23 @@ def cancel_appointment():
 
 def view_info():
     return controllers.generic_info.get_info()
+
+def get_analytics():
+    return controllers.analytics.get_analytics()
+
+def show_analytics():
+    data = controllers.analytics.get_analytics(json_=False)
+    return render_template('analytics/daywise.html', data=data)
+
+def get_disease_analytics(disease_id):
+    return controllers.analytics.get_disease_analytics(disease_id)
+
+def show_disease_analytics(disease_id):
+    # disease_id = request.args.get('disease_id', None)
+    # if disease_id is None:
+    #     return render_template('analytics/disease-wise.html')
+    return controllers.analytics.show_disease_analytics(disease_id)
+
+def post_disease_for_analytics():
+    disease_name = request.form.get('disease')
+    return controllers.analytics.post_disease_for_analytics(disease_name)
