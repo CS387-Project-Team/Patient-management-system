@@ -13,28 +13,18 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form method="post" action="{{ url_for('cancel_appointment') }}">
+          <form method="post" action="{{ url_for('cancel_test') }}">
             <div class="mb-3">
               <div class="input-group mb-3">
-                <span class="input-group-text">Doctor</span>
-                <input type="text" readonly class="form-control bg-light" id="doctor_name" name="doctor_name">
+                <span class="input-group-text">Test name</span>
+                <input type="text" readonly class="form-control bg-light" id="test_name" name="test_name">
               </div>
-              <input type="hidden" class="form-control" id="app_id" name="app_id">
-              <input type="hidden" class="form-control" id="patient_id" name="patient_id">
+              <input type="hidden" class="form-control" id="test_id" name="test_id">
+              <input type="hidden" class="form-control" id="pat_id" name="pat_id">
               <div class="input-group">
                 <span class="input-group-text">Date</span>
                 <input type="date" readonly class="form-control bg-light" id="date" name="date">
-                <span class="input-group-text">Time</span>
-                <input type="text" readonly class="form-control bg-light" id="time" name="time">
               </div>
-            </div>
-            <div class="mb-3">
-              <div class="input-group mb-3">
-                <span class="input-group-text">Appo Type</span>
-                <input type="text" readonly class="form-control bg-light" id="type" name="type" value="OPD">
-              </div>
-              <label for="complaint" class="col-form-label">Complaint:</label>
-              <textarea readonly class="form-control bg-light" id="complaint" name="complaint"></textarea>
             </div>
             <button class="btn btn-outline-secondary" type="submit">Confirm</button>
           </form>
@@ -77,7 +67,7 @@
                             <td style="white-space: nowrap; width: 1%;">
                                 <div class="btn-group float-end" role="group" aria-label="actions">
                                     <button type="button" class="btn"><i class="bi bi-card-list"></i></button>
-                                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-name="{{ test_name }}" data-bs-date="{{ date }}"><i class="bi bi-trash"></i></button>
+                                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-name="{{ test_name }}" data-bs-date="{{ date }}" data-bs-id="{{ test['test_id'] }}" data-bs-pid="{{ test['patient_id'] }}"><i class="bi bi-trash"></i></button>
                                     <button type="button" class="btn"><i class="bi bi-arrow-right-square"></i></button>
                                 </div>
                             </td>
@@ -96,29 +86,23 @@
     // Extract info from data-bs-* attributes
     var test_name = button.getAttribute('data-bs-name')
     var date = button.getAttribute('data-bs-date')
-
-    //??????????????
+    var test_id=button.getAttribute('data-bs-id')
+    var pat_id=button.getAttribute('data-bs-pid')
 
     // If necessary, you could initiate an AJAX request here
     // and then do the updating in a callback.
     //
     // Update the modal's content.
     var modalTitle = exampleModal.querySelector('.modal-title')
-    var modal_body_doc_name = exampleModal.querySelector('#doctor_name')
-    var modal_body_app_id = exampleModal.querySelector('#app_id')
-    var modal_body_patient_id = exampleModal.querySelector('#patient_id')
-    var modal_body_time = exampleModal.querySelector('#time')
+    var modal_body_test_name = exampleModal.querySelector('#test_name')
+    var modal_body_test_id = exampleModal.querySelector('#test_id')
+    var modal_body_pat_id = exampleModal.querySelector('#pat_id')
     var modal_body_date = exampleModal.querySelector('#date')
-    var modal_body_type = exampleModal.querySelector('#type')
-    var modal_body_complaint = exampleModal.querySelector('#complaint')
 
-    modal_body_doc_name.value = doc_name
-    modal_body_app_id.value = app_id
-    modal_body_patient_id.value = patient_id
+    modal_body_test_name.value = test_name
+    modal_body_test_id.value = test_id
+    modal_body_pat_id.value = pat_id
     modal_body_date.value = date
-    modal_body_time.value = time
-    modal_body_type.value = appo_type
-    modal_body_complaint.innerHTML = complaint
 
   })
 </script>

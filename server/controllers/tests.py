@@ -13,7 +13,7 @@ def get_tests():
                 (select patient_id
                 from patient
                 where patient.id = %s)
-            select name as test, result_file , comments, dat
+            select test_id, name as test, result_file , comments, dat, patient_id
             from (takes natural join pt natural join test) as foo'''
     db.execute(sql, (g.user.get('id'),))
     rows = db.fetchall()
@@ -79,31 +79,22 @@ def book_test(request):
     return redirect(url_for('get_tests'))
 
 
-def cancel_appointment(request):
-    app_id = int(request.get('app_id'))
-    patient_id = int(request.get('patient_id'))
+def cancel_test(request):
+    test_id = int(request.get('test_id'))
+    date=request.get('date')
+    patient_id=int(request.get('pat_id'))
     conn = application.connect()
     db = conn.cursor(cursor_factory=application.DictCursor)
     try:
         
-        sql = '''delete from meet
-                where app_id = %s returning *;'''
-        db.execute(sql, (app_id,))
-        deleted_meet = db.fetchone() 
-        if deleted_meet is None:
+        sql = '''DELETE from takes where
+                    test_id=%s and
+                    dat=%s and 
+                    patient_id = %s;'''
+        db.execute(sql, (test_id,date,patient_id))
+        # deleted_test = db.fetchone() 
+        if db.rowcount==0:
             raise Exception('no appointment deleted')
-        # assert datetime.datetime.strptime(deleted_meet['dat'].isoformat() + ' ' + deleted_meet['start_time'].isoformat(), '%Y-%m-%d %H:%M:%S') > datetime.datetime.now(), 'attempting to cancel an appointment which has taken place'
-        sql = '''delete from appointment
-                where app_id = %s;'''
-        db.execute(sql, (app_id,))
-        sql = '''select * from meet
-                where patient_id = %s;'''
-        db.execute(sql, (patient_id,))
-        row = db.fetchone()
-        if row is None:
-            sql = '''delete from patient
-                    where patient_id = %s;'''
-            db.execute(sql, (patient_id,))
         conn.commit()
         conn.close()
     except Exception as e:
@@ -112,4 +103,6 @@ def cancel_appointment(request):
         conn.close()
         return jsonify({'status':'Failed to cancel appointment', 'code':401})    
     flash('Apoointment cancelled successfully!', 'danger')
-    return redirect(url_for('get_appointments'))
+    return redirect(url_for('get_tests'))
+
+    
