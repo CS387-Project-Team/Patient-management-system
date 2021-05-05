@@ -22,6 +22,29 @@ def profile():
         return controllers.dashboard.update_profile(data)
 
 @login_required
+def view_history():
+    pass
+
+@login_required
+def add_history():
+    if request.method == 'GET':
+        return controllers.dashboard.get_history_for_edit()
+    else:
+        data = request.form
+        print(data)
+        return controllers.dashboard.add_history(data)
+
+@login_required
+def delete_history():
+    data = request.form
+    return controllers.dashboard.delete_history(data)
+
+@login_required
+def update_history():
+    data = request.form
+    return controllers.dashboard.update_history(data)
+
+@login_required
 def get_appointments():
     return controllers.appointments.get_appointments()
 

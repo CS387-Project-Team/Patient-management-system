@@ -1,0 +1,278 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <!-- <h1>{% block title %}Appointments{% endblock %}</h1> -->
+{% endblock %}
+
+{% block content %}
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Confirm delete</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form method="post" action="{{ url_for('delete_history') }}">
+                <input type="hidden" name="old_disease_name" id="old_disease_name">
+                <input type="hidden" name="old_detected" id="old_detected">
+                <input type="hidden" name="old_link" id="old_link">
+                <div class="mb-3">
+                    <div class="input-group mb-3">
+                    <span class="input-group-text">Disease</span>
+                    <input type="text" readonly class="form-control bg-light" id="disease_name" name="disease_name">
+                    </div>
+                    <div class="input-group">
+                    <span class="input-group-text">Date</span>
+                    <input type="date" readonly class="form-control bg-light" id="detected" name="detected">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="input-group mb-3">
+                    <span class="input-group-text">Previous History Link</span>
+                    <input type="text" readonly class="form-control bg-light" id="link" name="link" value="OPD">
+                    </div>
+                </div>
+                <button class="btn btn-outline-secondary" type="submit">Confirm</button>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="editModalLabel">Update entry</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form method="post" action="{{ url_for('update_history') }}">
+                <input type="hidden" name="old_disease_name" id="old_disease_name">
+                <input type="hidden" name="old_detected" id="old_detected">
+                <input type="hidden" name="old_link" id="old_link">
+                <div class="mb-3">
+                    <div class="input-group mb-3">
+                    <span class="input-group-text">Disease</span>
+                    <input class="form-control form-select" id="search_input" list="disease" placeholder="Search for disease" title="Type in a name" name="disease_name">
+                    <datalist class="custom-select" id="disease">
+                        {% for disease in data['diseases'] %}
+                            <option value="{{ disease['disease_name'] }}">
+                        {% endfor %}
+                    </datalist>
+                    <button type="button" class="btn btn-outline-secondary disabled"><i class="bi bi-search"></i></button>
+                    <!-- <input type="text" class="form-control bg-light" id="disease_name" name="disease_name"> -->
+                    </div>
+                    <div class="input-group">
+                    <span class="input-group-text">Date</span>
+                    <input type="date" class="form-control bg-light" id="detected" name="detected">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="input-group mb-3">
+                    <span class="input-group-text">Previous History Link</span>
+                    <input type="text" class="form-control bg-light" id="link" name="link" value="OPD">
+                    </div>
+                </div>
+                <button class="btn btn-outline-secondary" type="submit">Confirm</button>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-2">
+    <!-- appointments -->
+    <div class="table-responsive app p-4">
+        <table class="table table-light table-hover">
+            <tr>
+                <th>Disease</th>
+                <th>Detected</th> 
+                <th class="d-none d-md-table-cell">Link</th>
+                <th style="white-space: nowrap; width: 1%;"><span class="float-end">Actions</span></th>
+            </tr>
+            {% for hist in data['history'] %}
+                {% set disease_name = hist['name'] %}
+                {% set detected = hist['detected'] %}
+                {% set link = hist['link'] %}
+                <tr>
+                    <td>{{ hist['name'] }}</td>
+                    <td>{{ hist['detected'] }}</td>
+                    {% if hist['link'] %}
+                        <td class="d-none d-md-table-cell">{{ hist['link'] }}</td>
+                    {% else %}
+                        <td class="d-none d-md-table-cell"> None </td>
+                    {% endif %}
+
+                    <td style="white-space: nowrap; width: 1%;">
+                        <div class="btn-group btn-group-sm float-end" role="group" aria-label="actions">
+                            <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#editModal" data-bs-name="{{ disease_name }}" data-bs-detected="{{ detected }}" data-bs-link="{{ link }}"><i class="bi bi-pen"></i></button>
+                            <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-name="{{ disease_name }}" data-bs-detected="{{ detected }}" data-bs-link="{{ link }}"><i class="bi bi-trash"></i></button>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+<button class="add_form_field btn btn-secondary">Add New Entry &nbsp; 
+    <span style="font-size:16px; font-weight:bold;">+ </span>
+</button>
+
+<!-- <div class="input-group">
+    <input class="form-control form-select" id="search_input" list="disease" placeholder="Search for disease" title="Type in a name" name="disease">
+    <datalist class="custom-select" id="disease">
+        {% for disease in data['diseases'] %}
+            <option value="{{ disease['disease_name'] }}">
+        {% endfor %}
+    </datalist>
+    <button type="submit" class="btn btn-outline-secondary"><i class="bi bi-search"></i></button>
+</div> -->
+
+<form method="post">
+    <div id="repeat_form">
+        <div class="row">
+            <div class="col-lg-3 mt-sm-2">
+                <div class="input-group">
+                    <input class="form-control form-select" id="search_input" list="disease" placeholder="Search for disease" title="Type in a name" name="disease[]">
+                    <datalist class="custom-select" id="disease">
+                        {% for disease in data['diseases'] %}
+                            <option value="{{ disease['disease_name'] }}">
+                        {% endfor %}
+                    </datalist>
+                    <button type="button" class="btn btn-outline-secondary disabled"><i class="bi bi-search"></i></button>
+                </div>
+            </div>
+            <div class="col-lg-3 mt-sm-2">
+                <div class="input-group" method="post" action="{{ url_for('update_date_free_slots') }}">
+                    <input class="form-select" type="date" name="detected[]" id="date" title="Select earliest date of detection" required>
+                </div>
+            </div>
+            <div class="col-lg-3 mt-sm-2">
+                <div class="input-group">
+                    <input class="form-control" type="text" id="hist_link" placeholder="Previous history link ..." name="hist_link[]">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="btn btn-primary mt-sm-2" type="submit">Add</button>
+</form>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+  $(document).ready(function() {
+    var max_fields = 10;
+    var wrapper = $("#repeat_form");
+    var add_button = $(".add_form_field");
+
+    var x = 1;
+    $(add_button).click(function(e) {
+        e.preventDefault();
+        if (x < max_fields) {
+            x++;
+            $(wrapper).append(`
+                <div class="row">
+                    <div class="col-lg-3 mt-sm-2">
+                        <div class="input-group">
+                            <input class="form-control form-select" id="search_input" list="disease" placeholder="Search for disease" title="Type in a name" name="disease[]">
+                            <datalist class="custom-select" id="disease">
+                                {% for disease in data['diseases'] %}
+                                    <option value="{{ disease['disease_name'] }}">
+                                {% endfor %}
+                            </datalist>
+                            <button type="button" class="btn btn-outline-secondary disabled"><i class="bi bi-search"></i></button>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 mt-sm-2">
+                        <div class="input-group" method="post" action="{{ url_for('update_date_free_slots') }}">
+                            <input class="form-select" type="date" name="detected[]" title="Select earliest date of detection" id="date" required>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 mt-sm-2">
+                        <div class="input-group">
+                            <input class="form-control" type="text" id="hist_link" placeholder="Previous history link ..." name="hist_link[]">
+                        </div>
+                    </div>
+                    <div class="col mt-sm-2">
+                        <a href="#" class="delete"><button class="btn btn-outline-primary"><i class="bi bi-trash"></i></button></a>
+                    </div>
+                </div>
+                `);
+        } else {
+            alert('You Reached the limits')
+        }
+    });
+
+    $(wrapper).on("click", ".delete", function(e) {
+        e.preventDefault();
+        $(this).parent('div').parent('div').remove();
+        x--;
+    })
+}); 
+var exampleModal = document.getElementById('exampleModal')
+exampleModal.addEventListener('show.bs.modal', function (event) {
+// Button that triggered the modal
+var button = event.relatedTarget
+// Extract info from data-bs-* attributes
+var disease_name = button.getAttribute('data-bs-name')
+var detected = button.getAttribute('data-bs-detected')
+var link = button.getAttribute('data-bs-link')
+console.log(disease_name, detected, link)
+// If necessary, you could initiate an AJAX request here
+// and then do the updating in a callback.
+//
+// Update the modal's content.
+var modalTitle = exampleModal.querySelector('.modal-title')
+var modal_body_disease_name = exampleModal.querySelector('#disease_name')
+var modal_body_old_disease_name = exampleModal.querySelector('#old_disease_name')
+var modal_body_detected = exampleModal.querySelector('#detected')
+var modal_body_old_detected = exampleModal.querySelector('#old_detected')
+var modal_body_link = exampleModal.querySelector('#link')
+var modal_body_old_link = exampleModal.querySelector('#old_link')
+
+modal_body_disease_name.value = disease_name
+modal_body_detected.value = detected
+modal_body_link.value = link
+modal_body_old_disease_name.value = disease_name
+modal_body_old_detected.value = detected
+modal_body_old_link.value = link
+})
+var editModal = document.getElementById('editModal')
+editModal.addEventListener('show.bs.modal', function (event) {
+// Button that triggered the modal
+var button = event.relatedTarget
+// Extract info from data-bs-* attributes
+var disease_name = button.getAttribute('data-bs-name')
+var detected = button.getAttribute('data-bs-detected')
+var link = button.getAttribute('data-bs-link')
+console.log(disease_name, detected, link)
+// If necessary, you could initiate an AJAX request here
+// and then do the updating in a callback.
+//
+// Update the modal's content.
+var modalTitle = editModal.querySelector('.modal-title')
+var modal_body_disease_name = editModal.querySelector('#search_input')
+var modal_body_old_disease_name = editModal.querySelector('#old_disease_name')
+var modal_body_detected = editModal.querySelector('#detected')
+var modal_body_old_detected = editModal.querySelector('#old_detected')
+var modal_body_link = editModal.querySelector('#link')
+var modal_body_old_link = editModal.querySelector('#old_link')
+
+modal_body_disease_name.value = disease_name
+modal_body_detected.value = detected
+modal_body_link.value = link
+modal_body_old_disease_name.value = disease_name
+modal_body_old_detected.value = detected
+modal_body_old_link.value = link
+}) 
+</script>
+
+{% endblock %}

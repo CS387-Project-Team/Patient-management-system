@@ -4,6 +4,10 @@ import application
 def routes(app):
     app.add_url_rule('/hello', view_func=api.hello)
     app.add_url_rule('/dashboard', view_func=api.dashboard)
+    app.add_url_rule('/view-history', view_func=api.view_history, methods=['GET'])
+    app.add_url_rule('/edit-history', view_func=api.add_history, methods=['GET', 'POST'])
+    app.add_url_rule('/delete-history', view_func=api.delete_history, methods=['POST'])
+    app.add_url_rule('/update-history', view_func=api.update_history, methods=['POST'])
     app.add_url_rule('/appointments', view_func=api.get_appointments)
     app.add_url_rule('/show-free-slots', view_func=api.available_slots, methods=['GET'])
     app.add_url_rule('/update-date-free-slots', view_func=api.update_date_free_slots, methods=['POST'])

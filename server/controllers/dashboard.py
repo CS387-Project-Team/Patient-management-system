@@ -210,3 +210,108 @@ def get_dashboard():
     print(data['expenses'])
     print(data['top_diseases'])
     return render_template('dashboard/dashboard.html', data=data) #jsonify(data)
+
+
+def get_history_for_edit():
+    data = {}
+    conn = application.connect()
+    db = conn.cursor(cursor_factory=application.DictCursor)
+    # history
+    sql = '''select disease_name as name, prev_hist_link as link, detected
+                from history natural join disease
+                where person_id = %s
+                order by detected desc
+        '''
+    id = g.user.get('id')
+    db.execute(sql, (id,))
+    rows = db.fetchall()
+    data['history'] = my_jsonify(rows)
+    sql = '''select disease_name from disease'''
+    db.execute(sql)
+    rows = db.fetchall()
+    data['diseases'] = my_jsonify(rows)
+    return render_template('history/edit_history.html', data=data)
+
+def add_history(data):
+    dis_det_link_data = zip(data.getlist('disease[]'), data.getlist('detected[]'), data.getlist('hist_link[]'))
+    select = '''select disease_id from disease
+                where disease_name = %s
+            '''
+    insert = '''insert into history(person_id, disease_id, prev_hist_link, detected)
+            values (%s, %s, %s, %s)
+        '''
+    conn = application.connect()
+    db = conn.cursor(cursor_factory=application.DictCursor)
+    for (disease,detected,link) in dis_det_link_data:
+        try:
+            row = db.execute(select, (disease,))
+            row = db.fetchone()
+            disease_id = row['disease_id']
+            db.execute(insert, (g.user.get('id'), disease_id, link, detected))
+            conn.commit()
+        except Exception as e:
+            print(e)
+            conn.rollback()
+    conn.close()
+    return redirect(url_for('add_history'))
+
+def delete_history(data):
+    print(data)
+    conn = application.connect()
+    disease_name = data['disease_name']
+    link = data['link']
+    detected = data['detected']
+    db = conn.cursor(cursor_factory=application.DictCursor)
+    try:
+        sql = '''select disease_id from disease
+                where disease_name = %s
+                '''
+        db.execute(sql, (disease_name,))
+        row = db.fetchone()
+        disease_id = row['disease_id']
+        sql = '''delete from history
+                where person_id = %s and disease_id = %s returning *;
+                '''
+        db.execute(sql, (g.user.get('id'), disease_id))
+        row = db.fetchone()
+        if row is None:
+            raise('no row was deleted')
+        conn.commit()
+    except Exception as e:
+        print(e)
+        conn.rollback()
+    conn.close()
+    return redirect(url_for('add_history'))
+
+def update_history(data):
+    print(data)
+    conn = application.connect()
+    disease_name = data['disease_name']
+    link = data['link']
+    detected = data['detected']
+    old_disease_name = data['old_disease_name']
+    db = conn.cursor(cursor_factory=application.DictCursor)
+    try:
+        sql = '''select disease_id from disease
+                where disease_name = %s
+                '''
+        db.execute(sql, (old_disease_name,))
+        row = db.fetchone()
+        old_disease_id = row['disease_id']
+        sql = '''select disease_id from disease
+                where disease_name = %s
+                '''
+        db.execute(sql, (disease_name,))
+        row = db.fetchone()
+        disease_id = row['disease_id']
+        sql = '''update history
+                set disease_id = %s, detected = %s, prev_hist_link = %s
+                where disease_id = %s and person_id = %s;
+                '''
+        db.execute(sql, (disease_id, detected, link, old_disease_id, g.user.get('id'),))
+        conn.commit()
+    except Exception as e:
+        print(e)
+        conn.rollback()
+    conn.close()
+    return redirect(url_for('add_history'))
