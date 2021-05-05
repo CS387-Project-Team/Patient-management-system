@@ -5,170 +5,170 @@
 {% endblock %}
 
 {% block content %}
-<div class="card mt-5">
-    <div class="card-header p-3 bg-secondary bg-light">
-        <h3> My Dashboard </h3>
+<div class="row justify-content-center">
+    <div class="col-lg-4 col-md-7">
+        <div class="card rounded-pill mt-5" style="background-color: lightskyblue;">
+            <h2 class="text-center p-5">My Dashboard</h2>
+        </div>
     </div>
-    <div class="card-body">
-        <div class="row mt-5">
-            <div class="col-sm-12 col-md-6 col-lg-6 mb-4">
-                <!-- appointments -->
-                <div class="card mx-4-md mx-4-lg">
-                    <div class="card-header">
-                        <h4>
-                            Appointments
-                            <span class="float-end dropdown">
-                                <button class="btn btn-border-secondary btn" type="button" id="appointments" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="bi bi-three-dots-vertical"></i>
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="appointments">
-                                    <li><a class="dropdown-item" href="{{ url_for('book_appointment') }}"> Book </a></li>
-                                    <li><a class="dropdown-item" href="{{ url_for('cancel_appointment') }}"> Cancel </a></li>
-                                    <li><a class="dropdown-item" href="{{ url_for('get_appointments') }}"> View all </a></li>
-                                </ul>
-                            </span>
-                        </h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive app">
-                            <table class="table table-light table-hover">
+</div>
+<!-- <h3 class="text-center mt-5">My Dashboard</h3> -->
+    
+    <div class="row mt-5 justify-content-center">
+        <div class="col-sm-12 col-md-6 col-lg-4 mb-4 me-lg-5">
+            <!-- appointments -->
+            <div class="shadow bg-body rounded-3 card mx-5-md mx-5-lg mt-md-5">
+                <div class="card-header">
+                        Appointments
+                        <span class="float-end dropdown">
+                            <button class="btn" type="button" id="appointments" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="appointments">
+                                <li><a class="dropdown-item" href="{{ url_for('book_appointment') }}"> Book </a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('cancel_appointment') }}"> Cancel </a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('get_appointments') }}"> View all </a></li>
+                            </ul>
+                        </span>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive app">
+                        <table class="table table-hover">
+                            <tr>
+                                <th>Doctor</th>
+                                <th>Date</th> 
+                                <th>Time</th>
+                                <th class="d-none d-lg-table-cell">Complaint</th>
+                            </tr>
+                            {% for appo in data['appointments'] %}
                                 <tr>
-                                    <th>Doctor</th>
-                                    <th>Date</th> 
-                                    <th>Time</th>
-                                    <th>Complaint</th>
+                                    <td>{{ appo['name'] }}</td>
+                                    <td><span class="badge bg-danger rounded-pill">{{ appo['dat'] }}</span></td>
+                                    <td><span class="badge bg-primary rounded-pill">{{ appo['start_time'] }}</span></td>
+                                    {% if appo['complaint'] %}
+                                        <td class="d-none d-lg-table-cell">{{ appo['complaint'] }}</td>
+                                    {% else %}
+                                        <td class="d-none d-lg-table-cell"> None </td>
+                                    {% endif %}
                                 </tr>
-                                {% for appo in data['appointments'] %}
-                                    <tr>
-                                        <td>{{ appo['name'] }}</td>
-                                        <td>{{ appo['dat'] }}</td>
-                                        <td>{{ appo['start_time'] }}</td>
-                                        {% if appo['complaint'] %}
-                                            <td>{{ appo['complaint'] }}</td>
-                                        {% else %}
-                                            <td> None </td>
-                                        {% endif %}
-                                    </tr>
-                                {% endfor %}
-                            </table>
-                        </div>
+                            {% endfor %}
+                        </table>
                     </div>
                 </div>
             </div>
-            <div class="col-sm-12 col-md-6 col-lg-6 mb-4">
-                <!-- bills -->
-                <div class="card mx-4-md mx-4-lg">
-                    <div class="card-header">
-                        <h4>
-                            Bills
-                            <span class="float-end dropdown">
-                                <button class="btn btn-border-secondary btn" type="button" id="bills" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="bi bi-three-dots-vertical"></i>
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="bills">
-                                    <li><a class="dropdown-item" href="{{ url_for('book_appointment') }}"> Pay </a></li>
-                                    <li><a class="dropdown-item" href="{{ url_for('cancel_appointment') }}"> View all </a></li>
-                                </ul>
-                            </span>
-                        </h4>
-                    </div>
-                    <div class="card-body">    
-                        <div class="table-responsive app">
-                            <table class="table table-light table-hover">
-                                <tr>
-                                    <th>Purpose</th>
-                                    <th>Charges</th> 
-                                    <th>Discount</th>
-                                    <th>Status</th>
-                                    <th>Date</th>
-                                </tr>
-                                {% for bill in data['bills'] %}
-                                    <tr>
-                                        <td>{{ bill['purpose'] }}</td>
-                                        <td>{{ bill['net_charges'] }}</td>
-                                        <td>{{ bill['discount'] }}</td>
-                                        <td>{{ bill['status'] }}</td>
-                                        <td>{{ bill['dat'] }}</td>
-                                    </tr>
-                                {% endfor %}
-                            </table>
-                        </div>
-                    </div>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-4 mb-4 ms-lg-5 mt-md-5">
+            <!-- bills -->
+            <div class="shadow bg-body rounded-3 card mx-4-md mx-4-lg">
+                <div class="card-header">
+
+                        Bills
+                        <span class="float-end dropdown">
+                            <button class="btn" type="button" id="bills" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="bills">
+                                <li><a class="dropdown-item" href="{{ url_for('book_appointment') }}"> Pay </a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('cancel_appointment') }}"> View all </a></li>
+                            </ul>
+                        </span>
+                    
                 </div>
-            </div>
-            <div class="col-sm-12 col-md-6 col-lg-6 mb-4">
-                <!-- tests -->
-                <div class="card mx-4-md mx-4-lg">
-                    <div class="card-header">
-                        <h4>
-                            Tests
-                            <span class="float-end dropdown">
-                                <button class="btn btn-border-secondary btn" type="button" id="tests" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="bi bi-three-dots-vertical"></i>
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="tests">
-                                    <li><a class="dropdown-item" href="{{ url_for('cancel_appointment') }}"> View all </a></li>
-                                </ul>
-                            </span>
-                        </h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive app">
-                            <table class="table table-light table-hover">
+                <div class="card-body">    
+                    <div class="table-responsive app">
+                        <table class="table table-hover">
+                            <tr>
+                                <th>Purpose</th>
+                                <th>Charges</th> 
+                                <th class="d-none d-lg-table-cell">Discount</th>
+                                <th>Status</th>
+                                <th class="d-none d-lg-table-cell">Date</th>
+                            </tr>
+                            {% for bill in data['bills'] %}
                                 <tr>
-                                    <th>Name</th>
-                                    <th>Results</th> 
-                                    <th>Comments</th>
-                                    <th>Date</th>
+                                    <td>{{ bill['purpose'] }}</td>
+                                    <td><span class="badge bg-info rounded-pill">{{ bill['net_charges'] }}</span></td>
+                                    <td class="d-none d-lg-table-cell"><span class="badge bg-success rounded-pill">{{ bill['discount'] }}%</span></td>
+                                    <td><span class="badge bg-warning rounded-pill">{{ bill['status'] }}</span></td>
+                                    <td class="d-none d-lg-table-cell"><span class="badge bg-danger rounded-pill">{{ bill['dat'] }}</span></td>
                                 </tr>
-                                {% for test in data['tests'] %}
-                                    <tr>
-                                        <td>{{ test['test'] }}</td>
-                                        <td>{{ test['result_file'] }}</td>
-                                        <td>{{ test['comments'] }}</td>
-                                        <td>{{ test['dat'] }}</td>
-                                    </tr>
-                                {% endfor %}
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-12 col-md-6 col-lg-6 mb-4">
-                <!-- history -->
-                <div class="card mx-4-md mx-4-lg">
-                    <div class="card-header">
-                        <h4>
-                            History
-                            <span class="float-end dropdown">
-                                <button class="btn btn-border-secondary btn" type="button" id="history" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="bi bi-three-dots-vertical"></i>
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="history">
-                                    <li><a class="dropdown-item" href="{{ url_for('cancel_appointment') }}"> View all </a></li>
-                                </ul>
-                            </span>
-                        </h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive app">
-                            <table class="table table-light table-hover">
-                                <tr>
-                                    <th>Disease</th>
-                                    <th>Date</th> 
-                                </tr>
-                                {% for record in data['history'] %}
-                                    <tr>
-                                        <td>{{ record['name'] }}</td>
-                                        <td>{{ record['detected'] }}</td>
-                                    </tr>
-                                {% endfor %}
-                            </table>
-                        </div>
+                            {% endfor %}
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+    <div class="row mt-md-5 justify-content-center">
+        <div class="col-sm-12 col-md-6 col-lg-4 mb-4 me-lg-5">
+            <!-- tests -->
+            <div class="shadow bg-body rounded-3 card mx-4-md mx-4-lg">
+                <div class="card-header">
+                
+                        Tests
+                        <span class="float-end dropdown">
+                            <button class="btn" type="button" id="tests" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="tests">
+                                <li><a class="dropdown-item" href="{{ url_for('cancel_appointment') }}"> View all </a></li>
+                            </ul>
+                        </span>
+            
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive app">
+                        <table class="table table-hover">
+                            <tr>
+                                <th>Name</th>
+                                <th class="d-none d-lg-table-cell">Results</th> 
+                                <th class="d-none d-lg-table-cell">Comments</th>
+                                <th>Date</th>
+                            </tr>
+                            {% for test in data['tests'] %}
+                                <tr>
+                                    <td>{{ test['test'] }}</td>
+                                    <td class="d-none d-lg-table-cell">{{ test['result_file'] }}</td>
+                                    <td class="d-none d-lg-table-cell">{{ test['comments'] }}</td>
+                                    <td><span class="badge bg-danger rounded-pill">{{ test['dat'] }}</span></td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-4 mb-4 ms-lg-5">
+            <!-- history -->
+            <div class="shadow bg-body rounded-3 card mx-4-md mx-4-lg">
+                <div class="card-header">
+                    History
+                    <span class="float-end dropdown">
+                        <button class="btn" type="button" id="history" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-three-dots-vertical"></i>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="history">
+                            <li><a class="dropdown-item" href="{{ url_for('cancel_appointment') }}"> View all </a></li>
+                        </ul>
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive app">
+                        <table class="table table-hover">
+                            <tr>
+                                <th>Disease</th>
+                                <th>Date</th> 
+                            </tr>
+                            {% for record in data['history'] %}
+                                <tr>
+                                    <td>{{ record['name'] }}</td>
+                                    <td><span class="badge bg-danger rounded-pill">{{ record['detected'] }}</span></td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
