@@ -2,7 +2,7 @@ import flask
 import application
 from flask import request, make_response, render_template, url_for, redirect
 from controllers.auth import login_required
-import controllers.dashboard, controllers.appointments, controllers.analytics
+import controllers.dashboard, controllers.appointments, controllers.analytics, controllers.tests
 import controllers.generic_info
 
 @login_required
@@ -71,6 +71,11 @@ def cancel_appointment():
         return controllers.appointments.cancel_appointment(request_data)
     elif request.method == 'GET':
         return redirect(url_for('get_appointments'))
+
+## tests
+@login_required
+def get_tests():
+    return controllers.tests.get_tests()
 
 def view_info():
     return controllers.generic_info.get_info()

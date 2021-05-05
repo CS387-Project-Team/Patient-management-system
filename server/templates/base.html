@@ -38,8 +38,15 @@
               <li><a class="dropdown-item" href="{{ url_for('cancel_appointment') }}">Cancel</a></li>
             </ul>
           </li>
-          <li class="nav-item p-lg-3">
-            <a class="nav-link middle disabled" href="#">Tests</a>
+          <li class="nav-item dropdown p-lg-3">
+            <a class="nav-link dropdown-toggle middle" href="#" id="tests" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Tests
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="tests">
+              <li><a class="dropdown-item" href="{{ url_for('get_tests') }}">View all</a></li>
+              <li><a class="dropdown-item" href="{{ url_for('book_appointment') }}">Book</a></li>
+              <li><a class="dropdown-item" href="{{ url_for('cancel_appointment') }}">Cancel</a></li>
+            </ul>
           </li>
         </ul>
         <ul class="navbar-nav ms-auto">
