@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <!-- <h1>{% block title %}View available slots{% endblock %}</h1> -->
+{% endblock %}
+
+{% block content %}
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Confirm booking</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="{{ url_for('book_appointment') }}">
+          <div class="mb-3">
+            <div class="input-group mb-3">
+              <span class="input-group-text">Doctor</span>
+              <input type="text" readonly class="form-control bg-light" id="doctor_name" name="doctor_name">
+            </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text">Speciality</span>
+              <input type="text" readonly class="form-control bg-light" id="doctor_speciality" name="doctor_speciality">
+            </div>
+            <input type="hidden" class="form-control" id="doctor_id" name="doctor_id">
+            <input type="hidden" class="form-control" id="patient_id" name="patient_id" value="{{data['patient_id']}}">
+            <input type="hidden" class="form-control" id="followup" name="followup" value="1">
+            <div class="input-group">
+              <span class="input-group-text">Date</span>
+              <input type="date" readonly class="form-control bg-light" id="date" name="date">
+              <span class="input-group-text">Time</span>
+              <input type="text" readonly class="form-control bg-light" id="time" name="time">
+            </div>
+          </div>
+          <div class="mb-3">
+            <div class="input-group mb-3">
+              <span class="input-group-text">Appo Type</span>
+              <input class="form-control" id="type" name="type" value="OPD">
+            </div>
+            <label for="complaint" class="col-form-label">Complaint:</label>
+            <textarea class="form-control" id="complaint" name="complaint"></textarea>
+          </div>
+          <button class="btn btn-outline-secondary" type="submit">Confirm</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row mt-5">
+    <h3 class="text-center"> View available slots </h3>
+</div>
+    <div class="row mt-3 mb-2">
+        <div class="row justify-content-center">
+            <div class="col-lg-3 col-sm-6 mt-3 mt-sm-0">
+                <form class="input-group" method="post" action="{{ url_for('update_date_free_slots_followup') }}">
+                    <input class="form-select" type="date" name="date" id="date" value="{{ data['today'] }}" required>
+                    <input type="hidden" id="doc_id" name="doc_id" value="{{ data['slots'][0]['id'] }}">
+                    <input type="hidden" id="patient_id" name="patient_id" value="{{data['patient_id']}}">
+                    <button class="btn btn-secondary" type="submit"><i class="bi bi-search"></i></button>
+                </form>
+            </div>
+        </div>
+    
+        {% for doc_slot in data['slots'] %}
+            <!-- <div class="card mt-5 mx-lg-5 px-lg-5" id="doc_slots"> -->
+            <div class="row g-0 mt-5 justify-content-center p-3">
+                <div class="col-lg-2 col-md-4 bg-primary rounded-3">
+                    <div class="card-body text-center">
+                    <h5 id="name">{{ doc_slot['name'] }}</h5>
+                    <h5 id="speciality">{{ doc_slot['speciality'] }}</h5>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-8">
+                    <div class="card-body">
+                        <div class="row row-cols-auto g-0">
+                            {% for start_time in doc_slot['start_time'] %}
+                                {% set doc_name = doc_slot['name'] %}
+                                {% set doc_id = doc_slot['id'] %}
+                                {% set doc_speciality = doc_slot['speciality'] %}
+                                {% set date = doc_slot['date'] %}
+                                <div class="col">
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-name="{{ doc_name }}" data-bs-id="{{ doc_id }}" data-bs-speciality="{{ doc_speciality }}" data-bs-date="{{ date }}" data-bs-time="{{ start_time }}">{{ start_time }}</button>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- </div> -->
+          {% endfor %}
+    </div>
+
+<script>
+var exampleModal = document.getElementById('exampleModal')
+exampleModal.addEventListener('show.bs.modal', function (event) {
+    // Button that triggered the modal
+    var button = event.relatedTarget
+    // Extract info from data-bs-* attributes
+    var doc_name = button.getAttribute('data-bs-name')
+    var doc_id = button.getAttribute('data-bs-id')
+    var doc_speciality = button.getAttribute('data-bs-speciality')
+    var time = button.getAttribute('data-bs-time')
+    var date = button.getAttribute('data-bs-date')
+
+    // If necessary, you could initiate an AJAX request here
+    // and then do the updating in a callback.
+    //
+    // Update the modal's content.
+    var modalTitle = exampleModal.querySelector('.modal-title')
+    var modal_body_doc_name = exampleModal.querySelector('#doctor_name')
+    var modal_body_doc_speciality = exampleModal.querySelector('#doctor_speciality')
+    var modal_body_doc_id = exampleModal.querySelector('#doctor_id')
+    var modal_body_time = exampleModal.querySelector('#time')
+    var modal_body_date = exampleModal.querySelector('#date')
+
+    modal_body_doc_name.value = doc_name
+    modal_body_doc_speciality.value = doc_speciality
+    modal_body_doc_id.value = doc_id
+    modal_body_date.value = date
+    modal_body_time.value = time
+})
+</script>
+{% endblock %}

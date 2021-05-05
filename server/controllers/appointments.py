@@ -21,11 +21,20 @@ def get_appointments():
                     natural left join meds)
                     natural left outer join medicine) as foo, (person join doctor on doctor.doc_id=person.id) as d
             where foo.doc_id = d.id
-            order by foo.dat desc'''
+            order by foo.dat desc, foo.start_time desc'''
             # left outer join medicine on medicine.med_id = meds.med_id) as foo, (person natural join doctor) as d
     db.execute(sql, (g.user.get('id'),))
     rows = db.fetchall()
     data['appointments'] = my_jsonify(rows)
+    data['upcoming_appos'] = []
+    data['past_appos'] = []
+    for appo in data['appointments']:
+        appo_time = datetime.datetime.strptime(appo['dat'].isoformat() + ' ' + appo['start_time'].isoformat(), '%Y-%m-%d %H:%M:%S')
+        hardcoded_now = datetime.datetime.strptime('2021-04-21 14:00:00', '%Y-%m-%d %H:%M:%S')
+        if appo_time >= hardcoded_now: #datetime.datetime.now() + datetime.timedelta(minutes=10)
+            data['upcoming_appos'].append(appo)
+        else:
+            data['past_appos'].append(appo)
     conn.close()
     print(data)
     return render_template('appointments/appointments.html', data=data)
@@ -55,6 +64,33 @@ def get_available_slots(date_str):
     data['today'] = date_str
     print(data)
     return render_template('appointments/available_slots.html', data=data) #jsonify(df.to_dict(orient='records'))
+
+def get_available_slots_followup(patient_id, doc_id, date_str):
+    data = {}
+    if date_str == None:
+        date_str = "2021-04-21"
+    # date = datetime.datetime.strptime(date_str, '%Y-%m-%d').date
+    conn = application.connect()
+    db = conn.cursor(cursor_factory=application.DictCursor)
+    sql = '''select doctor.id, doctor.name, doctor.speciality, start_time, %s as date 
+            from doctor_room_slot as drs, (doctor join person on doc_id=id) as doctor
+            where drs.doc_id = doctor.id and doctor.id = %s and dat = %s and not exists (
+                select * from meet
+                where drs.doc_id = doctor.id and dat = %s and meet.start_time = drs.start_time
+            )'''
+    db.execute(sql, (date_str, doc_id, date_str, date_str,))
+    rows = db.fetchall()
+    df = DataFrame(rows)
+    if rows == []:
+        return jsonify({'msg':'No data found'})
+    df.columns = rows[0].keys()
+    df = df.groupby('id', as_index=False).agg({'name':'first', 'speciality':'first', 'date':'first', 'start_time': lambda x: list(x)})
+    conn.close()
+    data['slots'] = df.to_dict(orient='records')
+    data['today'] = date_str
+    data['patient_id'] = patient_id
+    print(data)
+    return render_template('appointments/follow_up.html', data=data) #jsonify(df.to_dict(orient='records'))
 
 def confirm_booking(request):
     data = {}

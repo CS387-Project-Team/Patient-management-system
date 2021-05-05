@@ -126,7 +126,7 @@
 </div>
 <div class="card mt-5">
     <div class="card-header">
-        My Appointments
+        Upcoming Appointments
     </div>
     <div class="card-body">
         <div class="row mt-2">
@@ -140,7 +140,7 @@
                         <th class="d-none d-md-table-cell">Complaint</th>
                         <th style="white-space: nowrap; width: 1%;"><span class="float-end">Actions</span></th>
                     </tr>
-                    {% for appo in data['appointments'] %}
+                    {% for appo in data['upcoming_appos'] %}
                         {% set doc_name = appo['name'] %}
                         {% set app_id = appo['app_id'] %}
                         {% set patient_id = appo['patient_id'] %}
@@ -162,7 +162,6 @@
                                     <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#viewModal" data-bs-name="{{ doc_name }}" data-bs-appid="{{ app_id }}" data-bs-patientid="{{ patient_id }}" data-bs-date="{{ date }}" data-bs-time="{{ time }}" data-bs-type="{{ app_type }}" data-bs-complaint="{{ complaint }}"><i class="bi bi-eye"></i></button>
                                     <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#editModal" data-bs-name="{{ doc_name }}" data-bs-appid="{{ app_id }}" data-bs-patientid="{{ patient_id }}" data-bs-date="{{ date }}" data-bs-time="{{ time }}" data-bs-type="{{ app_type }}" data-bs-complaint="{{ complaint }}"><i class="bi bi-pen"></i></button>
                                     <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-name="{{ doc_name }}" data-bs-appid="{{ app_id }}" data-bs-patientid="{{ patient_id }}" data-bs-date="{{ date }}" data-bs-time="{{ time }}" data-bs-type="{{ app_type }}" data-bs-complaint="{{ complaint }}"><i class="bi bi-trash"></i></button>
-                                    <button type="button" class="btn"><i class="bi bi-arrow-right-square"></i></button>
                                 </div>
                             </td>
                         </tr>
@@ -171,6 +170,57 @@
             </div>
        </div>
     </div>
+</div>
+<div class="card mt-5">
+  <div class="card-header">
+      Past Appointments
+  </div>
+  <div class="card-body">
+      <div class="row mt-2">
+          <!-- appointments -->
+          <div class="table-responsive app p-4">
+              <table class="table table-light table-hover">
+                  <tr>
+                      <th>Doctor</th>
+                      <th>Date</th> 
+                      <th class="d-none d-md-table-cell">Time</th>
+                      <th class="d-none d-md-table-cell">Complaint</th>
+                      <th style="white-space: nowrap; width: 1%;"><span class="float-end">Actions</span></th>
+                  </tr>
+                  {% for appo in data['past_appos'] %}
+                      {% set doc_name = appo['name'] %}
+                      {% set app_id = appo['app_id'] %}
+                      {% set patient_id = appo['patient_id'] %}
+                      {% set date = appo['dat'] %}
+                      {% set time = appo['start_time'] %}
+                      {% set app_type = appo['type'] %}
+                      {% set complaint = appo['complaint'] %}
+                      {% set doc_id = appo['doc_id'] %}
+                      <tr>
+                          <td>{{ appo['name'] }}</td>
+                          <td>{{ appo['dat'] }}</td>
+                          <td class="d-none d-md-table-cell">{{ appo['start_time'] }}</td>
+                          {% if appo['complaint'] %}
+                              <td class="d-none d-md-table-cell">{{ appo['complaint'] }}</td>
+                          {% else %}
+                              <td class="d-none d-md-table-cell"> None </td>
+                          {% endif %}
+                          <td style="white-space: nowrap; width: 1%;">
+                              <div class="btn-group btn-group-sm float-end" role="group" aria-label="actions">
+                                  <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#viewModal" data-bs-name="{{ doc_name }}" data-bs-appid="{{ app_id }}" data-bs-patientid="{{ patient_id }}" data-bs-date="{{ date }}" data-bs-time="{{ time }}" data-bs-type="{{ app_type }}" data-bs-complaint="{{ complaint }}"><i class="bi bi-eye"></i></button>
+                                  <form method="get" action="{{ url_for('available_slots_followup') }}">
+                                    <input type="hidden" name="doc_id" value="{{ doc_id }}">
+                                    <input type="hidden" name="patient_id" value="{{ patient_id }}">
+                                    <button type="submit" class="btn"><i class="bi bi-arrow-right-square"></i></button>
+                                  </form>
+                              </div>
+                          </td>
+                      </tr>
+                  {% endfor %}
+              </table>
+          </div>
+     </div>
+  </div>
 </div>
 <script>
   var exampleModal = document.getElementById('exampleModal')

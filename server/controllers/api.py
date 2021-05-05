@@ -54,10 +54,23 @@ def update_date_free_slots():
     return redirect(url_for('available_slots', date=date))
 
 @login_required
+def update_date_free_slots_followup():
+    date = request.form.get('date', None)
+    doc_id = request.form.get('doc_id', None)
+    patient_id = request.form.get('patient_id', None)
+    return redirect(url_for('available_slots_followup', doc_id=doc_id, patient_id=patient_id, date=date))
+
+@login_required
 def available_slots():
     date = request.args.get("date")
     return controllers.appointments.get_available_slots(date)
 
+@login_required
+def available_slots_followup():
+    date = request.args.get("date")
+    doc_id = request.args.get("doc_id")
+    patient_id = request.args.get("patient_id")
+    return controllers.appointments.get_available_slots_followup(patient_id, doc_id, date)
 # @login_required
 # def confirm_appointment_post():
 #     data = request.form
