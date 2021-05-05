@@ -278,7 +278,7 @@ for (i,s) in enumerate(symptom_list):
 
 doc_free_slots={}
 
-doc_room=random.sample(list(range(int(no_rooms*0.6))),k=no_docs)
+doc_room=random.sample(list(range(1,1+int(no_rooms*0.6))),k=no_docs)
 
 doc_room_slots=[]
 no_drs_entries=0
@@ -601,7 +601,3 @@ with open('data.sql','w') as f:
 	for rec in visitss:
 		f.write("insert into visits values("+g(rec[0])+','+g(rec[1])+','+g(rec[2])+','+g(rec[3])+");\n")
 	# f.write('commit;\n')
-
-
-
-
