@@ -49,8 +49,8 @@
   </div>
 </div>
 <div class="card mt-5">
-  <div class="card-header p-3 bg-light">
-      <h3> View available slots </h3>
+  <div class="card-header">
+      View available slots
   </div>
   <div class="card-body">
       <div class="row mt-3 mb-2">
@@ -72,7 +72,7 @@
           {% for doc_slot in data['slots'] %}
             <div class="card" id="doc_slots">
               <div class="row g-0">
-                <div class="col-lg-2 col-md-4 bg-light">
+                <div class="col-lg-2 col-md-4 bg-primary rounded-3">
                   <div class="card-body">
                     <h5 id="name">{{ doc_slot['name'] }}</h5>
                     <h5 id="speciality">{{ doc_slot['speciality'] }}</h5>
