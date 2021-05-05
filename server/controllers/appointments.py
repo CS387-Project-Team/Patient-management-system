@@ -129,6 +129,30 @@ def book_appointment(request):
     flash('Apoointment booked successfully!', 'success')
     return redirect(url_for('get_appointments')) #render_template('appointments/appointments.html') #jsonify({'status':'Successfully booked a new appointment', 'code':200})
 
+def update_complaint(request):
+    app_id = int(request.get('app_id'))
+    patient_id = int(request.get('patient_id'))
+    complaint = request.get('complaint')
+    conn = application.connect()
+    db = conn.cursor(cursor_factory=application.DictCursor)
+    try:
+        sql = '''update meet
+                set patient_complaint = %s
+                where app_id = %s and patient_id = %s returning *;
+                '''
+        db.execute(sql, (complaint, app_id, patient_id,))
+        update_meet = db.fetchone()
+        if update_meet is None:
+            raise Exception('no appointment updated')
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(e)
+        conn.rollback()
+        conn.close()
+        return jsonify({'status':'Failed to update complaint', 'code':401})
+    flash('Appointment updated successfully!', 'success')
+    return redirect(url_for('get_appointments'))
 
 def cancel_appointment(request):
     app_id = int(request.get('app_id'))

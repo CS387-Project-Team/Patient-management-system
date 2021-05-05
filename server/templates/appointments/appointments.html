@@ -6,45 +6,124 @@
 
 {% block content %}
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Confirm cancellation</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form method="post" action="{{ url_for('cancel_appointment') }}">
-            <div class="mb-3">
-              <div class="input-group mb-3">
-                <span class="input-group-text">Doctor</span>
-                <input type="text" readonly class="form-control bg-light" id="doctor_name" name="doctor_name">
-              </div>
-              <input type="hidden" class="form-control" id="app_id" name="app_id">
-              <input type="hidden" class="form-control" id="patient_id" name="patient_id">
-              <div class="input-group">
-                <span class="input-group-text">Date</span>
-                <input type="date" readonly class="form-control bg-light" id="date" name="date">
-                <span class="input-group-text">Time</span>
-                <input type="text" readonly class="form-control bg-light" id="time" name="time">
-              </div>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Confirm cancellation</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="{{ url_for('cancel_appointment') }}">
+          <div class="mb-3">
+            <div class="input-group mb-3">
+              <span class="input-group-text">Doctor</span>
+              <input type="text" readonly class="form-control bg-light" id="doctor_name" name="doctor_name">
             </div>
-            <div class="mb-3">
-              <div class="input-group mb-3">
-                <span class="input-group-text">Appo Type</span>
-                <input type="text" readonly class="form-control bg-light" id="type" name="type" value="OPD">
-              </div>
-              <label for="complaint" class="col-form-label">Complaint:</label>
-              <textarea readonly class="form-control bg-light" id="complaint" name="complaint"></textarea>
+            <input type="hidden" class="form-control" id="app_id" name="app_id">
+            <input type="hidden" class="form-control" id="patient_id" name="patient_id">
+            <div class="input-group">
+              <span class="input-group-text">Date</span>
+              <input type="date" readonly class="form-control bg-light" id="date" name="date">
+              <span class="input-group-text">Time</span>
+              <input type="text" readonly class="form-control bg-light" id="time" name="time">
             </div>
-            <button class="btn btn-outline-secondary" type="submit">Confirm</button>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        </div>
+          </div>
+          <div class="mb-3">
+            <div class="input-group mb-3">
+              <span class="input-group-text">Appo Type</span>
+              <input type="text" readonly class="form-control bg-light" id="type" name="type" value="OPD">
+            </div>
+            <label for="complaint" class="col-form-label">Complaint:</label>
+            <textarea readonly class="form-control bg-light" id="complaint" name="complaint"></textarea>
+          </div>
+          <button class="btn btn-outline-secondary" type="submit">Confirm</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
+</div>
+<div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="viewModalLabel">View Appo Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <div class="input-group mb-3">
+              <span class="input-group-text">Doctor</span>
+              <input type="text" readonly class="form-control bg-light" id="doctor_name" name="doctor_name">
+            </div>
+            <input type="hidden" class="form-control" id="app_id" name="app_id">
+            <input type="hidden" class="form-control" id="patient_id" name="patient_id">
+            <div class="input-group">
+              <span class="input-group-text">Date</span>
+              <input type="date" readonly class="form-control bg-light" id="date" name="date">
+              <span class="input-group-text">Time</span>
+              <input type="text" readonly class="form-control bg-light" id="time" name="time">
+            </div>
+          </div>
+          <div class="mb-3">
+            <div class="input-group mb-3">
+              <span class="input-group-text">Appo Type</span>
+              <input type="text" readonly class="form-control bg-light" id="type" name="type" value="OPD">
+            </div>
+            <label for="complaint" class="col-form-label">Complaint:</label>
+            <textarea readonly class="form-control bg-light" id="complaint" name="complaint"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editModalLabel">Update complaint</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="{{ url_for('update_complaint') }}">
+          <div class="mb-3">
+            <div class="input-group mb-3">
+              <span class="input-group-text">Doctor</span>
+              <input type="text" readonly class="form-control bg-light" id="doctor_name" name="doctor_name">
+            </div>
+            <input type="hidden" class="form-control" id="app_id" name="app_id">
+            <input type="hidden" class="form-control" id="patient_id" name="patient_id">
+            <div class="input-group">
+              <span class="input-group-text">Date</span>
+              <input type="date" readonly class="form-control bg-light" id="date" name="date">
+              <span class="input-group-text">Time</span>
+              <input type="text" readonly class="form-control bg-light" id="time" name="time">
+            </div>
+          </div>
+          <div class="mb-3">
+            <div class="input-group mb-3">
+              <span class="input-group-text">Appo Type</span>
+              <input type="text" readonly class="form-control bg-light" id="type" name="type" value="OPD">
+            </div>
+            <label for="complaint" class="col-form-label">Complaint:</label>
+            <textarea class="form-control bg-light" id="complaint" name="complaint"></textarea>
+          </div>
+          <button class="btn btn-outline-secondary" type="submit">Update</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="card mt-5">
     <div class="card-header p-3 bg-light">
         <h3> My Appointments </h3>
@@ -80,7 +159,8 @@
                             {% endif %}
                             <td style="white-space: nowrap; width: 1%;">
                                 <div class="btn-group float-end" role="group" aria-label="actions">
-                                    <button type="button" class="btn"><i class="bi bi-card-list"></i></button>
+                                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#viewModal" data-bs-name="{{ doc_name }}" data-bs-appid="{{ app_id }}" data-bs-patientid="{{ patient_id }}" data-bs-date="{{ date }}" data-bs-time="{{ time }}" data-bs-type="{{ app_type }}" data-bs-complaint="{{ complaint }}"><i class="bi bi-eye"></i></button>
+                                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#editModal" data-bs-name="{{ doc_name }}" data-bs-appid="{{ app_id }}" data-bs-patientid="{{ patient_id }}" data-bs-date="{{ date }}" data-bs-time="{{ time }}" data-bs-type="{{ app_type }}" data-bs-complaint="{{ complaint }}"><i class="bi bi-pen"></i></button>
                                     <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-name="{{ doc_name }}" data-bs-appid="{{ app_id }}" data-bs-patientid="{{ patient_id }}" data-bs-date="{{ date }}" data-bs-time="{{ time }}" data-bs-type="{{ app_type }}" data-bs-complaint="{{ complaint }}"><i class="bi bi-trash"></i></button>
                                     <button type="button" class="btn"><i class="bi bi-arrow-right-square"></i></button>
                                 </div>
@@ -93,7 +173,7 @@
     </div>
 </div>
 <script>
-    var exampleModal = document.getElementById('exampleModal')
+  var exampleModal = document.getElementById('exampleModal')
   exampleModal.addEventListener('show.bs.modal', function (event) {
     // Button that triggered the modal
     var button = event.relatedTarget
@@ -119,6 +199,78 @@
     var modal_body_date = exampleModal.querySelector('#date')
     var modal_body_type = exampleModal.querySelector('#type')
     var modal_body_complaint = exampleModal.querySelector('#complaint')
+
+    modal_body_doc_name.value = doc_name
+    modal_body_app_id.value = app_id
+    modal_body_patient_id.value = patient_id
+    modal_body_date.value = date
+    modal_body_time.value = time
+    modal_body_type.value = appo_type
+    modal_body_complaint.innerHTML = complaint
+
+  })
+  var viewModal = document.getElementById('viewModal')
+  viewModal.addEventListener('show.bs.modal', function (event) {
+    // Button that triggered the modal
+    var button = event.relatedTarget
+    // Extract info from data-bs-* attributes
+    var doc_name = button.getAttribute('data-bs-name')
+    var app_id = button.getAttribute('data-bs-appid')
+    var patient_id = button.getAttribute('data-bs-patientid')
+    var doc_speciality = button.getAttribute('data-bs-speciality')
+    var time = button.getAttribute('data-bs-time')
+    var date = button.getAttribute('data-bs-date')
+    var appo_type = button.getAttribute('data-bs-type')
+    var complaint = button.getAttribute('data-bs-complaint')
+
+    // If necessary, you could initiate an AJAX request here
+    // and then do the updating in a callback.
+    //
+    // Update the modal's content.
+    var modalTitle = viewModal.querySelector('.modal-title')
+    var modal_body_doc_name = viewModal.querySelector('#doctor_name')
+    var modal_body_app_id = viewModal.querySelector('#app_id')
+    var modal_body_patient_id = viewModal.querySelector('#patient_id')
+    var modal_body_time = viewModal.querySelector('#time')
+    var modal_body_date = viewModal.querySelector('#date')
+    var modal_body_type = viewModal.querySelector('#type')
+    var modal_body_complaint = viewModal.querySelector('#complaint')
+
+    modal_body_doc_name.value = doc_name
+    modal_body_app_id.value = app_id
+    modal_body_patient_id.value = patient_id
+    modal_body_date.value = date
+    modal_body_time.value = time
+    modal_body_type.value = appo_type
+    modal_body_complaint.innerHTML = complaint
+
+  })
+  var editModal = document.getElementById('editModal')
+  editModal.addEventListener('show.bs.modal', function (event) {
+    // Button that triggered the modal
+    var button = event.relatedTarget
+    // Extract info from data-bs-* attributes
+    var doc_name = button.getAttribute('data-bs-name')
+    var app_id = button.getAttribute('data-bs-appid')
+    var patient_id = button.getAttribute('data-bs-patientid')
+    var doc_speciality = button.getAttribute('data-bs-speciality')
+    var time = button.getAttribute('data-bs-time')
+    var date = button.getAttribute('data-bs-date')
+    var appo_type = button.getAttribute('data-bs-type')
+    var complaint = button.getAttribute('data-bs-complaint')
+
+    // If necessary, you could initiate an AJAX request here
+    // and then do the updating in a callback.
+    //
+    // Update the modal's content.
+    var modalTitle = editModal.querySelector('.modal-title')
+    var modal_body_doc_name = editModal.querySelector('#doctor_name')
+    var modal_body_app_id = editModal.querySelector('#app_id')
+    var modal_body_patient_id = editModal.querySelector('#patient_id')
+    var modal_body_time = editModal.querySelector('#time')
+    var modal_body_date = editModal.querySelector('#date')
+    var modal_body_type = editModal.querySelector('#type')
+    var modal_body_complaint = editModal.querySelector('#complaint')
 
     modal_body_doc_name.value = doc_name
     modal_body_app_id.value = app_id

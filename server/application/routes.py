@@ -11,6 +11,7 @@ def routes(app):
     # app.add_url_rule('/confirm-booking', view_func=api.confirm_appointment_get, methods=['GET'])
     app.add_url_rule('/book-appointment', view_func=api.book_appointment, methods=['GET', 'POST'])
     app.add_url_rule('/cancel-appointment', view_func=api.cancel_appointment, methods=['GET', 'POST'])
+    app.add_url_rule('/update-complaint', view_func=api.update_complaint, methods=['POST'])
     app.add_url_rule('/view-info',view_func=api.view_info,methods=['GET'])
     app.add_url_rule('/my-profile',view_func=api.profile,methods=['GET', 'POST'])
     app.add_url_rule('/analytics-data',view_func=api.get_analytics,methods=['GET'])

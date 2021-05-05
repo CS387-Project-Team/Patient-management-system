@@ -72,6 +72,11 @@ def cancel_appointment():
     elif request.method == 'GET':
         return redirect(url_for('get_appointments'))
 
+@login_required
+def update_complaint():
+    data = request.form
+    return controllers.appointments.update_complaint(data)
+
 def view_info():
     return controllers.generic_info.get_info()
 
