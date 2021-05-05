@@ -23,7 +23,7 @@ def profile():
 
 @login_required
 def view_history():
-    pass
+    return controllers.dashboard.view_history()
 
 @login_required
 def add_history():

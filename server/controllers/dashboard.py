@@ -211,6 +211,42 @@ def get_dashboard():
     print(data['top_diseases'])
     return render_template('dashboard/dashboard.html', data=data) #jsonify(data)
 
+def view_history():
+    data = {}
+
+    conn = application.connect()
+    db = conn.cursor(cursor_factory=application.DictCursor)
+    # history
+    sql = '''with pt(patient_id) as 
+                (select patient_id
+                from patient
+                where patient.id = %s),
+                foo(name, detected) as 
+                (select disease_name, detected
+                from ((history natural join pt)
+                        natural join disease)
+                where person_id = %s)
+            select * 
+            from
+            (
+                (select name, min(dat) as detected
+                from (select disease_name as name, dat
+                        from (((suffers natural join pt)
+                                natural join disease)
+                                natural join meet) as bar
+                        where not exists(select 1 from foo
+                                        where foo.name = bar.disease_name)) as bar group by name)
+                union
+                select * from foo
+            ) as foo
+            order by detected desc
+            '''
+    id = g.user.get('id')
+    db.execute(sql, (id,id,))
+    rows = db.fetchall()
+    data['history'] = my_jsonify(rows)
+    conn.close()
+    return render_template('history/view_history.html', data=data)
 
 def get_history_for_edit():
     data = {}

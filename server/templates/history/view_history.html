@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <!-- <h1>{% block title %}Appointments{% endblock %}</h1> -->
+{% endblock %}
+
+{% block content %}
+<h3 class="text-center mt-5">View History</h3>
+<div class="row mt-2">
+    <!-- appointments -->
+    <div class="table-responsive app p-4">
+        <table class="table table-light table-hover">
+            <tr>
+                <th>Disease</th>
+                <th>Detected</th> 
+            </tr>
+            {% for hist in data['history'] %}
+                <tr>
+                    <td>{{ hist['name'] }}</td>
+                    <td>{{ hist['detected'] }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+{% endblock %}
