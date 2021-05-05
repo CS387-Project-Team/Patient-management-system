@@ -28,19 +28,21 @@
           <li class="nav-item p-lg-3">
             <a class="nav-link middle" aria-current="page" href="{{ url_for('view_info') }}">About Us</a>
           </li>
-          <li class="nav-item dropdown p-lg-3">
-            <a class="nav-link dropdown-toggle middle" href="#" id="appointments" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Appointments
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="appointments">
-              <li><a class="dropdown-item" href="{{ url_for('get_appointments') }}">View all</a></li>
-              <li><a class="dropdown-item" href="{{ url_for('book_appointment') }}">Book</a></li>
-              <li><a class="dropdown-item" href="{{ url_for('cancel_appointment') }}">Cancel</a></li>
-            </ul>
-          </li>
-          <li class="nav-item p-lg-3">
-            <a class="nav-link middle disabled" href="#">Tests</a>
-          </li>
+          {% if g.user %}
+	          <li class="nav-item dropdown p-lg-3">
+	            <a class="nav-link dropdown-toggle middle" href="#" id="appointments" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+	              Appointments
+	            </a>
+	            <ul class="dropdown-menu" aria-labelledby="appointments">
+	              <li><a class="dropdown-item" href="{{ url_for('get_appointments') }}">View all</a></li>
+	              <li><a class="dropdown-item" href="{{ url_for('book_appointment') }}">Book</a></li>
+	              <li><a class="dropdown-item" href="{{ url_for('cancel_appointment') }}">Cancel</a></li>
+	            </ul>
+	          </li>
+	          <li class="nav-item p-lg-3">
+	            <a class="nav-link middle disabled" href="#">Tests</a>
+	          </li>
+          {% endif %}
         </ul>
         <ul class="navbar-nav ms-auto">
           {% if g.user %}
