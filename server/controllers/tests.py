@@ -22,31 +22,21 @@ def get_tests():
     print(data)
     return render_template('tests/tests.html', data=data)
 
-def get_available_slots(date_str):
-    data = {}
-    if date_str == None:
-        date_str = "2021-04-21"
-    # date = datetime.datetime.strptime(date_str, '%Y-%m-%d').date
+def get_available_tests():
     conn = application.connect()
     db = conn.cursor(cursor_factory=application.DictCursor)
-    sql = '''select doctor.id, doctor.name, doctor.speciality, start_time, %s as date 
-            from doctor_room_slot as drs, (doctor join person on doc_id=id) as doctor
-            where drs.doc_id = doctor.id and dat = %s and not exists (
-                select * from meet
-                where drs.doc_id = doctor.id and dat = %s and meet.start_time = drs.start_time
-            )'''
-    db.execute(sql, (date_str, date_str, date_str,))
+    sql='''SELECT test_id, name, charges from test'''
+    db.execute(sql)
     rows = db.fetchall()
-    df = DataFrame(rows)
     if rows == []:
         return jsonify({'msg':'No data found'})
-    df.columns = rows[0].keys()
-    df = df.groupby('id', as_index=False).agg({'name':'first', 'speciality':'first', 'date':'first', 'start_time': lambda x: list(x)})
-    conn.close()
-    data['slots'] = df.to_dict(orient='records')
-    data['today'] = date_str
+
+    data={}
+    data['available_tests']=[]
+    for r in rows:
+        data['available_tests'].append({"id":r[0], "name":r[1],"charge":float(r[2])})
     print(data)
-    return render_template('appointments/available_slots.html', data=data) #jsonify(df.to_dict(orient='records'))
+    return render_template('tests/available_tests.html', data=data)
 
 def confirm_booking(request):
     data = {}
@@ -56,70 +46,37 @@ def confirm_booking(request):
     data['time'] = request.get('time')
     return render_template('appointments/confirm_booking.html', data=data)
 
-def book_appointment(request):
+def book_test(request):
     print(request)
-    doctor_id = int(request.get('doctor_id'))
+    test_id = int(request.get('test_id'))
     date = request.get('date')
-    time = request.get('time')
-    appo_type = request.get('type')
-    complaint = request.get('complaint')
     print(request)
-    try:
-        followup = int(request.get('followup'))
-    except:
-        followup = 0
-    try:
-        patient_id = int(request.get('patient_id'))
-    except:
-        patient_id = -1
     user_id = g.user['id']
     conn = application.connect()
     db = conn.cursor(cursor_factory=application.DictCursor)
     try:
-        if followup == 0:
-            sql = '''select 1+max(patient_id) as new_id
-                    from patient'''
-            db.execute(sql)
-            row = db.fetchone()
-            patient_id = row['new_id']
-            sql = '''insert into patient(id, patient_id)
-                    values (%s, %s);'''
-            db.execute(sql, (user_id, patient_id,))
-        else:
-            assert patient_id >= 0, 'invalid patient id'
-            sql = '''select dat, start_time from meet
-                    where patient_id = %s
-                    order by dat desc, start_time desc
-                    limit 1'''
-            db.execute(sql, (patient_id,))
-            row = db.fetchone()
-            parent_appo_datetime = datetime.datetime.strptime(row['dat'].isoformat() + ' ' + row['start_time'].isoformat(), '%Y-%m-%d %H:%M:%S')
-            assert parent_appo_datetime < datetime.datetime.now(), 'attempting to book a follow up for an appointment which is yet to take place'
-        
-        assert patient_id >= 0, "invalid patient id"
-        sql = '''select 1+max(app_id) as new_id
-                from appointment'''
+        sql = '''SELECT 1+max(patient_id) as new_id
+                        from patient'''
         db.execute(sql)
         row = db.fetchone()
-        app_id = row['new_id']
-        sql = '''insert into appointment(app_id, type)
+        patient_id = row['new_id']
+        sql = '''INSERT into patient(id, patient_id)
                 values (%s, %s);'''
-        appo_datetime = datetime.datetime.strptime(date + ' ' + time, '%Y-%m-%d %H:%M:%S')
-        # To uncomment this when database updates doctor_room_slot
-        # assert appo_datetime >= datetime.datetime.now() and appo_datetime.datetime.date <= datetime.date.today()+datetime.timedelta(days=application.MAX_BOOKING_RANGE), 'invalid date for booking a new appointment'
-        db.execute(sql, (app_id, appo_type,))
-        sql = '''insert into meet(app_id, patient_id, doc_id, dat, start_time, patient_complaint)
-                values (%s, %s, %s, %s, %s, %s);'''
-        db.execute(sql, (app_id, patient_id, doctor_id, date, time, complaint,))
+        db.execute(sql, (user_id, patient_id,))
+
+        sql='''INSERT into takes(patient_id, test_id, dat)
+                values(%s,%s,%s);'''
+        db.execute(sql,(patient_id, test_id,date))
+
         conn.commit()
         conn.close()
     except Exception as e:
         print(e)
         conn.rollback()
         conn.close()
-        return jsonify({'status':'Failed to book a new appointment', 'code':401})    
-    flash('Apoointment booked successfully!', 'success')
-    return redirect(url_for('get_appointments')) #render_template('appointments/appointments.html') #jsonify({'status':'Successfully booked a new appointment', 'code':200})
+        return jsonify({'status':'Failed to book a new test', 'code':401})    
+    flash('Diagnostic test booked successfully!', 'success')
+    return redirect(url_for('get_tests'))
 
 
 def cancel_appointment(request):

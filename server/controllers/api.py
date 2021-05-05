@@ -77,6 +77,18 @@ def cancel_appointment():
 def get_tests():
     return controllers.tests.get_tests()
 
+@login_required
+def book_test():
+    if request.method == 'POST':
+        request_data = request.form
+        return controllers.tests.book_test(request_data)
+    elif request.method == 'GET':
+        return redirect(url_for('available_tests'))
+
+@login_required
+def available_tests():
+    return controllers.tests.get_available_tests()
+
 def view_info():
     return controllers.generic_info.get_info()
 

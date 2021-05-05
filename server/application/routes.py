@@ -21,3 +21,9 @@ def routes(app):
 
     ## tests
     app.add_url_rule('/tests', view_func=api.get_tests)
+    app.add_url_rule('/book_test', view_func=api.book_test, methods=['GET', 'POST'])
+    app.add_url_rule('/available_tests', view_func=api.available_tests, methods=['GET'])
+
+
+
+

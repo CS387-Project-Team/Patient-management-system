@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <!-- <h1>{% block title %}View available slots{% endblock %}</h1> -->
+{% endblock %}
+
+{% block content %}
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Confirm booking</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="{{ url_for('book_test') }}">
+          <div class="mb-3">
+            <div class="input-group mb-3">
+              <span class="input-group-text">Test</span>
+              <input type="text" readonly class="form-control bg-light" id="test_name" name="test_name">
+            </div>
+            <input type="hidden" class="form-control" id="test_id" name="test_id">
+            <div class="input-group">
+              <span class="input-group-text">Date</span>
+              <input type="date" class="form-control bg-light" id="date" name="date">
+            </div>
+          </div>
+          <button class="btn btn-outline-secondary" type="submit">Confirm</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="card mt-5">
+  <div class="card-header p-3 bg-light">
+      <h3> Available diagnostic services </h3>
+  </div>
+  <div class="card-body">
+        <div class="row mt-2">
+            <div class="table-responsive app p-4">
+                <table class="table table-light table-hover">
+                    <tr>
+                        <th>Test name</th>
+                        <th>Charges</th>
+                        <th></th>
+                    </tr>
+                    {% for test in data['available_tests'] %}
+                      <tr>
+                          <td>{{ test['name'] }}</td>
+                          <td>&#8377;{{ test['charge'] }}</td>
+                          <td><button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-name="{{ test['name'] }}" data-bs-id="{{ test['id'] }}">Book</button></td>
+                      </tr>
+                    {% endfor %}
+                </table>
+            </div>
+       </div>
+    </div>
+</div>
+<script>
+
+  var exampleModal = document.getElementById('exampleModal')
+  exampleModal.addEventListener('show.bs.modal', function (event) {
+    // Button that triggered the modal
+    var button = event.relatedTarget
+    // Extract info from data-bs-* attributes
+    var test_name = button.getAttribute('data-bs-name')
+    var test_id = button.getAttribute('data-bs-id')
+
+    // If necessary, you could initiate an AJAX request here
+    // and then do the updating in a callback.
+    //
+    // Update the modal's content.
+    var modalTitle = exampleModal.querySelector('.modal-title')
+    var modal_body_test_name = exampleModal.querySelector('#test_name')
+    var modal_body_test_id = exampleModal.querySelector('#test_id')
+
+    modal_body_test_name.value = test_name
+    modal_body_test_id.value = test_id
+  })
+  </script>
+{% endblock %}
