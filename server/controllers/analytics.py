@@ -221,7 +221,7 @@ def get_top_k(rows, k, key1='name', key2='freq'):
         iter_ += 1
         cur_dict = {}
         cur_dict['label'] = row[key1]
-        cur_dict['y'] = row[key2] / total * 100
+        cur_dict['y'] = round(row[key2] / total * 100, 2)
         perc_cum += cur_dict['y']
         ret_list.append(cur_dict)
         if iter_ == k:
