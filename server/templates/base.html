@@ -40,7 +40,7 @@
           </li>
           <li class="nav-item dropdown p-lg-3">
             <a class="nav-link dropdown-toggle middle" href="#" id="tests" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Tests
+              Diagnostic Tests
             </a>
             <ul class="dropdown-menu" aria-labelledby="tests">
               <li><a class="dropdown-item" href="{{ url_for('get_tests') }}">View all</a></li>
@@ -48,6 +48,11 @@
               <li><a class="dropdown-item" href="{{ url_for('cancel_appointment') }}">Cancel</a></li>
             </ul>
           </li>
+          {% if g.is_support %}
+          <li class="nav-item p-lg-3">
+            <a class="nav-link middle" aria-current="page" href="{{ url_for('administer_test') }}">Administer Test</a>
+          </li>
+          {% endif %}
         </ul>
         <ul class="navbar-nav ms-auto">
           {% if g.user %}

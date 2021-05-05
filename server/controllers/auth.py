@@ -83,6 +83,11 @@ def load_logged_in_user():
             'SELECT * FROM person WHERE id = %s', (user_id,)
         )
         g.user = db.fetchone()
+        db.execute('SELECT count(*) from support_staff where staff_id=%s',(user_id,))
+        if db.fetchone()[0]==0:
+            g.is_support=False
+        else:
+            g.is_support=True
         conn.close()
 
 @bp.route('/logout')

@@ -25,6 +25,14 @@ def routes(app):
     app.add_url_rule('/available_tests', view_func=api.available_tests, methods=['GET'])
     app.add_url_rule('/cancel_test', view_func=api.cancel_test, methods=['GET', 'POST'])
 
+    # administer tests
+    app.add_url_rule('/administer_test', view_func=api.administer_test, methods=['GET', 'POST'])
+
+
+
+
+
+
 
 
 
