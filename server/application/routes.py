@@ -36,3 +36,21 @@ def routes(app):
     app.add_url_rule('/analytics-disease-data/<int:disease_id>',view_func=api.get_disease_analytics,methods=['GET'])
     app.add_url_rule('/analytics-disease/<int:disease_id>',view_func=api.show_disease_analytics,methods=['GET'])
     app.add_url_rule('/analytics-disease-post',view_func=api.post_disease_for_analytics,methods=['POST'])
+
+    ## tests
+    app.add_url_rule('/tests', view_func=api.get_tests)
+    app.add_url_rule('/book_test', view_func=api.book_test, methods=['GET', 'POST'])
+    app.add_url_rule('/available_tests', view_func=api.available_tests, methods=['GET'])
+    app.add_url_rule('/cancel_test', view_func=api.cancel_test, methods=['GET', 'POST'])
+
+    # administer tests
+    app.add_url_rule('/administer_test', view_func=api.administer_test, methods=['GET', 'POST'])
+
+
+
+
+
+
+
+
+

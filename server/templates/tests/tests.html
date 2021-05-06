@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <!-- <h1>{% block title %}Appointments{% endblock %}</h1> -->
+{% endblock %}
+
+{% block content %}
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Confirm cancellation</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="post" action="{{ url_for('cancel_test') }}">
+            <div class="mb-3">
+              <div class="input-group mb-3">
+                <span class="input-group-text">Test name</span>
+                <input type="text" readonly class="form-control bg-light" id="test_name" name="test_name">
+              </div>
+              <input type="hidden" class="form-control" id="test_id" name="test_id">
+              <input type="hidden" class="form-control" id="pat_id" name="pat_id">
+              <div class="input-group">
+                <span class="input-group-text">Date</span>
+                <input type="date" readonly class="form-control bg-light" id="date" name="date">
+              </div>
+            </div>
+            <button class="btn btn-outline-secondary" type="submit">Confirm</button>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<div class="card mt-5">
+    <div class="card-header p-3 bg-light">
+        <h3> My Diagnostic Tests </h3>
+    </div>
+    <div class="card-body">
+        <div class="row mt-2">
+            <!-- tests -->
+            <div class="table-responsive app p-4">
+                <table class="table table-light table-hover">
+                    <tr>
+                        <th>Name</th>
+                        <th>Results</th> 
+                        <th>Comments</th>
+                        <th>Date</th>
+                        <th style="white-space: nowrap; width: 1%;"><span class="float-end">Actions</span></th>
+                    </tr>
+                    {% for test in data['tests'] %}
+                        {% set test_name = test['test'] %}
+                        {% set date = test['dat'] %}
+                        <tr>
+                            <td>{{ test['test'] }}</td>
+                            {% if test['result_file'] %}
+                                <td>{{ test['result_file'] }}</td>
+                                <td>{{ test['comments'] }}</td>
+                            {% else %}
+                                <td> NA </td>
+                                <td> NA </td>
+                            {% endif %}
+                            <td>{{ test['dat'] }}</td>
+                            <td style="white-space: nowrap; width: 1%;">
+                                <div class="btn-group float-end" role="group" aria-label="actions">
+                                    <button type="button" class="btn"><i class="bi bi-card-list"></i></button>
+                                    {% if test['result_file'] %}
+                                    {% else %}
+                                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-name="{{ test_name }}" data-bs-date="{{ date }}" data-bs-id="{{ test['test_id'] }}" data-bs-pid="{{ test['patient_id'] }}"><i class="bi bi-trash"></i></button>
+                                    {% endif %}
+                                    <button type="button" class="btn"><i class="bi bi-arrow-right-square"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+       </div>
+    </div>
+</div>
+<script>
+    var exampleModal = document.getElementById('exampleModal')
+  exampleModal.addEventListener('show.bs.modal', function (event) {
+    // Button that triggered the modal
+    var button = event.relatedTarget
+    // Extract info from data-bs-* attributes
+    var test_name = button.getAttribute('data-bs-name')
+    var date = button.getAttribute('data-bs-date')
+    var test_id=button.getAttribute('data-bs-id')
+    var pat_id=button.getAttribute('data-bs-pid')
+
+    // If necessary, you could initiate an AJAX request here
+    // and then do the updating in a callback.
+    //
+    // Update the modal's content.
+    var modalTitle = exampleModal.querySelector('.modal-title')
+    var modal_body_test_name = exampleModal.querySelector('#test_name')
+    var modal_body_test_id = exampleModal.querySelector('#test_id')
+    var modal_body_pat_id = exampleModal.querySelector('#pat_id')
+    var modal_body_date = exampleModal.querySelector('#date')
+
+    modal_body_test_name.value = test_name
+    modal_body_test_id.value = test_id
+    modal_body_pat_id.value = pat_id
+    modal_body_date.value = date
+
+  })
+</script>
+{% endblock %}

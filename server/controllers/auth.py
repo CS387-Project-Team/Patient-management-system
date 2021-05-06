@@ -83,6 +83,24 @@ def load_logged_in_user():
             'SELECT * FROM person WHERE id = %s', (user_id,)
         )
         g.user = db.fetchone()
+        db.execute('SELECT count(*) from support_staff where staff_id=%s',(user_id,))
+        if db.fetchone()[0]==0:
+            g.is_support=False
+        else:
+            g.is_support=True
+        
+        db.execute('SELECT count(*) from doctor where doc_id=%s',(user_id,))
+        if db.fetchone()[0]==0:
+            g.is_doc=False
+        else:
+            g.is_doc=True
+        
+        db.execute('SELECT count(*) from admin where id=%s',(user_id,))
+        if db.fetchone()[0]==0:
+            g.is_admin=False
+        else:
+            g.is_admin=True
+        
         conn.close()
 
 @bp.route('/logout')

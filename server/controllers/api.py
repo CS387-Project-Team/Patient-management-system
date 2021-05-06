@@ -2,7 +2,7 @@ import flask
 import application
 from flask import request, make_response, render_template, url_for, redirect
 from controllers.auth import login_required
-import controllers.dashboard, controllers.appointments, controllers.analytics
+import controllers.dashboard, controllers.appointments, controllers.analytics, controllers.tests, controllers.administer_test
 import controllers.generic_info
 
 @login_required
@@ -112,6 +112,38 @@ def cancel_appointment():
 def update_complaint():
     data = request.form
     return controllers.appointments.update_complaint(data)
+## tests
+@login_required
+def get_tests():
+    return controllers.tests.get_tests()
+
+@login_required
+def book_test():
+    if request.method == 'POST':
+        request_data = request.form
+        return controllers.tests.book_test(request_data)
+    elif request.method == 'GET':
+        return redirect(url_for('available_tests'))
+
+@login_required
+def available_tests():
+    return controllers.tests.get_available_tests()
+
+@login_required
+def cancel_test():
+    if request.method == 'POST':
+        request_data = request.form
+        return controllers.tests.cancel_test(request_data)
+    elif request.method == 'GET':
+        return redirect(url_for('get_appointments'))
+
+@login_required
+def administer_test():
+    if request.method=='POST':
+        request_data=request.form
+        return controllers.administer_test.edit_test(request_data)
+    elif request.method=='GET':
+        return controllers.administer_test.show_tests()
 
 def view_info():
     return controllers.generic_info.get_info()
