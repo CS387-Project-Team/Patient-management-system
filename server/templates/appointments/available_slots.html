@@ -60,7 +60,7 @@
     <div class="shadow bg-body rounded-3 card mt-5">
       <div class="card-body">
           <div class="row mt-3 mb-2">
-            <div class="row">
+            <div class="row mb-lg-3">
               <div class="col-lg-3 col-sm-6">
                 <div class="input-group">
                   <input class="form-control" type="text" id="search_input" onkeyup="search()" placeholder="Search for doctors.." title="Type in a name">
@@ -76,7 +76,7 @@
             </div>
             <div class="mt-5" id="all_doc_slots">
               {% for doc_slot in data['slots'] %}
-                <div class="card mb-3" style="border-radius: 10px;" id="doc_slots">
+                <div class="card mb-lg-5 mb-3" style="border-radius: 10px;" id="doc_slots">
                   <div class="row g-0">
                     <div class="col-lg-3 col-md-4 p-lg-5 p-md-4 p-3 bg-success shadow text-white text-center" style="border-radius: 10px;">
                         <h4 id="name">{{ doc_slot['name'] }}</h4>
@@ -92,18 +92,6 @@
                             {% set date = doc_slot['date'] %}
                             <div class="col">
                               <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-name="{{ doc_name }}" data-bs-id="{{ doc_id }}" data-bs-speciality="{{ doc_speciality }}" data-bs-date="{{ date }}" data-bs-time="{{ start_time }}">{{ start_time }}</button>
-                              <!-- <button class="btn btn-outline-secondary" onclick="expandForm('{{ doc_name }}', '{{ doc_id }}', '{{ date }}', '{{ start_time }}')" id="time" name="time" value="{{ start_time }}">{{ start_time }}</button>           -->
-                              <!-- <form>  action="" method="post"> 
-                                <input class="form-control" type="hidden" id="doctor_name" name="doctor_name" value="{{ doc_slot['name'] }}">
-                                <input class="form-control" type="hidden" id="doctor_id" name="doctor_id" value="{{ doc_slot['id'] }}">
-                                <input class="form-control" type="hidden" id="date" name="date" value="{{ doc_slot['date'] }}">
-                                <input class="form-control" type="hidden" id="type" name="type" value="OPD">
-                                <input class="form-control" type="hidden" id="complaint" name="complaint" value="">
-                                {% set doc_name = doc_slot['name'] %}
-                                {% set doc_id = doc_slot['id'] %}
-                                {% set date = doc_slot['date'] %}
-                                <button class="btn btn-outline-secondary" onclick="expandForm('{{ doc_name }}', '{{ doc_id }}', '{{ date }}', '{{ start_time }}')" id="time" name="time" value="{{ start_time }}">{{ start_time }}</button>
-                              </form> -->
                             </div>
                           {% endfor %}
                         </div>

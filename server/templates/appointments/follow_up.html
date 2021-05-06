@@ -51,10 +51,61 @@
   </div>
 </div>
 
-<div class="row mt-5">
-    <h3 class="text-center"> View available slots </h3>
+<div class="row justify-content-center">
+  <div class="col-lg-4 col-md-7">
+      <div class="card rounded-pill mt-5" style="background-color: lightskyblue;">
+          <h2 class="text-center p-5">Available slots</h2>
+      </div>
+  </div>
 </div>
-    <div class="row mt-3 mb-2">
+<div class="row mt-5 justify-content-center">
+  <div class="col-lg-8 col-md-10">
+    <div class="shadow bg-body rounded-3 card mt-5">
+      <div class="card-body">
+          <div class="row mt-3 mb-2">
+            <div class="row mb-lg-3 justify-content-center">
+              <div class="col-lg-3 col-sm-6 mt-3 mt-sm-0">
+                <form class="input-group" method="post" action="{{ url_for('update_date_free_slots_followup') }}">
+                  <input class="form-select" type="date" name="date" id="date" value="{{ data['today'] }}" required>
+                  <input type="hidden" id="doc_id" name="doc_id" value="{{ data['slots'][0]['id'] }}">
+                  <input type="hidden" id="patient_id" name="patient_id" value="{{data['patient_id']}}">
+                  <button class="btn btn-secondary" type="submit"><i class="bi bi-search"></i></button>
+                </form>
+              </div>
+            </div>
+            <div class="mt-5" id="all_doc_slots">
+              {% for doc_slot in data['slots'] %}
+                <div class="card mb-lg-5 mb-3" style="border-radius: 10px;" id="doc_slots">
+                  <div class="row g-0">
+                    <div class="col-lg-3 col-md-4 p-lg-5 p-md-4 p-3 bg-success shadow text-white text-center" style="border-radius: 10px;">
+                        <h4 id="name">{{ doc_slot['name'] }}</h4>
+                        <h5 id="speciality">{{ doc_slot['speciality'] }}</h5>
+                    </div>
+                    <div class="col-lg-9 col-md-8">
+                      <div class="card-body">
+                        <div class="row row-cols-auto g-0">
+                          {% for start_time in doc_slot['start_time'] %}
+                            {% set doc_name = doc_slot['name'] %}
+                            {% set doc_id = doc_slot['id'] %}
+                            {% set doc_speciality = doc_slot['speciality'] %}
+                            {% set date = doc_slot['date'] %}
+                            <div class="col">
+                              <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-name="{{ doc_name }}" data-bs-id="{{ doc_id }}" data-bs-speciality="{{ doc_speciality }}" data-bs-date="{{ date }}" data-bs-time="{{ start_time }}">{{ start_time }}</button>
+                            </div>
+                          {% endfor %}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <!-- <div class="row mt-3 mb-2">
         <div class="row justify-content-center">
             <div class="col-lg-3 col-sm-6 mt-3 mt-sm-0">
                 <form class="input-group" method="post" action="{{ url_for('update_date_free_slots_followup') }}">
@@ -64,37 +115,7 @@
                     <button class="btn btn-secondary" type="submit"><i class="bi bi-search"></i></button>
                 </form>
             </div>
-        </div>
-    
-        {% for doc_slot in data['slots'] %}
-            <!-- <div class="card mt-5 mx-lg-5 px-lg-5" id="doc_slots"> -->
-            <div class="row g-0 mt-5 justify-content-center p-3">
-                <div class="col-lg-2 col-md-4 bg-primary rounded-3">
-                    <div class="card-body text-center">
-                    <h5 id="name">{{ doc_slot['name'] }}</h5>
-                    <h5 id="speciality">{{ doc_slot['speciality'] }}</h5>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-8">
-                    <div class="card-body">
-                        <div class="row row-cols-auto g-0">
-                            {% for start_time in doc_slot['start_time'] %}
-                                {% set doc_name = doc_slot['name'] %}
-                                {% set doc_id = doc_slot['id'] %}
-                                {% set doc_speciality = doc_slot['speciality'] %}
-                                {% set date = doc_slot['date'] %}
-                                <div class="col">
-                                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-name="{{ doc_name }}" data-bs-id="{{ doc_id }}" data-bs-speciality="{{ doc_speciality }}" data-bs-date="{{ date }}" data-bs-time="{{ start_time }}">{{ start_time }}</button>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- </div> -->
-          {% endfor %}
-    </div>
-
+        </div> -->
 <script>
 var exampleModal = document.getElementById('exampleModal')
 exampleModal.addEventListener('show.bs.modal', function (event) {
