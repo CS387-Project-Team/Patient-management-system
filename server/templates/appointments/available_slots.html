@@ -115,8 +115,8 @@
       doc_slots = all_doc_slots.getElementsByClassName("card");
 
       for (i = 0; i < doc_slots.length; i++) {
-          doc_name = doc_slots[i].getElementsByTagName("h5")[0];
-          doc_speciality = doc_slots[i].getElementsByTagName("h5")[1];
+          doc_name = doc_slots[i].getElementsByTagName("h4")[0];
+          doc_speciality = doc_slots[i].getElementsByTagName("h5")[0];
           name_txt = doc_name.textContent || doc_name.innerText;
           speciality_txt = doc_speciality.textContent || doc_speciality.innerText;
           if (name_txt.toUpperCase().indexOf(filter) > -1) {
