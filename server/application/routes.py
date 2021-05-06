@@ -46,6 +46,9 @@ def routes(app):
     # administer tests
     app.add_url_rule('/administer_test', view_func=api.administer_test, methods=['GET', 'POST'])
 
+    # allot beds to admitted patients
+    app.add_url_rule('/allot-beds', view_func=api.allot_beds, methods=['GET', 'POST'])
+    app.add_url_rule('/allot-beds2', view_func=api.allot_beds2, methods=['GET', 'POST'])
 
 
 

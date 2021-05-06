@@ -3,7 +3,7 @@ import application
 from flask import request, make_response, render_template, url_for, redirect
 from controllers.auth import login_required
 import controllers.dashboard, controllers.appointments, controllers.analytics, controllers.tests, controllers.administer_test
-import controllers.generic_info
+import controllers.generic_info, controllers.beds
 
 @login_required
 def hello():
@@ -167,3 +167,17 @@ def show_disease_analytics(disease_id):
 def post_disease_for_analytics():
     disease_name = request.form.get('disease')
     return controllers.analytics.post_disease_for_analytics(disease_name)
+
+@login_required
+def allot_beds():
+    if request.method == 'GET':
+        return controllers.beds.show_stuff()
+    elif request.method == 'POST':
+        return redirect(url_for('allot_beds2'))
+
+@login_required
+def allot_beds2():
+    if request.method == 'GET':
+        return render_template('beds/allot_beds2.html')
+    elif request.method == 'POST':
+        return controllers.beds.allot_beds(request.form)
