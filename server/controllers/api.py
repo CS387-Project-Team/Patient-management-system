@@ -2,7 +2,8 @@ import flask
 import application
 from flask import request, make_response, render_template, url_for, redirect
 from controllers.auth import login_required
-import controllers.dashboard, controllers.appointments, controllers.analytics, controllers.tests, controllers.administer_test
+import controllers.dashboard, controllers.appointments, controllers.analytics
+import controllers.tests, controllers.administer_test, controllers.dis_symp
 import controllers.generic_info
 
 @login_required
@@ -104,6 +105,21 @@ def administer_test():
         return controllers.administer_test.edit_test(request_data)
     elif request.method=='GET':
         return controllers.administer_test.show_tests()
+
+
+@login_required
+def view_dis_symp():
+    return controllers.dis_symp.show_dis_symp()
+
+@login_required
+def add_dis():
+    request_data=request.form
+    return controllers.dis_symp.add_disease(request_data)
+
+@login_required
+def add_symp():
+    request_data=request.form
+    return controllers.dis_symp.add_symptom(request_data)
 
 def view_info():
     return controllers.generic_info.get_info()

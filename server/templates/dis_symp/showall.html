@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <!-- <h1>{% block title %}View available slots{% endblock %}</h1> -->
+{% endblock %}
+
+{% block content %}
+<div class="modal fade" id="addDisModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"> Add new disease </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="{{ url_for('add_dis') }}">
+          <div class="mb-3">
+            <div class="input-group mb-3">
+              <span class="input-group-text">Disease name</span>
+              <input type="text" class="form-control bg-light" id="dis_name" name="dis_name">
+            </div>
+            <div class="input-group">
+              <span class="input-group-text">Info link</span>
+              <input type="date" class="form-control bg-light" id="info_link" name="info_link">
+            </div>
+          </div>
+          <button class="btn btn-outline-secondary" type="submit">Confirm</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="addSympModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"> Add new sympton </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="{{ url_for('add_symp') }}">
+          <div class="mb-3">
+            <div class="input-group mb-3">
+              <span class="input-group-text">Symptom name</span>
+              <input type="text" class="form-control bg-light" id="symp_name" name="symp_name">
+            </div>
+          </div>
+          <button class="btn btn-outline-secondary" type="submit">Confirm</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="card mt-5">
+  <div class="card-header p-3 bg-light">
+      <h3> Diseases list 
+          <span class="float-end dropdown">
+              <button class="btn btn-border-secondary btn" type="button" id="disease" data-bs-toggle="modal" data-bs-target="#addDisModal">
+                  <i class="bi bi-card-list"></i>
+              </button>
+          </span>
+      </h3>
+  </div>
+  <div class="card-body">
+        <div class="row mt-2">
+            <div class="table-responsive app p-4">
+                <table class="table table-light table-hover">
+                    <tr>
+                        <th>Disease name</th>
+                        <th>Info link</th>
+                    </tr>
+                    {% for dis in data['disease'] %}
+                      <tr>
+                          <td>{{ dis['disease_name'] }}</td>
+                          <td>{{ dis['info_link'] }}</td>
+                      </tr>
+                    {% endfor %}
+                </table>
+            </div>
+       </div>
+    </div>
+</div>
+<div class="card mt-5">
+  <div class="card-header p-3 bg-light">
+      <h3> Symptoms list
+        <span class="float-end dropdown">
+            <button class="btn btn-border-secondary btn" type="button" id="symptom"  data-bs-toggle="modal" data-bs-target="#addSympModal">
+                <i class="bi bi-card-list"></i>
+            </button>
+        </span>
+      </h3>
+  </div>
+  <div class="card-body">
+        <div class="row mt-2">
+            <div class="table-responsive app p-4">
+                <table class="table table-light table-hover">
+                    <tr>
+                        <th>Symptom name</th>
+                    </tr>
+                    {% for symp in data['symptoms'] %}
+                      <tr>
+                          <td>{{ symp['symp_name'] }}</td>
+                      </tr>
+                    {% endfor %}
+                </table>
+            </div>
+       </div>
+    </div>
+</div>
+<script>
+
+  var addDisModal = document.getElementById('addDisModal')
+  addDisModal.addEventListener('show.bs.modal', function (event) {
+    // Button that triggered the modal
+    var button = event.relatedTarget
+  })
+
+  var addSympModal = document.getElementById('addSympModal')
+  addSympModal.addEventListener('show.bs.modal', function (event) {
+    // Button that triggered the modal
+    var button = event.relatedTarget
+  })
+
+
+  </script>
+{% endblock %}

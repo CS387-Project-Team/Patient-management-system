@@ -28,6 +28,10 @@ def routes(app):
     # administer tests
     app.add_url_rule('/administer_test', view_func=api.administer_test, methods=['GET', 'POST'])
 
+    app.add_url_rule('/dis_symp',view_func=api.view_dis_symp)
+    app.add_url_rule('/add_disease', view_func=api.add_dis,methods=['POST'])
+    app.add_url_rule('/add_symptom', view_func=api.add_symp,methods=['POST'])
+
 
 
 
