@@ -5,6 +5,8 @@ import datetime
 from pandas import DataFrame
 
 def show_tests():
+    if not g.is_support:
+        return redirect(url_for('dashboard'))
     user_id = g.user['id']
     sql='''SELECT patient.patient_id as pid, person.name as pname, takes.test_id as tid, test.name as test, result_file, comments, dat from 
             handle, equipment, takes, test,person, patient  where
@@ -26,6 +28,8 @@ def show_tests():
     return render_template('tests/administer_test.html',data=data)
 
 def edit_test(request):
+    if not g.is_support:
+        return redirect(url_for('dashboard'))
     print(request)
     pid=request.get('pat_id')
     tid=request.get('test_id')

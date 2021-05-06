@@ -66,9 +66,16 @@
             {% endif %}
 
             {% if g.is_admin %}
-            <li class="nav-item p-lg-3">
-	            <a class="nav-link middle disabled" href="#">Admin</a>
-	          </li>
+            <li class="nav-item dropdown p-lg-3">
+              <a class="nav-link dropdown-toggle middle" href="#" id="tests" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Admin
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="tests">
+                <li><a class="dropdown-item" href="{{ url_for('add_admin') }}">Add admin</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('add_remove_staff') }}">Assg Responisibilty</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('add_remove_staff') }}">Add/remove staff</a></li>
+              </ul>
+            </li>
             {% endif %}
 
           {% endif %}

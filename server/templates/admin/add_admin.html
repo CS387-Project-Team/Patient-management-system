@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <!-- <h1>{% block title %}View available slots{% endblock %}</h1> -->
+{% endblock %}
+
+{% block content %}
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Confirm Changes</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="{{ url_for('add_admin') }}">
+          <div class="mb-3">
+            <div class="input-group mb-3">
+              <span class="input-group-text">Doctor</span>
+              <input type="text" readonly class="form-control bg-light" id="doctor_name" name="doctor_name">
+            </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text">ID</span>
+              <input type="number" readonly class="form-control bg-light" id="id" name="id">
+            </div>
+            <div class="input-group mb-3">
+              <label for="salary" class="col-form-label">Salary</label>
+              <input class="form-control" type="number" id="salary" name="salary"></input>
+            </div>
+          </div>
+          <button class="btn btn-outline-secondary" type="submit">Confirm</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card mt-5">
+  <div class="card-header">
+      Add admin
+  </div>
+  <div class="card-body">
+    <div class="row mt-3 mb-2">
+      <div class="row">
+        <div class="col-lg-3 col-sm-6">
+          <div class="input-group">
+            <input class="form-control" type="text" id="search_input" onkeyup="search()" placeholder="Search for doctors.." title="Type in a name">
+            <button type="button" class="btn btn-outline-secondary disabled"><i class="bi bi-search"></i></button>
+          </div>
+        </div>
+      </div>
+      <div class="mt-5" id="all_docs">
+        {% for doc in data['docs'] %}
+          <div class="card" id="docs">
+            <div class="row g-0">
+              <div class="col-lg-2 col-md-4 bg-light rounded-3">
+                <div class="card-body">
+                  {% set doc_name = doc['name'] %}
+                  {% set doc_id = doc['id'] %}
+                  <h5 id="name">{{ doc['name'] }}</h5>
+                  <h5 id="speciality">{{ doc['speciality'] }}</h5>
+                  <h5>( {{doc['id']}} )
+                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-name="{{ doc_name }}" data-bs-id="{{ doc_id }}" >
+                      <i class="bi bi-check"></i>
+                    </button>
+                  </h5>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  function search() {
+      var input, filter, all_docs, docs, doc_name, name_txt, i;
+      input = document.getElementById("search_input");
+      filter = input.value.toUpperCase();
+      all_docs = document.getElementById("all_docs");
+      docs = all_docs.getElementsByClassName("card");
+      console.log("searched sth")
+
+      for (i = 0; i < docs.length; i++) {
+          doc_name = docs[i].getElementsByTagName("h5")[0];
+          console.log(doc_name);
+          doc_speciality = docs[i].getElementsByTagName("h5")[1];
+          name_txt = doc_name.textContent || doc_name.innerText;
+          speciality_txt = doc_speciality.textContent || doc_speciality.innerText;
+
+          if (name_txt.toUpperCase().indexOf(filter) > -1) {
+            console.log("Matched name ...", name_txt)
+            docs[i].style.display = "";
+          } else if(speciality_txt.toUpperCase().indexOf(filter) > -1) {
+            console.log("Matched speciality ...", speciality_txt)
+            docs[i].style.display = "";}
+          else {
+            docs[i].style.display = "none";
+          }
+      }
+  }
+
+  var exampleModal = document.getElementById('exampleModal')
+  exampleModal.addEventListener('show.bs.modal', function (event) {
+    // Button that triggered the modal
+    var button = event.relatedTarget
+    // Extract info from data-bs-* attributes
+    var doc_name = button.getAttribute('data-bs-name')
+    var doc_id = button.getAttribute('data-bs-id')
+
+    // Update the modal's content.
+    var modalTitle = exampleModal.querySelector('.modal-title')
+    var modal_body_doc_name = exampleModal.querySelector('#doctor_name')
+    var modal_body_doc_id = exampleModal.querySelector('#id')
+
+    modal_body_doc_name.value = doc_name
+    modal_body_doc_id.value = doc_id
+  })
+  </script>
+{% endblock %}

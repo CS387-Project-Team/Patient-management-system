@@ -2,7 +2,9 @@ import flask
 import application
 from flask import request, make_response, render_template, url_for, redirect
 from controllers.auth import login_required
-import controllers.dashboard, controllers.appointments, controllers.analytics, controllers.tests, controllers.administer_test
+import controllers.dashboard, controllers.appointments, controllers.analytics
+import controllers.tests, controllers.administer_test, controllers.dis_symp
+import controllers.assign_room
 import controllers.generic_info
 
 @login_required
@@ -93,6 +95,33 @@ def available_slots_followup():
 #     return controllers.appointments.confirm_booking(data)
 
 @login_required
+def add_admin():
+    if request.method == 'GET':
+        return controllers.dashboard.get_admin_dashboard()
+    elif request.method == 'POST':
+        request_data = request.form
+        return controllers.dashboard.add_admin(request_data)
+
+@login_required
+def remove_staff():
+    request_data = request.form
+    return controllers.dashboard.remove_staff(request_data)
+
+@login_required
+def add_doctor():
+    request_data = request.form
+    return controllers.dashboard.add_doctor(request_data)
+
+@login_required
+def add_staff():
+    request_data = request.form
+    return controllers.dashboard.add_staff(request_data)
+
+@login_required
+def add_remove_staff():
+    return controllers.dashboard.get_staff()
+
+@login_required
 def book_appointment():
     if request.method == 'POST':
         request_data = request.form
@@ -144,6 +173,29 @@ def administer_test():
         return controllers.administer_test.edit_test(request_data)
     elif request.method=='GET':
         return controllers.administer_test.show_tests()
+
+
+@login_required
+def view_dis_symp():
+    return controllers.dis_symp.show_dis_symp()
+
+@login_required
+def add_dis():
+    request_data=request.form
+    return controllers.dis_symp.add_disease(request_data)
+
+@login_required
+def add_symp():
+    request_data=request.form
+    return controllers.dis_symp.add_symptom(request_data)
+
+@login_required
+def assign_room():
+    if request.method=='GET':
+        return controllers.assign_room.show_slots()
+    else:
+        request_data=request.form
+        return controllers.assign_room.edit_slot(request_data)
 
 def view_info():
     return controllers.generic_info.get_info()

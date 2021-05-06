@@ -38,6 +38,120 @@ def update_profile(request):
     conn.close()
     return redirect(url_for('profile'))
 
+def get_staff():
+    data = {}
+    conn = application.connect()
+    db = conn.cursor(cursor_factory=application.DictCursor)
+
+    sql = '''select name,id from person where not exists 
+            ((select doc_id from doctor where doc_id = id)
+            union
+            (select staff_id from support_staff where staff_id = id))'''
+    db.execute(sql)
+    row = db.fetchall()
+    data['person'] = my_jsonify(row)
+
+    sql = '''select name,id,speciality from doctor join person on doctor.doc_id = person.id'''
+    db.execute(sql)
+    row = db.fetchall()
+    data['docs'] = my_jsonify(row)
+
+    sql = '''select name,id,role from support_staff join person on support_staff.staff_id = person.id'''
+    db.execute(sql)
+    row = db.fetchall()
+    data['staff'] = my_jsonify(row)
+
+    return render_template('admin/add_remove_staff.html',data=data)
+
+def remove_staff(request):
+    conn = application.connect()
+    db = conn.cursor(cursor_factory=application.DictCursor)
+    state = 0 #doctor
+    sql = '''select * from support_staff where staff_id=%s'''
+    db.execute(sql,(request.get('id'),))
+    row = db.fetchone()
+    if row:
+        state = 1 #staff
+    try:
+        if state:
+            sql = '''delete from support_staff where staff_id = %s'''
+            db.execute(sql,(request.get('id'),))
+        else:
+            sql = '''delete from support_staff where staff_id = %s'''
+            db.execute(sql,(request.get('id'),))
+    except Exception as e:
+        print(e)
+        conn.rollback()
+        conn.close()
+        redirect(url_for('add_remove_staff'))
+
+    conn.commit()
+    conn.close()
+    return redirect(url_for('remove_staff'))
+
+def add_doctor(request):
+    conn = application.connect()
+    db = conn.cursor(cursor_factory=application.DictCursor)
+    try:
+        sql = '''insert into doctor values (%s,%s,%s,%s,%s,%s,%s)'''
+        db.execute(sql,(request.get('id'),request.get('speciality'),request.get('salary'),request.get('permanent'),request.get('experience'),request.get('opd_charges'),request.get('ot_charges'),))
+    except Exception as e:
+        print(e)
+        conn.rollback()
+        conn.close()
+        redirect(url_for('add_remove_staff'))
+    
+    conn.commit()
+    conn.close()
+    return redirect(url_for('add_remove_staff'))
+
+def add_staff(request):
+    conn = application.connect()
+    db = conn.cursor(cursor_factory=application.DictCursor)
+    try:
+        sql = '''insert into support_staff values (%s,%s,%s,%s,%s,%s,%s)'''
+        db.execute(sql,(request.get('id'),request.get('role'),request.get('experience'),request.get('salary'),request.get('start_hr'),request.get('end_hr'),request.get('days_of_week'),))
+    except Exception as e:
+        print(e)
+        conn.rollback()
+        conn.close()
+        redirect(url_for('add_remove_staff'))
+    
+    conn.commit()
+    conn.close()
+    return redirect(url_for('add_remove_staff'))
+
+def add_admin(request):
+    # print("Fundo")
+    # print(request.get('salary'))
+    conn = application.connect()
+    db = conn.cursor(cursor_factory=application.DictCursor)
+    try:
+        sql = '''insert into admin values (%s,%s)'''
+        db.execute(sql,(request.get('id'),request.get('salary'),))
+        print('Done')
+    except Exception as e:
+        print(e)
+        conn.rollback()
+        conn.close()
+        redirect(url_for('add_admin'))
+    
+    conn.commit()
+    conn.close()
+    return redirect(url_for('add_admin'))
+
+def get_admin_dashboard():
+    data = {}
+
+    conn = application.connect()
+    db = conn.cursor(cursor_factory=application.DictCursor)
+    sql = '''select name,id,speciality from doctor join person on doctor.doc_id = person.id where not exists (select id from admin where id = doctor.doc_id)'''
+    db.execute(sql)
+    row = db.fetchall()
+    data['docs'] = my_jsonify(row)
+
+    return render_template('admin/add_admin.html',data=data)
+
 def get_dashboard():
     data = {}
 

@@ -12,6 +12,12 @@ def routes(app):
     app.add_url_rule('/delete-history', view_func=api.delete_history, methods=['POST'])
     app.add_url_rule('/update-history', view_func=api.update_history, methods=['POST'])
 
+    #admin
+    app.add_url_rule('/add-admin', view_func=api.add_admin, methods=['GET','POST'])
+    app.add_url_rule('/add-remove-staff',view_func=api.add_remove_staff, methods=['GET'])
+    app.add_url_rule('/add-doctor',view_func = api.add_doctor,methods=['POST'])
+    app.add_url_rule('/add-staff',view_func=api.add_staff,methods=['POST'])
+    app.add_url_rule('/remove-staff',view_func=api.remove_staff,methods=['POST'])
     # appos
     app.add_url_rule('/appointments', view_func=api.get_appointments)
     app.add_url_rule('/show-free-slots', view_func=api.available_slots, methods=['GET'])
@@ -45,6 +51,12 @@ def routes(app):
 
     # administer tests
     app.add_url_rule('/administer_test', view_func=api.administer_test, methods=['GET', 'POST'])
+
+    app.add_url_rule('/dis_symp',view_func=api.view_dis_symp)
+    app.add_url_rule('/add_disease', view_func=api.add_dis,methods=['POST'])
+    app.add_url_rule('/add_symptom', view_func=api.add_symp,methods=['POST'])
+
+    app.add_url_rule('/assign_room',view_func=api.assign_room, methods=['GET','POST'])
 
 
 

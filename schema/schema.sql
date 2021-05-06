@@ -73,7 +73,7 @@ create table doctor
 	ot_charges int,
 	primary key (doc_id),
 	foreign key (doc_id) references person
-		on delete set null
+		on delete cascade
 	);
 
 -- insert into doctor values(4,'Phys',22222,NULL,10,200,2000);
@@ -90,7 +90,7 @@ create table support_staff
 	days_of_week text,
 	primary key (staff_id),
 	foreign key (staff_id) references person
-		on delete set null
+		on delete cascade
 	);
 
 -- insert into support_staff values(6,'Nursing',10,10000,8,14,'Mon-Fri');
@@ -104,7 +104,7 @@ create table admin
 	-- qualification text,
 	primary key (id),
 	foreign key (id) references person
-		on delete set null
+		on delete cascade
 	);
 -- insert into admin values(0,1000000);
 
@@ -113,7 +113,7 @@ create table patient
 	patient_id int,
 	primary key (patient_id),
 	foreign key (id) references person
-		on delete set null
+		on delete cascade
 	);
 -- insert into patient values(1,1);
 -- insert into patient values(2,2);
