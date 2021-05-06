@@ -4,6 +4,7 @@ from flask import request, make_response, render_template, url_for, redirect
 from controllers.auth import login_required
 import controllers.dashboard, controllers.appointments, controllers.analytics
 import controllers.tests, controllers.administer_test, controllers.dis_symp
+import controllers.assign_room
 import controllers.generic_info
 
 @login_required
@@ -120,6 +121,14 @@ def add_dis():
 def add_symp():
     request_data=request.form
     return controllers.dis_symp.add_symptom(request_data)
+
+@login_required
+def assign_room():
+    if request.method=='GET':
+        return controllers.assign_room.show_slots()
+    else:
+        request_data=request.form
+        return controllers.assign_room.edit_slot(request_data)
 
 def view_info():
     return controllers.generic_info.get_info()

@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <!-- <h1>{% block title %}Appointments{% endblock %}</h1> -->
+{% endblock %}
+
+{% block content %}
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Edit room for appointment</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="post" action="{{ url_for('assign_room') }}">
+            <div class="mb-3">
+              <div class="input-group mb-3">
+                <span class="input-group-text">Dr</span>
+                <input type="text" readonly class="form-control bg-light" id="doc_name" name="doc_name">
+              </div>
+              <input type="hidden" class="form-control" id="doc_id" name="doc_id">
+              <div class="input-group">
+                <span class="input-group-text">Date</span>
+                <input type="date" readonly class="form-control bg-light" id="date" name="date">
+              </div>
+              <div class="input-group">
+                <span class="input-group-text">Time</span>
+                <input type="time" readonly class="form-control bg-light" id="start_time" name="start_time">
+              </div>
+              <div class="input-group">
+                <span class="input-group-text">RNo</span>
+                <input type="text" class="form-control bg-light" id="room_no" name="room_no">
+              </div>
+            </div>
+            <button class="btn btn-outline-secondary" type="submit">Confirm</button>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<div class="card mt-5">
+    <div class="card-header p-3 bg-light">
+        <h3> All appointments </h3>
+    </div>
+    <div class="card-body">
+        <div class="row mt-2">
+            <div class="table-responsive app p-4">
+                <table class="table table-light table-hover">
+                    <tr>
+                        <th>Name</th>
+                        <th>Room No</th> 
+                        <th>Date</th>
+                        <th>Start Time</th>
+                        <th style="white-space: nowrap; width: 1%;"><span class="float-end">Actions</span></th>
+                    </tr>
+                    {% for slot in data['slots'] %}
+                        {% set doc_name=slot['name'] %}
+                        {% set doc_id = slot['doc_id'] %}
+                        {% set room_no=slot['room_no'] %}
+                        {% set date = slot['dat'] %}
+                        {% set start_time=slot['start_time'] %}
+                        <tr>
+                            <td>{{ slot['name'] }}</td>
+                            {% if slot['room_no'] %}
+                                <td>{{ slot['room_no'] }}</td>
+                            {% else %}
+                                <td> NA </td>
+                            {% endif %}
+                            <td>{{ slot['dat'] }}</td>
+                            <td>{{ slot['start_time'] }}</td>
+                            <td style="white-space: nowrap; width: 1%;">
+                                <div class="btn-group float-end" role="group" aria-label="actions">
+                                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-docid="{{ doc_id }}" data-bs-roomno="{{ room_no }}" data-bs-date="{{ date }}" data-bs-stime="{{ start_time }}" data-bs-docname="{{ doc_name }}"><i class="bi bi-card-list"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+       </div>
+    </div>
+</div>
+<script>
+    var exampleModal = document.getElementById('exampleModal')
+  exampleModal.addEventListener('show.bs.modal', function (event) {
+    // Button that triggered the modal
+    var button = event.relatedTarget
+    // Extract info from data-bs-* attributes
+    var doc_name = button.getAttribute('data-bs-docname')
+    var date = button.getAttribute('data-bs-date')
+    var stime=button.getAttribute('data-bs-stime')
+    var room_no=button.getAttribute('data-bs-roomno')
+    var doc_id=button.getAttribute('data-bs-docid')
+
+    // If necessary, you could initiate an AJAX request here
+    // and then do the updating in a callback.
+    //
+    // Update the modal's content.
+    var modalTitle = exampleModal.querySelector('.modal-title')
+    exampleModal.querySelector('#doc_name').value=doc_name
+    exampleModal.querySelector('#doc_id').value=doc_id
+    exampleModal.querySelector('#date').value=date
+    exampleModal.querySelector('#start_time').value=stime
+    exampleModal.querySelector('#room_no').value=room_no
+
+  })
+</script>
+{% endblock %}

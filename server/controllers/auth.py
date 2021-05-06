@@ -95,6 +95,12 @@ def load_logged_in_user():
         else:
             g.is_doctor=True
 
+        db.execute('SELECT count(*) from admin where id=%s',(user_id,))
+        if db.fetchone()[0]==0:
+            g.is_admin=False
+        else:
+            g.is_admin=True
+
         conn.close()
 
 @bp.route('/logout')

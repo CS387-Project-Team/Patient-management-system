@@ -32,6 +32,8 @@ def routes(app):
     app.add_url_rule('/add_disease', view_func=api.add_dis,methods=['POST'])
     app.add_url_rule('/add_symptom', view_func=api.add_symp,methods=['POST'])
 
+    app.add_url_rule('/assign_room',view_func=api.assign_room, methods=['GET','POST'])
+
 
 
 
