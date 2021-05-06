@@ -5,7 +5,13 @@
 {% endblock %}
 
 {% block content %}
-
+<div class="row justify-content-center">
+    <div class="col-lg-4 col-md-7">
+        <div class="card rounded-pill mt-5" style="background-color: lightskyblue;">
+            <h2 class="text-center p-5">Disease Specific Analytics</h2>
+        </div>
+    </div>
+  </div>
 <div class="row justify-content-center">
     <div class="col-md-6">
         <form class="input-group mt-5" method="post" action="{{ url_for('post_disease_for_analytics') }}">
@@ -26,44 +32,46 @@
         <p class="h3 mt-5">{{data['disease_name']}}</p>
     </div>
 </div>
-<div class="row">
-    <div class="col-lg-6">
-        <div class="card mt-5 mx-5">
+<div class="row justify-content-center">
+    <div class="col-lg-4 me-lg-5 mb-3">
+        <div class="shadow bg-body rounded-3 card mt-5 mx-md-5">
             <div class="card-header">
                 Bed Occupancy
             </div>
             <div class="card-body">
-                <div id="beds" style="height: 450px; width: 100%;"></div>
+                <div id="beds" style="height: 300px; width: 100%;"></div>
             </div>
         </div>
     </div>
-    <div class="col-lg-6">
-      <div class="card mt-5 mx-5">
+    <div class="col-lg-4 ms-lg-5">
+      <div class="shadow bg-body rounded-3 card mt-5 mx-md-5">
           <div class="card-header">
               Appointments
           </div>
           <div class="card-body">
-              <div id="appos" style="height: 450px; width: 100%;"></div>
+              <div id="appos" style="height: 300px; width: 100%;"></div>
           </div>
       </div>
     </div>
-    <div class="col-lg-6">
-        <div class="card mt-5 mx-5">
+</div>
+<div class="row justify-content-center">
+    <div class="col-lg-4 me-lg-5 mt-3">
+        <div class="shadow bg-body rounded-3 card mt-5 mx-md-5">
             <div class="card-header">
                 Symptoms
             </div>
             <div class="card-body">
-                <div id="Symptoms" style="height: 370px; width: 100%;"></div>
+                <div id="Symptoms" style="height: 300px; width: 100%;"></div>
             </div>
         </div>
     </div>
-    <div class="col-lg-6">
-        <div class="card mt-5 mx-5">
+    <div class="col-lg-4 ms-lg-5 mt-3">
+        <div class="shadow bg-body rounded-3 card mt-5 mx-md-5">
             <div class="card-header">
                 Medicines
             </div>
             <div class="card-body">
-                <div id="Medicines" style="height: 370px; width: 100%;"></div>
+                <div id="Medicines" style="height: 300px; width: 100%;"></div>
             </div>
         </div>
     </div>
