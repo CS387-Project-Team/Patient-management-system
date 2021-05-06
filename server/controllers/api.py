@@ -122,6 +122,16 @@ def add_remove_staff():
     return controllers.dashboard.get_staff()
 
 @login_required
+def upd_doctor():
+    request_data = request.form
+    return controllers.dashboard.upd_doctor(request_data)
+
+@login_required
+def upd_staff():
+    request_data = request.form
+    return controllers.dashboard.upd_staff(request_data)
+
+@login_required
 def book_appointment():
     if request.method == 'POST':
         request_data = request.form

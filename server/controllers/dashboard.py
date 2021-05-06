@@ -51,17 +51,53 @@ def get_staff():
     row = db.fetchall()
     data['person'] = my_jsonify(row)
 
-    sql = '''select name,id,speciality from doctor join person on doctor.doc_id = person.id'''
+    sql = '''select name,id,salary,opd_charges,ot_charges from doctor join person on doctor.doc_id = person.id'''
     db.execute(sql)
     row = db.fetchall()
     data['docs'] = my_jsonify(row)
 
-    sql = '''select name,id,role from support_staff join person on support_staff.staff_id = person.id'''
+    sql = '''select name,id,salary,days_of_week,start_hr,end_hr from support_staff join person on support_staff.staff_id = person.id'''
     db.execute(sql)
     row = db.fetchall()
     data['staff'] = my_jsonify(row)
 
     return render_template('admin/add_remove_staff.html',data=data)
+
+def upd_doctor(request):
+    conn = application.connect()
+    db = conn.cursor(cursor_factory=application.DictCursor)
+    sql = '''update doctor
+            set salary=%s,opd_charges=%s,ot_charges=%s
+            where doc_id=%s'''
+    try:
+        db.execute(sql,(request.get('salary'),request.get('opd_charges'),request.get('ot_charges'),request.get('id'),))
+    except Exception as e:
+        print(e)
+        conn.rollback()
+        conn.close()
+        redirect(url_for('add_remove_staff'))
+
+    conn.commit()
+    conn.close()
+    return redirect(url_for('remove_staff'))
+
+def upd_staff(request):
+    conn = application.connect()
+    db = conn.cursor(cursor_factory=application.DictCursor)
+    sql = '''update staff
+            set salary=%s,start_hr=%s,end_hr=%s,days_of_week=%s
+            where staff_id=%s'''
+    try:
+        db.execute(sql,(request.get('salary'),request.get('start_hr'),request.get('end_hr'),request.get('days_of_week'),request.get('id'),))
+    except Exception as e:
+        print(e)
+        conn.rollback()
+        conn.close()
+        redirect(url_for('add_remove_staff'))
+
+    conn.commit()
+    conn.close()
+    return redirect(url_for('remove_staff'))
 
 def remove_staff(request):
     conn = application.connect()

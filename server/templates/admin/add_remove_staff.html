@@ -6,6 +6,123 @@
 
 {% block content %}
 
+<div class="modal fade" id="DeleteModal" tabindex="-1" aria-labelledby="DeleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="DeleteModalLabel">Are you sure?</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="{{ url_for('remove_staff') }}">
+          <div class="mb-3">
+            <div class="input-group mb-3">
+              <span class="input-group-text">Name</span>
+              <input type="text" readonly class="form-control bg-light" id="name" name="name">
+            </div>
+            <input type="hidden" class="form-control" id="id" name="id">
+
+          </div>
+          <button class="btn btn-outline-secondary" type="submit">Confirm</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="UpdDocModal" tabindex="-1" aria-labelledby="UpdDocModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="UpdDocModalLabel">Confirm Changes</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="{{ url_for('upd_doctor') }}">
+          <div class="mb-3">
+            <div class="input-group mb-3">
+              <span class="input-group-text">Name</span>
+              <input type="text" readonly class="form-control bg-light" id="doctor_name" name="doctor_name">
+            </div>
+            <input type="hidden" class="form-control" id="id" name="id">
+            <div class="input-group">
+              <div class="input-group mb-3">
+              <span class="input-group-text">Salary</span>
+              <input type="number" class="form-control bg-light" id="salary" name="salary">
+              </div>
+              <div class="input-group mb-3">
+              <span class="input-group-text">Opd Charges</span>
+              <input type="number" class="form-control bg-light" id="opd_charges" name="opd_charges">
+              </div>
+              <div class="input-group mb-3">
+              <span class="input-group-text">OT Charges</span>
+              <input type="number" class="form-control bg-light" id="ot_charges" name="ot_charges">
+              </div>
+            </div>
+
+          </div>
+          <button class="btn btn-outline-secondary" type="submit">Confirm</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="UpdStaffModal" tabindex="-1" aria-labelledby="UpdStaffModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="UpdStaffModalLabel">Confirm Changes</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="{{ url_for('upd_staff') }}">
+          <div class="mb-3">
+            <div class="input-group mb-3">
+              <span class="input-group-text">Name</span>
+              <input type="text" readonly class="form-control bg-light" id="staff_name" name="staff_name">
+            </div>
+            <input type="hidden" class="form-control" id="id" name="id">
+            <div class="input-group">
+              <div class="input-group mb-3">
+              <span class="input-group-text">Role</span>
+              <input type="text" class="form-control bg-light" id="role" name="role">
+              </div>
+              <div class="input-group mb-3">
+              <span class="input-group-text">Salary</span>
+              <input type="number" class="form-control bg-light" id="salary" name="salary">
+              </div>
+              <div class="input-group mb-3">
+              <span class="input-group-text">Start Hr</span>
+              <input type="number" class="form-control bg-light" id="start_hr" name="start_hr">
+              </div>
+              <div class="input-group mb-3">
+              <span class="input-group-text">End Hr</span>
+              <input type="number" class="form-control bg-light" id="end_hr" name="end_hr">
+              </div>
+              <div class="input-group mb-3">
+              <span class="input-group-text">Days Of Week</span>
+              <input type="text" class="form-control bg-light" id="days_of_week" name="days_of_week">
+              </div>
+            </div>
+
+          </div>
+          <button class="btn btn-outline-secondary" type="submit">Confirm</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="modal fade" id="DocModal" tabindex="-1" aria-labelledby="DocModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -97,7 +214,7 @@
                 </div>
                 <div class="input-group mb-3">
                 <span class="input-group-text">Days Of Week</span>
-                <input type="number" class="form-control bg-light" id="days_of_week" name="days_of_week">
+                <input type="text" class="form-control bg-light" id="days_of_week" name="days_of_week">
                 </div>
               </div>
 
@@ -177,7 +294,7 @@
                             {% set doc_id = person['id'] %}
                             <h5 id="name">{{ person['name'] }}</h5>
                             <h5>( {{person['id']}} )
-                              <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#StaffModal" data-bs-name="{{ doc_name }}" data-bs-id="{{ doc_id }}" >
+                              <button type="button" class="btn btn-outline-secondary" data-bs-type="new" data-bs-toggle="modal" data-bs-target="#StaffModal" data-bs-name="{{ doc_name }}" data-bs-id="{{ doc_id }}" >
                                 <i class="bi bi-check"></i>
                               </button>
                             </h5>
@@ -192,9 +309,101 @@
           </div>
     </div>
 </div>
-<div class="row mt-md-5 justify-content-center">
 
+<div class="row mt-5 justify-content-center">
+  <div class="col-sm-12 col-md-6 col-lg-4 mb-4 me-lg-5">
+      <div class="card">
+          <div class="card-header">
+              Modify/Remove Doctor
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="row">
+                <div class="col-lg-12 col-sm-12">
+                  <div class="input-group">
+                    <input class="form-control" type="text" id="search_doc1" onkeyup="search('search_doc1','all_docs')" placeholder="Search for doctor.." title="Type in a name">
+                    <button type="button" class="btn btn-outline-secondary disabled"><i class="bi bi-search"></i></button>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-6" id="all_docs">
+                {% for doc in data['docs'] %}
+                  <div class="card" id="persons">
+                    <div class="row g-0">
+                      <div class="col-lg-12 col-md-4 bg-light rounded-3">
+                        <div class="card-body">
+                          {% set doc_name = doc['name'] %}
+                          {% set doc_id = doc['id'] %}
+                          {% set doc_salary = doc['salary'] %}
+                          {% set doc_opd_charges = doc['opd_charges'] %}
+                          {% set doc_ot_charges = doc['ot_charges'] %}
+                          <h5 id="name">{{ doc['name'] }}</h5>
+                          <h5>( {{doc['id']}} )
+                            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#UpdDocModal" data-bs-name="{{ doc_name }}" data-bs-id="{{ doc_id }}" data-bs-salart="{{ doc_salary }}" data-bs-ot-charges = "{{ doc_ot_charges }}" data-bs-opd-charges = "{{ doc_opd_charges }}">
+                              <i class="bi bi-pen-fill"></i>
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#DeleteModal" data-bs-name="{{ doc_name }}" data-bs-id="{{ doc_id }}" >
+                              <i class="bi bi-x-square"></i>
+                            </button>
+                          </h5>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+  </div>
+  <div class="col-sm-12 col-md-6 col-lg-4 mb-4 me-lg-5">
+      <div class="card">
+          <div class="card-header">
+              Modify/Remove Staff
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="row">
+                <div class="col-lg-12 col-sm-12">
+                  <div class="input-group">
+                    <input class="form-control" type="text" id="search_staff1" onkeyup="search('search_staff1','all_staff1')" placeholder="Search for staff.." title="Type in a name">
+                    <button type="button" class="btn btn-outline-secondary disabled"><i class="bi bi-search"></i></button>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-6" id="all_staff1">
+                {% for staff in data['staff'] %}
+                  <div class="card" id="persons">
+                    <div class="row g-0">
+                      <div class="col-lg-12 col-md-4 bg-light rounded-3">
+                        <div class="card-body">
+                          {% set staff_name = staff['name'] %}
+                          {% set staff_id = staff['id'] %}
+                          {% set staff_salary = staff['salary'] %}
+                          {% set stafff_start_hr = staff['start_hr'] %}
+                          {% set staff_end_hr = staff['end_hr'] %}
+                          {% set staff_days_of_week = staff['days_of_week'] %}
+                          <h5 id="name">{{ staff['name'] }}</h5>
+                          <h5>( {{staff['id']}} )
+                            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#UpdStaffModal" data-bs-name="{{ staff_name }}" data-bs-id="{{ staff_id }}" data-bs-salart="{{ staff_salary }}" data-bs-start = "{{ staff_start_hr }}" data-bs-end = "{{ staff_end_hr }}" data-bs-days = "{{ staff_days_of_week }}">
+                              <i class="bi bi-pen-fill"></i>
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#DeleteModal" data-bs-name="{{ staff_name }}" data-bs-id="{{ staff_id }}" >
+                              <i class="bi bi-x-square"></i>
+                            </button>
+                          </h5>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+  </div>
 </div>
+
 <script>
     function search(inpt,element) {
         var input, filter, all_persons, persons, person_name, name_txt, i;
@@ -241,17 +450,93 @@
       // Button that triggered the modal
       var button = event.relatedTarget
       // Extract info from data-bs-* attributes
+      var bt_type = button.getAttribute('data-bs-type')
+      if(bt_type == 'new'){
+        var staff_name = button.getAttribute('data-bs-name')
+        var staff_id = button.getAttribute('data-bs-id')
+
+        // Update the modal's content.
+        var modalTitle = exampleModal.querySelector('.modal-title')
+        var modal_body_staff_name = exampleModal.querySelector('#staff_name')
+        var modal_body_staff_id = exampleModal.querySelector('#id')
+
+        modal_body_staff_name.value = staff_name
+        modal_body_staff_id.value = staff_id
+      }
+    })
+
+    exampleModal = document.getElementById('DeleteModal')
+    exampleModal.addEventListener('show.bs.modal', function (event) {
+      // Button that triggered the modal
+      var button = event.relatedTarget
+      // Extract info from data-bs-* attributes
+      var name = button.getAttribute('data-bs-name')
+      var id = button.getAttribute('data-bs-id')
+
+      // Update the modal's content.
+      var modalTitle = exampleModal.querySelector('.modal-title')
+      var modal_body_name = exampleModal.querySelector('#name')
+      var modal_body_id = exampleModal.querySelector('#id')
+
+      modal_body_name.value = name
+      modal_body_id.value = id
+    })
+
+    exampleModal = document.getElementById('UpdDocModal')
+    exampleModal.addEventListener('show.bs.modal', function (event) {
+      // Button that triggered the modal
+      var button = event.relatedTarget
+      // Extract info from data-bs-* attributes
       var doc_name = button.getAttribute('data-bs-name')
       var doc_id = button.getAttribute('data-bs-id')
+      var doc_salary = button.getAttribute('data-bs-salary')
+      var doc_opd_charges = button.getAttribute('data-bs-opd-charges')
+      var doc_ot_charges = button.getAttribute('data-bs-ot-charges')
   
       // Update the modal's content.
       var modalTitle = exampleModal.querySelector('.modal-title')
-      var modal_body_doc_name = exampleModal.querySelector('#staff_name')
+      var modal_body_doc_name = exampleModal.querySelector('#doctor_name')
       var modal_body_doc_id = exampleModal.querySelector('#id')
+      var modal_body_doc_salary = exampleModal.querySelector('#salary')
+      var modal_body_doc_opd_charges = exampleModal.querySelector('#opd_chrges')
+      var modal_body_doc_ot_charges = exampleModal.querySelector('#ot_charges')
   
       modal_body_doc_name.value = doc_name
       modal_body_doc_id.value = doc_id
+      modal_body_doc_salary.value = doc_salary
+      modal_body_doc_ot_charges = doc_ot_charges
+      modal_body_doc_opd_charges = doc_opd_charges
     })
-    
+
+    exampleModal = document.getElementById('UpdStaffModal')
+    exampleModal.addEventListener('show.bs.modal', function (event) {
+      // Button that triggered the modal
+      var button = event.relatedTarget
+      // Extract info from data-bs-* attributes
+      var bt_type = button.getAttribute('data-bs-type')
+      var staff_name = button.getAttribute('data-bs-name')
+      var staff_id = button.getAttribute('data-bs-id')
+      var staff_salary = button.getAttribute('data-salary')
+      var staff_start_hr = button.getAttribute('data-bs-start')
+      var staff_end_hr = button.getAttribute('data-bs-end')
+      var staff_days_of_week = button.getAttribute('data-bs-days')
+
+      // Update the modal's content.
+      var modalTitle = exampleModal.querySelector('.modal-title')
+      var modal_body_staff_name = exampleModal.querySelector('#staff_name')
+      var modal_body_staff_id = exampleModal.querySelector('#id')
+      var modal_staff_salary = exampleModal.querySelector('#salary')
+      var modal_staff_start_hr = exampleModal.querySelector('#start_hr')
+      var modal_staff_end_hr = exampleModal.querySelector('#end_hr')
+      var modal_staff_days_of_week = exampleModal.querySelector('#days_of_week')
+
+      modal_body_staff_name.value = staff_name
+      modal_body_staff_id.value = staff_id
+      modal_staff_days_of_week = staff_days_of_week
+      modal_staff_end_hr = staff_end_hr
+      modal_staff_start_hr = staff_start_hr
+      modal_staff_salary = staff_salary
+    })
+
 </script>
 {% endblock %}
