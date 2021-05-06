@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+
+{% block header %}
+	<!-- <h1>{% block title %}Profile{% endblock %}</h1> -->
+{% endblock %}
+
+{% block content %}
+
+<div class="row mt-5 justify-content-center">
+	<div class="col-sm-8">
+		<div class="row mt-5">
+			<div class="col-sm-12 col-md-6 col-lg-6 mb-4">
+				<div class="card mx-4-md mx-4-lg">
+					<div class="card-header">
+						<h4>
+							Room info
+						</h4>
+					</div>
+					<div class="card-body">
+						<div class="table-responsive app">
+							<table class="table table-light table-hover">
+								<tr>
+									<th>Room no</th>									
+									<th>Type</th>
+								</tr>
+								{% for row in data['rooms'] %}
+									<tr>
+										<td>{{ row['room_no'] }}</td>
+										<td>{{ row['type'] }}</td>
+									</tr>
+								{% endfor %}
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-12 col-md-6 col-lg-6 mb-4">
+				<div class="card mx-4-md mx-4-lg">
+					<div class="card-header">
+						<h4>
+							Beds info
+						</h4>
+					</div>
+					<div class="card-body">
+						<div class="table-responsive app">
+							<table class="table table-light table-hover">
+								<tr>
+									<th>Bed no</th>									
+									<th>Type</th>
+									<th>Charges</th> 
+									<th>Room no</th> 
+								</tr>
+								{% for bed in data['beds'] %}
+									<tr>
+										<td>{{ bed['bed_no'] }}</td>
+										<td>{{ bed['type'] }}</td>
+										<td>{{ bed['charges'] }}</td>
+										<td>{{ bed['room_no'] }}</td>
+									</tr>
+								{% endfor %}
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="card">
+			<div class="card-header">
+				Add Bed
+			</div>
+			<div class="card-body">
+				<form method="post">
+					<div class="mb-3 row">
+						<label for="name" class="col-sm-5 col-form-label">Bed no</label>
+						<div class="col-sm-7">
+							<input type="text" class="form-control bg-light" name="bed_no" id="bed_no" value="" required>
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label for="name" class="col-sm-5 col-form-label">Bed type</label>
+						<div class="col-sm-7">
+							<input type="text" class="form-control bg-light" name="bed_type" id="bed_type" value="" required>
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label for="contact" class="col-sm-5 col-form-label">Charges</label>
+						<div class="col-sm-7">
+							<input type="text" class="form-control bg-light" name="charges" id="charges" value="" required>
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label for="username" class="col-sm-5 col-form-label">Room no</label>
+						<div class="col-sm-7">
+							<input type="text" class="form-control bg-light" name="room_no" id="room_no" value="" required>
+						</div>
+					</div>
+
+					<input type="submit" class="btn btn-outline-secondary mt-5" name="action" value="Add">
+				</form>
+			</div>
+		</div>
+
+		<div class="card">
+			<div class="card-header">
+				Delete Bed
+			</div>
+			<div class="card-body">
+				<form method="post">
+					<div class="mb-3 row">
+						<label for="name" class="col-sm-5 col-form-label">Bed no</label>
+						<div class="col-sm-7">
+							<input type="text" class="form-control bg-light" name="bed_no" id="bed_no" value="" required>
+						</div>
+					</div>
+
+					<input type="submit" class="btn btn-outline-secondary mt-5" name="action" value="Delete">
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
