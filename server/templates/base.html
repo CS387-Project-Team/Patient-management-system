@@ -42,6 +42,25 @@
 	          <li class="nav-item p-lg-3">
 	            <a class="nav-link middle disabled" href="#">Tests</a>
 	          </li>
+
+            {% if data['doctor']%}
+            <li class="nav-item p-lg-3">
+	            <a class="nav-link middle disabled" href="{{url_for('doc_dashboard') }}">Doctor</a>
+	          </li>
+            {% endif %}
+
+            {% if data['staff']%}
+            <li class="nav-item p-lg-3">
+	            <a class="nav-link middle disabled" href="#">Staff</a>
+	          </li>
+            {% endif %}
+
+            {% if data['admin']%}
+            <li class="nav-item p-lg-3">
+	            <a class="nav-link middle disabled" href="#">Admin</a>
+	          </li>
+            {% endif %}
+
           {% endif %}
         </ul>
         <ul class="navbar-nav ms-auto">

@@ -47,6 +47,30 @@ def get_dashboard():
     db.execute('select * from person where id = %s', (g.user.get('id'),))
     row = db.fetchone()
     data['user'] = my_jsonify(row, multiple=False)
+
+    #doctor role
+    db.execute('select * from doctor where doc_id = %s', (g.user.get('id'),))
+    row = db.fetchone()
+    if row is not None:
+        data['doctor'] = True
+    else:
+        data['doctor'] = False
+    
+    #staff role
+    db.execute('select * from support_staff where staff_id = %s',(g.user.get('id'),))
+    row = db.fetchone()
+    if row is not None:
+        data['staff'] = True
+    else:
+        data['staff'] = False
+
+    #admin role
+    db.execute('select * from admin where id = %s',(g.user.get('id'),))
+    row = db.fetchone()
+    if row is not None:
+        data['admin'] = True
+    else:
+        data['admin'] = False
     
     # appointments and prescription
     sql = '''with pt(patient_id) as
