@@ -287,6 +287,23 @@ def get_admin_dashboard():
 
     return render_template('admin/add_admin.html',data=data)
 
+def pay_bill(request):
+    conn = application.connect()
+    db = conn.cursor(cursor_factory=application.DictCursor)
+    try:
+        sql = '''update bill
+                set paid_by=%s, mode=%s
+                where bill_no=%s'''
+        db.execute(sql,(request.get('id'),request.get('mode'),request.get('bill_no'),))
+        conn.commit()
+    except Exception as e:
+        print(e)
+        conn.rollback()
+        # conn.close()
+    
+    conn.close()
+    return redirect(url_for('dashboard'))
+
 def get_dashboard():
     data = {}
 
@@ -325,18 +342,18 @@ def get_dashboard():
             select * 
             from
             (
-                (select opd_charges as net_charges, purpose, discount, (case when paid_by is null then 'unpaid' else 'paid' end) as status, dat
+                (select bill_no, opd_charges as net_charges, purpose, discount, (case when paid_by is null then 'unpaid' else 'paid' end) as status, dat
                 from ((((meet natural join pt)
                         natural join appointment)
                         natural join bill)
                         natural join doctor) as foo)
                 union
-                (select charges  as net_charges, purpose, discount, (case when paid_by is null then 'unpaid' else 'paid' end) as status, dat
+                (select bill_no, charges  as net_charges, purpose, discount, (case when paid_by is null then 'unpaid' else 'paid' end) as status, dat
                 from (((pt natural join takes)
                         natural join bill)
                         natural join test) as bar)
                 union
-                (select charges*(end_dt-start_dt) as net_charges, purpose, discount, (case when paid_by is null then 'unpaid' else 'paid' end) as status, start_dt as dat
+                (select bill_no, charges*(end_dt-start_dt) as net_charges, purpose, discount, (case when paid_by is null then 'unpaid' else 'paid' end) as status, start_dt as dat
                 from (((pt natural join occupies)
                         natural join bill)
                         natural join bed) as foo)

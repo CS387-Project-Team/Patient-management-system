@@ -6,6 +6,9 @@ def routes(app):
     # dash
     app.add_url_rule('/dashboard', view_func=api.dashboard)
 
+    #bill
+    app.add_url_rule('/pay-bill',view_func=api.pay_bill,methods=['POST'])
+
     # history
     app.add_url_rule('/view-history', view_func=api.view_history, methods=['GET'])
     app.add_url_rule('/edit-history', view_func=api.add_history, methods=['GET', 'POST'])

@@ -5,6 +5,53 @@
 {% endblock %}
 
 {% block content %}
+<div class="modal fade" id="PayModal" tabindex="-1" aria-labelledby="PayModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="PayModalLabel">Confirm Payment</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="{{ url_for('pay_bill') }}">
+          <div class="mb-3">
+            <div class="input-group mb-3">
+              <span class="input-group-text">Purpose</span>
+              <input type="text" readonly class="form-control bg-light" id="purpose" name="purpose">
+            </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text">Charges</span>
+              <input type="text" readonly class="form-control bg-light" id="charges" name="charges">
+            </div>
+            <input type="hidden" class="form-control" id="id" name="id">
+            <input type="hidden" class="form-control" id="bill_no" name="bill_no">
+            
+            <div class="input-group mb-3">
+              <input class="form-control form-select" id="search_input" list="mode" placeholder="Payment Modes" title="Mode" name="mode" required>
+              <datalist class="custom-select" id="mode">
+                  <option value="Cash">
+                  <option value="Cheque">
+                  <option value="Online">
+                  <option value="Cash">
+              </datalist>
+              <!-- <button type="submit" class="btn btn-outline-secondary"><i class="bi bi-search"></i></button> -->
+            </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text">UPI</span>
+              <input type="email" class="form-control bg-light" id="upi" name="upi">
+            </div>
+            
+          </div>
+          <button class="btn btn-outline-secondary" type="submit">Pay</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="row justify-content-center">
     <div class="col-lg-4 col-md-7">
         <div class="card rounded-pill mt-5" style="background-color: lightskyblue;">
@@ -93,6 +140,7 @@
                                 <th class="d-none d-lg-table-cell">Discount</th>
                                 <th>Status</th>
                                 <th class="d-none d-lg-table-cell">Date</th>
+                                <th>Pay Now</th>
                             </tr>
                             {% for bill in data['bills'] %}
                                 <tr>
@@ -101,6 +149,13 @@
                                     <td class="d-none d-lg-table-cell"><span class="badge bg-success rounded-pill">{{ bill['discount'] }}%</span></td>
                                     <td><span class="badge bg-warning rounded-pill">{{ bill['status'] }}</span></td>
                                     <td class="d-none d-lg-table-cell"><span class="badge bg-danger rounded-pill">{{ bill['dat'] }}</span></td>
+                                    {% if bill['status'] == 'unpaid' %}
+                                      <td class="d-none d-lg-table-cell">
+                                        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#PayModal" data-bs-bill-no="{{ bill['bill_no'] }}" data-bs-id="{{ g.user['id'] }}" data-bs-charges="{{ bill['net_charges'] }}" data-bs-purpose="{{ bill['purpose'] }}">
+                                          <i class="bi bi-check"></i>
+                                        </button>
+                                      </td>
+                                    {% endif %}
                                 </tr>
                             {% endfor %}
                         </table>
@@ -200,4 +255,29 @@
             </div>
         </div>
     </div>
+
+<script>
+  var PayModal = document.getElementById('PayModal')
+	PayModal.addEventListener('show.bs.modal', function (event) {
+		// Button that triggered the modal
+		var button = event.relatedTarget
+		// Extract info from data-bs-* attributes
+		var bill_no = button.getAttribute('data-bs-bill-no')
+    var id = button.getAttribute('data-bs-id')
+    var purpose = button.getAttribute('data-bs-purpose')
+    var charges = button.getAttribute('data-bs-charges')
+
+		// Update the modal's content.
+		var modalTitle = PayModal.querySelector('.modal-title')
+    var modal_body_bill_no = PayModal.querySelector('#bill_no')
+    var modal_body_id = PayModal.querySelector('#id')
+    var modal_body_purpose = PayModal.querySelector('#purpose')
+    var modal_body_charges = PayModal.querySelector('#charges')
+
+		modal_body_bill_no.value = bill_no
+    modal_body_id.value = id
+    modal_body_purpose.value = purpose
+    modal_body_charges.value = charges
+	})
+</script>
 {% endblock %}

@@ -97,6 +97,11 @@ def available_slots_followup():
 #     return controllers.appointments.confirm_booking(data)
 
 @login_required
+def pay_bill():
+	request_data = request.form
+	return controllers.dashboard.pay_bill(request_data)
+
+@login_required
 def view_resp():
 	return controllers.dashboard.get_staff_resp()
 
