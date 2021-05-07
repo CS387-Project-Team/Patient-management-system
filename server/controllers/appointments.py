@@ -38,7 +38,7 @@ def get_appointments():
     if rows != []:  
         df = DataFrame(rows)
         df.columns = rows[0].keys()
-        df = df.groupby('app_id', as_index=False).agg({'name':'first', 'dat':'first', 'start_time': 'first', 'complaint': 'first', 'medicine': lambda x: list(x), 'dosage': lambda x: list(x), 'frequency': lambda x: list(x), 'instr': lambda x: list(x), 'patient_id': 'first', 'type': 'first'})
+        df = df.groupby('app_id', as_index=False).agg({'name':'first', 'dat':'first', 'start_time': 'first', 'complaint': 'first', 'medicine': lambda x: list(x), 'dosage': lambda x: list(x), 'frequency': lambda x: list(x), 'instr': lambda x: list(x), 'patient_id': 'first', 'type': 'first', 'doc_id': 'first'})
         data['appointments'] = df.to_dict(orient='records')
     else:
         data['appointments'] = []
@@ -99,7 +99,7 @@ def get_available_slots(date_str):
 def get_available_slots_followup(patient_id, doc_id, date_str):
     data = {}
     if date_str == None:
-        date_str = datetime.datetime.strptime(date_str, '%Y-%m-%d').date
+        date_str = datetime.date.today().isoformat()
     # date = datetime.datetime.strptime(date_str, '%Y-%m-%d').date
     conn = application.connect()
     db = conn.cursor(cursor_factory=application.DictCursor)
