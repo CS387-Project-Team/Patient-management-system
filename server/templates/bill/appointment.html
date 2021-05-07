@@ -9,6 +9,29 @@
 <div class="row mt-2 justify-content-center">
 	<div class="col-sm-8">
 
+		<div class="card">
+			<div class="card-header">
+				<h5> Choose test to generate bill for</h5>
+			</div>
+			<div class="card-body">
+				<form method="post">
+					<div class="mb-3 row">
+						<label for="name" class="col-sm-5 col-form-label">Choose appointment id</label>
+						<div class="col-sm-7">
+							<input type="text" class="form-control bg-light" name="app_id" id="app_id" value="" required>
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label for="name" class="col-sm-5 col-form-label">Discount</label>
+						<div class="col-sm-7">
+							<input type="number" class="form-control bg-light" name="discount" id="discount" value="0">
+						</div>
+					</div>
+					<input type="submit" class="btn btn-outline-secondary mt-5" name="action" value="Generate bill">
+				</form>
+			</div>
+		</div>
+
 		<div class="row mt-2">
 			<div class="col-sm-15 col-md-15 col-lg-15 mb-6">
 				<div class="card mx-4-md mx-4-lg">
@@ -78,35 +101,6 @@
 				</div>
 			</div>
 
-		</div>
-
-		<div class="card">
-			<div class="card-header">
-				<h5> Choose test to generate bill for</h5>
-			</div>
-			<div class="card-body">
-				<form method="post">
-					<div class="mb-3 row">
-						<label for="name" class="col-sm-5 col-form-label">Choose appointment id</label>
-						<div class="col-sm-7">
-							<input type="text" class="form-control bg-light" name="app_id" id="app_id" value="" required>
-						</div>
-					</div>
-					<!-- <div class="mb-3 row">
-						<label for="name" class="col-sm-5 col-form-label">Purpose</label>
-						<div class="col-sm-7">
-							<input type="text" class="form-control bg-light" name="purpose" id="purpose" value="">
-						</div>
-					</div> -->
-					<div class="mb-3 row">
-						<label for="name" class="col-sm-5 col-form-label">Discount</label>
-						<div class="col-sm-7">
-							<input type="number" class="form-control bg-light" name="discount" id="discount" value="0">
-						</div>
-					</div>
-					<input type="submit" class="btn btn-outline-secondary mt-5" name="action" value="Generate bill">
-				</form>
-			</div>
 		</div>
 
 	</div>

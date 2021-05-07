@@ -63,7 +63,7 @@ def handle_post_test(request):
 		print(e)
 		conn.rollback()
 		conn.close()
-		return redirect(url_for(generate_bill_test))
+		return redirect(url_for('generate_bill_test'))
 
 	conn.commit()
 	conn.close()
@@ -72,10 +72,67 @@ def handle_post_test(request):
 
 
 def show_medicine():
-	pass
+	data = {}
+
+	conn = application.connect()
+	db = conn.cursor(cursor_factory=application.DictCursor)
+
+	db.execute(''' select * from support_staff where staff_id = %s''', (g.user.get('id'),))
+	if len(db.fetchall()) == 0:
+		return flask.Response('This page is only for support staff', 200)
+
+	db.execute('''select * from medicine''')
+	rows = db.fetchall()
+	data['medicines'] = my_jsonify(rows)
+
+	db.execute('''select * from bill''')
+	rows = db.fetchall()
+	data['bills'] = my_jsonify(rows)
+
+	conn.close()
+	return render_template('bill/medicine.html', data=data)
+
 
 def handle_post_medicine(request):
-	pass
+	conn = application.connect()
+	db = conn.cursor(cursor_factory=application.DictCursor)
+
+	meds = request.get('meds')
+	purpose = 'Pharmacy'
+	discount = request.get('discount')
+
+	meds = meds.replace(' ','').split(';')
+	meds = [z.replace('(','').replace(')','').split(',') for z in meds]  
+	for x in meds:
+		if len(x) != 2 or int(x[1]) <= 0:
+			return flask.Response('The input is ill-formed, please try again with proper input', 200)
+
+	if int(discount) < 0 or int(discount) > 100:
+		return flask.Response('Invalid input for discount, please retry with a number between 0 and 100', 200)
+	
+	for m in meds:
+		db.execute('''select * from medicine where med_id = %s''', (m[0],))
+		if len(db.fetchall()) == 0:
+			return flask.Response(f'No medicine exists with id {m[0]}, please try again with proper input', 200)
+
+	db.execute('''select max(bill_no) from bill''')
+	bill_no = db.fetchall()[0][0] + 1
+
+	try:
+		db.execute('''insert into bill values (%s, null, %s, %s, null)''', (bill_no, purpose, discount))
+		for m in meds:
+			db.execute('''insert into bill_med values (%s,%s,%s)''', (bill_no, m[0], m[1]))
+	except Exception as e:
+		print(e)
+		conn.rollback()
+		conn.close()
+		return redirect(url_for('generate_bill_medicine'))
+	conn.commit()
+	conn.close()
+
+	return redirect(url_for('generate_bill_medicine')) 
+
+
 
 def show_appo():
 	data = {}
@@ -130,7 +187,7 @@ def handle_post_appo(request):
 		print(e)
 		conn.rollback()
 		conn.close()
-		return redirect(url_for(generate_bill_appo))
+		return redirect(url_for('generate_bill_appo'))
 
 	conn.commit()
 	conn.close()
