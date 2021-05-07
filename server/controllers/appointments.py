@@ -46,8 +46,8 @@ def get_appointments():
     data['past_appos'] = []
     for appo in data['appointments']:
         appo_time = datetime.datetime.strptime(appo['dat'].isoformat() + ' ' + appo['start_time'].isoformat(), '%Y-%m-%d %H:%M:%S')
-        hardcoded_now = datetime.datetime.strptime('2021-04-21 14:00:00', '%Y-%m-%d %H:%M:%S')
-        if appo_time >= hardcoded_now: #datetime.datetime.now() + datetime.timedelta(minutes=10)
+        # hardcoded_now = datetime.datetime.strptime('2021-04-21 14:00:00', '%Y-%m-%d %H:%M:%S')
+        if appo_time >= datetime.datetime.now() + datetime.timedelta(minutes=10):
             data['upcoming_appos'].append(appo)
         else:
             data['past_appos'].append(appo)
@@ -58,7 +58,7 @@ def get_appointments():
 def get_available_slots(date_str):
     data = {}
     if date_str == None:
-        date_str = "2021-04-21"
+        date_str = datetime.date.today().isoformat()
     # date = datetime.datetime.strptime(date_str, '%Y-%m-%d').date
     conn = application.connect()
     db = conn.cursor(cursor_factory=application.DictCursor)
@@ -99,7 +99,7 @@ def get_available_slots(date_str):
 def get_available_slots_followup(patient_id, doc_id, date_str):
     data = {}
     if date_str == None:
-        date_str = "2021-04-21"
+        date_str = datetime.datetime.strptime(date_str, '%Y-%m-%d').date
     # date = datetime.datetime.strptime(date_str, '%Y-%m-%d').date
     conn = application.connect()
     db = conn.cursor(cursor_factory=application.DictCursor)
