@@ -81,7 +81,10 @@ def routes(app):
     # use case 14
     app.add_url_rule('/appo-feedback', view_func=api.appo_feedback, methods=['GET', 'POST'])
 
-
+    # use case 23
+    app.add_url_rule('/bill/test', view_func=api.generate_bill_test, methods=['GET', 'POST'])
+    app.add_url_rule('/bill/medicine', view_func=api.generate_bill_medicine, methods=['GET', 'POST'])
+    app.add_url_rule('/bill/appointment', view_func=api.generate_bill_appo, methods=['GET', 'POST'])
 
 
 
