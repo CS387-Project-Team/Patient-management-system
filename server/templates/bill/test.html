@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block header %}
+	<!-- <h1>{% block title %}Profile{% endblock %}</h1> -->
+{% endblock %}
+
+{% block content %}
+
+<div class="row mt-2 justify-content-center">
+	<div class="col-sm-8">
+
+		<div class="row mt-2">
+			<div class="col-sm-15 col-md-15 col-lg-15 mb-6">
+				<div class="card mx-4-md mx-4-lg">
+					<div class="card-header">
+						<h4>
+							Tests
+						</h4>
+					</div>
+					<div class="card-body">
+						<div class="table-responsive app">
+							<table class="table table-light table-hover">
+								<tr>
+									<th>Patient id</th>
+									<th>Person id</th> 
+									<th>Name</th>
+									<th>Username</th>
+									<th>Test id</th>
+									<th>Test name</th>
+									<th>Charges</th>
+									<th>Result file</th>
+									<th>Date</th>
+									<th>Bill no</th>
+									<th>Comments</th>
+								</tr>
+								{% for row in data['tests'] %}
+									<tr>
+										<td>{{ row['patient_id'] }}</td>
+										<td>{{ row['pid'] }}</td>
+										<td>{{ row['pname'] }}</td>
+										<td>{{ row['username'] }}</td>
+										<td>{{ row['test_id'] }}</td>
+										<td>{{ row['tname'] }}</td>
+										<td>{{ row['charges'] }}</td>
+										<td>{{ row['result_file'] }}</td>
+										<td>{{ row['dat'] }}</td>
+										<td>{{ row['bill_no'] }}</td>
+										<td>{{ row['comment'] }}</td>
+									</tr>
+								{% endfor %}
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-15 col-md-15 col-lg-15 mb-6">
+				<div class="card mx-4-md mx-4-lg">
+					<div class="card-header">
+						<h4>
+							Bills
+						</h4>
+					</div>
+					<div class="card-body">
+						<div class="table-responsive app">
+							<table class="table table-light table-hover">
+								<tr>
+									<th>Bill no</th>
+									<th>Paid by</th> 
+									<th>Purpose</th>
+									<th>Discount</th>
+									<th>Mode</th>
+								</tr>
+								{% for row in data['bills'] %}
+									<tr>
+										<td>{{ row['bill_no'] }}</td>
+										<td>{{ row['paid_by'] }}</td>
+										<td>{{ row['purpose'] }}</td>
+										<td>{{ row['discount'] }}</td>
+										<td>{{ row['mode'] }}</td>
+									</tr>
+								{% endfor %}
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<div class="card">
+			<div class="card-header">
+				<h5> Choose test to generate bill for</h5>
+			</div>
+			<div class="card-body">
+				<form method="post">
+					<div class="mb-3 row">
+						<label for="name" class="col-sm-5 col-form-label">Choose patient id</label>
+						<div class="col-sm-7">
+							<input type="text" class="form-control bg-light" name="patient_id" id="patient_id" value="" required>
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label for="name" class="col-sm-5 col-form-label">Choose test id</label>
+						<div class="col-sm-7">
+							<input type="text" class="form-control bg-light" name="test_id" id="test_id" value="">
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label for="name" class="col-sm-5 col-form-label">Choose date</label>
+						<div class="col-sm-7">
+							<input type="date" class="form-control bg-light" name="date" id="date" value="">
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label for="name" class="col-sm-5 col-form-label">Purpose</label>
+						<div class="col-sm-7">
+							<input type="text" class="form-control bg-light" name="purpose" id="purpose" value="">
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label for="name" class="col-sm-5 col-form-label">Discount</label>
+						<div class="col-sm-7">
+							<input type="number" class="form-control bg-light" name="discount" id="discount" value="0">
+						</div>
+					</div>
+					<input type="submit" class="btn btn-outline-secondary mt-5" name="action" value="Generate bill">
+				</form>
+			</div>
+		</div>
+
+	</div>
+</div>
+{% endblock %}

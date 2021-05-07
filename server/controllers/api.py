@@ -7,7 +7,7 @@ import controllers.tests, controllers.administer_test, controllers.dis_symp
 import controllers.assign_room
 import controllers.generic_info
 import controllers.dashboard, controllers.appointments, controllers.analytics, controllers.tests, controllers.administer_test
-import controllers.generic_info, controllers.beds, controllers.inventory, controllers.appo_feedback
+import controllers.generic_info, controllers.beds, controllers.inventory, controllers.appo_feedback, controllers.generate_bill
 
 @login_required
 def hello():
@@ -260,4 +260,23 @@ def appo_feedback():
 	elif request.method == 'POST':
 		return controllers.appo_feedback.handle_post(request.form)
 
+@login_required
+def generate_bill_test():
+	if request.method == 'GET':
+		return controllers.generate_bill.show_test()
+	elif request.method == 'POST':
+		return controllers.generate_bill.handle_post_test(request.form)
 
+@login_required
+def generate_bill_medicine():
+	if request.method == 'GET':
+		return controllers.generate_bill.show_medicine()
+	elif request.method == 'POST':
+		return controllers.generate_bill.handle_post_medicine(request.form)
+
+@login_required
+def generate_bill_appo():
+	if request.method == 'GET':
+		return controllers.generate_bill.show_appo()
+	elif request.method == 'POST':
+		return controllers.generate_bill.handle_post_appo(request.form)
