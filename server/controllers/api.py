@@ -101,13 +101,20 @@ def view_resp():
 	return controllers.dashboard.get_staff_resp()
 
 @login_required
-def assg_resp():
+def assg_room_resp():
 	request_data = request.form
-	return controllers.dashboard.assg_staff_resp(request_data)
+	return controllers.dashboard.assg_staff_room(request_data)
+
+@login_required
+def assg_eqp_resp():
+	request_data = request.form
+	return controllers.dashboard.assg_staff_eqp(request_data)
+
 
 @login_required
 def evict_resp():
 	request_data = request.form
+	print("here1")
 	return controllers.dashboard.evict_staff_resp(request_data)
 
 @login_required

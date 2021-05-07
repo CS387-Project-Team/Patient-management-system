@@ -21,7 +21,8 @@ def routes(app):
     app.add_url_rule('/upd-doctor',view_func=api.upd_doctor,methods=['POST'])
     app.add_url_rule('/upd-staff',view_func=api.upd_staff,methods=['POST'])
     app.add_url_rule('/view-resp',view_func=api.view_resp,methods=['GET'])
-    app.add_url_rule('/assg-resp',view_func=api.assg_resp,methods=['POST'])
+    app.add_url_rule('/assg-room-resp',view_func=api.assg_room_resp,methods=['POST'])
+    app.add_url_rule('/assg-eqp-resp',view_func=api.assg_eqp_resp,methods=['POST'])
     app.add_url_rule('/evict-resp',view_func=api.evict_resp,methods=['POST'])
 
     # appos

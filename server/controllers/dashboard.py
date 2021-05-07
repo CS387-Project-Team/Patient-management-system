@@ -55,34 +55,48 @@ def get_staff_resp():
     db.execute(sql)
     row = db.fetchall()
     data['eqp'] = my_jsonify(row)
+    # print(data['eqp'])
 
-    sql = '''(select name,staff_id,room_no as id,'Room' as name,1 as assg
+    sql = '''(select name,staff_id,room_no as id,'Room' as resp_name,1 as assg
             from (support_staff join person on support_staff.staff_id=person.id) natural join assg_to)
             union
-            (select name,staff_id,eqp_id as id,type as name,1 as assg
+            (select name,staff_id,eqp_id as id,type as resp_name,1 as assg
             from (support_staff join person on support_staff.staff_id=person.id) natural join handle natural join equipment)
             union
             (with unassg(staff_id) as
                 (select staff_id from support_staff
                     where not exists (select * from handle where handle.staff_id = support_staff.staff_id)
                     and not exists (select * from assg_to where assg_to.staff_id = support_staff.staff_id))
-            select name,staff_id,NULL as id,NULL as name,0 as assg
+            select name,staff_id,NULL as id,NULL as resp_name,0 as assg
             from unassg join person on unassg.staff_id = person.id)'''
     db.execute(sql)
     row = db.fetchall()
     data['staff'] = my_jsonify(row)
     return render_template('admin/view_resp.html',data=data)
 
-def assg_staff_resp(request):
+def assg_staff_eqp(request):
     conn = application.connect()
     db = conn.cursor(cursor_factory=application.DictCursor)
     try:
-        if request.get('resp_type') == 1: #assg_to eqp
-            sql = '''insert into assg_to values (%s,%s)'''
-            db.execute(sql,(request.get('staff_id'),reqeust.get('id'),))
-        elif request.get('resp_type') == 0: #assg_to_room
-            sql = '''insert into handle values(%s,%s)'''
-            db.execute(sql,(request.get('staff_id'),reqeust.get('id'),))
+        sql = '''insert into handle  values(%s,%s)'''
+        db.execute(sql,(request.get('staff_id'),request.get('eqp_id'),))
+        print("here")
+    except Exception as e:
+        print(e)
+        conn.rollback()
+        conn.close()
+        return redirect(url_for('view_resp'))
+
+    conn.commit()
+    conn.close()
+    return redirect(url_for('view_resp'))
+
+def assg_staff_room(request):
+    conn = application.connect()
+    db = conn.cursor(cursor_factory=application.DictCursor)
+    try:
+        sql = '''insert into assg_to values (%s,%s)'''
+        db.execute(sql,(request.get('staff_id'),request.get('room'),))
     except Exception as e:
         print(e)
         conn.rollback()
@@ -97,11 +111,13 @@ def evict_staff_resp(request):
     conn = application.connect()
     db = conn.cursor(cursor_factory=application.DictCursor)
     try:
+        # print("here")
         resp_type = 0
         sql = '''select * from handle where staff_id = %s'''
         db.execute(sql,(request.get('staff_id'),))
         row = db.fetchall()
-        if row is not None:
+        # print(len(row) == 0)
+        if len(row) != 0:
             resp_type = 1
         if resp_type:
             sql = '''delete from handle where staff_id = %s'''
