@@ -53,17 +53,22 @@ def handle_post(request):
 	tests = request.get('tests')
 	desc = request.get('desc')
 
+
 	# is the input valid?
+	symptoms, diseases, meds, tests = symptoms.split(','), diseases.split(','), meds.split(';'), tests.split(',')
 	try:
-		symptoms = symptoms.split(',')
+		if symptoms == ['']: symptoms = []
 		print(symptoms)
-		diseases = diseases.split(',')
+		
 		if diseases == ['']: diseases = [] 
 		print(diseases)
-		meds = [x.replace('(','').replace(')','') for x in meds.split(';')]
-		meds = [x.split(',') for x in meds]
+		
+		if meds == ['']: meds = []
+		else:
+			meds = [x.replace('(','').replace(')','') for x in meds]
+			meds = [x.split(',') for x in meds]
 		print(meds)
-		tests = tests.split(',')
+		
 		if tests == ['']: tests = [] 
 		print(tests)
 	except Exception as e:
@@ -76,9 +81,9 @@ def handle_post(request):
 			return flask.Response('The medicines input in ill-formed, please try again with proper input', 200)
 
 
-	db.execute('''select * from meet where app_id = %s''', (app_id,))
+	db.execute('''select * from meet where app_id = %s and doc_id = %s''', (app_id, g.user.get('id')))
 	if len(db.fetchall()) == 0:
-		return flask.Response(f'There is no appointment with id {app_id}, please try again with proper input', 200)
+		return flask.Response(f'There is no appointment with id {app_id} in your list, please try again with proper input', 200)
 
 	for x in symptoms:
 		db.execute('''select * from symptom where symp_id = %s''', (x, ))
@@ -119,7 +124,7 @@ def handle_post(request):
 			db.execute('''insert into meds values (%s, %s, %s, %s)''', (x[0], presc_id, x[1], x[2]))
 		for x in tests:
 			db.execute('''insert into should_take values (%s, %s) ''', (presc_id, x))
-			
+
 	except Exception as e:
 		print(e)
 		conn.rollback()
