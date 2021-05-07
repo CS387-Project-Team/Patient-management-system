@@ -66,12 +66,10 @@
                             <td>{{ test['dat'] }}</td>
                             <td style="white-space: nowrap; width: 1%;">
                                 <div class="btn-group float-end" role="group" aria-label="actions">
-                                    <button type="button" class="btn"><i class="bi bi-card-list"></i></button>
                                     {% if test['result_file'] %}
                                     {% else %}
                                     <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-name="{{ test_name }}" data-bs-date="{{ date }}" data-bs-id="{{ test['test_id'] }}" data-bs-pid="{{ test['patient_id'] }}"><i class="bi bi-trash"></i></button>
                                     {% endif %}
-                                    <button type="button" class="btn"><i class="bi bi-arrow-right-square"></i></button>
                                 </div>
                             </td>
                         </tr>

@@ -32,6 +32,10 @@ def edit_slot(request):
     room_no=int(request.get('room_no'))
 
     try:
+        if datetime.datetime.strptime(date,"%Y-%m-%d")<datetime.datetime.now():
+            flash("Please edit for an upcoming date",'danger')
+            return redirect(url_for('assign_room'))
+
         sql='''SELECT count(*) from doctor_room_slot where
                 start_time=%s and
                 dat=%s and
