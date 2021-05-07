@@ -79,6 +79,9 @@
               </a>
               <ul class="dropdown-menu" aria-labelledby="tests">
                 <li><a class="dropdown-item" href="{{ url_for('administer_test') }}">Administer Test</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('generate_bill_test') }}">Generate Bill for tests</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('generate_bill_medicine') }}">Generate bill for medicines</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('generate_bill_appo') }}">Generate bill for appointments</a></li>
               </ul>
             </li>
             {% endif %}
