@@ -4,6 +4,7 @@ from flask import request, make_response, render_template, url_for, redirect
 from controllers.auth import login_required
 import controllers.dashboard, controllers.appointments, controllers.analytics
 import controllers.tests, controllers.administer_test, controllers.dis_symp
+import controllers.doc_slots
 import controllers.assign_room
 import controllers.generic_info
 import controllers.dashboard, controllers.appointments, controllers.analytics, controllers.tests, controllers.administer_test
@@ -95,6 +96,32 @@ def available_slots_followup():
 #     data['date'] = request.args.get('date')
 #     data['time'] = request.args.get('time')    
 #     return controllers.appointments.confirm_booking(data)
+
+@login_required
+def pay_bill():
+	request_data = request.form
+	return controllers.dashboard.pay_bill(request_data)
+
+@login_required
+def view_resp():
+	return controllers.dashboard.get_staff_resp()
+
+@login_required
+def assg_room_resp():
+	request_data = request.form
+	return controllers.dashboard.assg_staff_room(request_data)
+
+@login_required
+def assg_eqp_resp():
+	request_data = request.form
+	return controllers.dashboard.assg_staff_eqp(request_data)
+
+
+@login_required
+def evict_resp():
+	request_data = request.form
+	print("here1")
+	return controllers.dashboard.evict_staff_resp(request_data)
 
 @login_required
 def add_admin():
@@ -208,6 +235,14 @@ def assign_room():
     else:
         request_data=request.form
         return controllers.assign_room.edit_slot(request_data)
+
+@login_required
+def get_week_slots():
+	if request.method=='GET':
+		return controllers.doc_slots.show_all()
+	else:
+		request_data=request.form
+		return controllers.doc_slots.change(request_data)
 
 def view_info():
 	return controllers.generic_info.get_info()

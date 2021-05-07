@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <!-- <h1>{% block title %}View available slots{% endblock %}</h1> -->
+{% endblock %}
+
+{% block content %}
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-success">
+        <h5 class="modal-title text-white" id="exampleModalLabel">Confirm updation</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="{{ url_for('get_week_slots') }}">
+          <div class="mb-3">
+            <input type="hidden" class="form-control" id="status" name="status">
+            <div class="input-group">
+              <span class="input-group-text">Date</span>
+              <input type="date" readonly class="form-control bg-light" id="date" name="date">
+              <span class="input-group-text">Time</span>
+              <input type="text" readonly class="form-control bg-light" id="time" name="time">
+            </div>
+          </div>
+          <button class="btn btn-outline-success" type="submit">Confirm</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row justify-content-center">
+  <div class="col-lg-4 col-md-7">
+      <div class="card rounded-pill mt-5" style="background-color: lightskyblue;">
+          <h2 class="text-center p-5">Allslots</h2>
+      </div>
+  </div>
+</div>
+<div class="row mt-5 justify-content-center">
+  <div class="col-lg-8 col-md-10">
+    <div class="shadow bg-body rounded-3 card mt-5">
+      <div class="card-body">
+          <div class="row mt-3 mb-2">
+            <div class="mt-5" id="all_doc_slots">
+              {% for date,date_dict in data['slots'].items() %}
+                <div class="card mb-lg-5 mb-3" style="border-radius: 10px;" id="doc_slots">
+                  <div class="row g-0">
+                    <div class="col-lg-3 col-md-4 p-lg-5 p-md-4 p-3 bg-success shadow text-white text-center" style="border-radius: 10px;">
+                        <h5 id="speciality">{{ date }}</h5>
+                    </div>
+                    <div class="col-lg-9 col-md-8">
+                      <div class="card-body">
+                        <div class="row row-cols-auto g-0">
+                          {% for start_time,value in date_dict.items() %}
+                            <div class="col">
+                              <button type="button" class="btn btn-outline-secondary {% if value==1 %} btn-success {% elif value==2 %} btn-danger {% endif %} " data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-date="{{ date }}" data-bs-time="{{ start_time }}" data-bs-value="{{ value }}">{{ start_time }}</button>
+                            </div>
+                          {% endfor %}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+
+  var exampleModal = document.getElementById('exampleModal')
+  exampleModal.addEventListener('show.bs.modal', function (event) {
+    // Button that triggered the modal
+    var button = event.relatedTarget
+    // Extract info from data-bs-* attributes
+    var value = button.getAttribute('data-bs-value')
+    var time = button.getAttribute('data-bs-time')
+    var date = button.getAttribute('data-bs-date')
+
+    // If necessary, you could initiate an AJAX request here
+    // and then do the updating in a callback.
+    //
+    // Update the modal's content.
+    var modalTitle = exampleModal.querySelector('.modal-title')
+
+    exampleModal.querySelector('#date').value=date
+    exampleModal.querySelector('#time').value=time
+    exampleModal.querySelector('#status').value=value
+  })
+  </script>
+{% endblock %}

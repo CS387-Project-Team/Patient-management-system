@@ -6,6 +6,9 @@ def routes(app):
     # dash
     app.add_url_rule('/dashboard', view_func=api.dashboard)
 
+    #bill
+    app.add_url_rule('/pay-bill',view_func=api.pay_bill,methods=['POST'])
+
     # history
     app.add_url_rule('/view-history', view_func=api.view_history, methods=['GET'])
     app.add_url_rule('/edit-history', view_func=api.add_history, methods=['GET', 'POST'])
@@ -20,6 +23,11 @@ def routes(app):
     app.add_url_rule('/remove-staff',view_func=api.remove_staff,methods=['POST'])
     app.add_url_rule('/upd-doctor',view_func=api.upd_doctor,methods=['POST'])
     app.add_url_rule('/upd-staff',view_func=api.upd_staff,methods=['POST'])
+    app.add_url_rule('/view-resp',view_func=api.view_resp,methods=['GET'])
+    app.add_url_rule('/assg-room-resp',view_func=api.assg_room_resp,methods=['POST'])
+    app.add_url_rule('/assg-eqp-resp',view_func=api.assg_eqp_resp,methods=['POST'])
+    app.add_url_rule('/evict-resp',view_func=api.evict_resp,methods=['POST'])
+
     # appos
     app.add_url_rule('/appointments', view_func=api.get_appointments)
     app.add_url_rule('/show-free-slots', view_func=api.available_slots, methods=['GET'])
@@ -59,6 +67,8 @@ def routes(app):
     app.add_url_rule('/add_symptom', view_func=api.add_symp,methods=['POST'])
 
     app.add_url_rule('/assign_room',view_func=api.assign_room, methods=['GET','POST'])
+
+    app.add_url_rule('/all_slots',view_func=api.get_week_slots,methods=['GET','POST'])
 
     # allot beds to admitted patients
     app.add_url_rule('/allot-beds', view_func=api.allot_beds, methods=['GET', 'POST'])

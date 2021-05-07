@@ -39,6 +39,103 @@ def update_profile(request):
     flash('Updated profile successfully!', 'success')
     return redirect(url_for('profile'))
 
+def get_staff_resp():
+    data = {}
+    conn = application.connect()
+    db = conn.cursor(cursor_factory=application.DictCursor)
+
+    sql = '''select room_no,'Room' as name,0 as resp_type
+        from room'''
+    db.execute(sql)
+    row = db.fetchall()
+    data['room'] = my_jsonify(row)
+
+    sql = '''select eqp_id,type as name,1 as resp_type
+        from equipment
+        where not exists (select * from handle where handle.eqp_id = equipment.eqp_id)'''
+    db.execute(sql)
+    row = db.fetchall()
+    data['eqp'] = my_jsonify(row)
+    # print(data['eqp'])
+
+    sql = '''(select name,staff_id,room_no as id,'Room' as resp_name,1 as assg
+            from (support_staff join person on support_staff.staff_id=person.id) natural join assg_to)
+            union
+            (select name,staff_id,eqp_id as id,type as resp_name,1 as assg
+            from (support_staff join person on support_staff.staff_id=person.id) natural join handle natural join equipment)
+            union
+            (with unassg(staff_id) as
+                (select staff_id from support_staff
+                    where not exists (select * from handle where handle.staff_id = support_staff.staff_id)
+                    and not exists (select * from assg_to where assg_to.staff_id = support_staff.staff_id))
+            select name,staff_id,NULL as id,NULL as resp_name,0 as assg
+            from unassg join person on unassg.staff_id = person.id)'''
+    db.execute(sql)
+    row = db.fetchall()
+    data['staff'] = my_jsonify(row)
+    return render_template('admin/view_resp.html',data=data)
+
+def assg_staff_eqp(request):
+    conn = application.connect()
+    db = conn.cursor(cursor_factory=application.DictCursor)
+    try:
+        sql = '''insert into handle  values(%s,%s)'''
+        db.execute(sql,(request.get('staff_id'),request.get('eqp_id'),))
+        print("here")
+    except Exception as e:
+        print(e)
+        conn.rollback()
+        conn.close()
+        return redirect(url_for('view_resp'))
+
+    conn.commit()
+    conn.close()
+    return redirect(url_for('view_resp'))
+
+def assg_staff_room(request):
+    conn = application.connect()
+    db = conn.cursor(cursor_factory=application.DictCursor)
+    try:
+        sql = '''insert into assg_to values (%s,%s)'''
+        db.execute(sql,(request.get('staff_id'),request.get('room'),))
+    except Exception as e:
+        print(e)
+        conn.rollback()
+        conn.close()
+        redirect(url_for('view_resp'))
+
+    conn.commit()
+    conn.close()
+    return redirect(url_for('view_resp'))
+
+def evict_staff_resp(request):
+    conn = application.connect()
+    db = conn.cursor(cursor_factory=application.DictCursor)
+    try:
+        # print("here")
+        resp_type = 0
+        sql = '''select * from handle where staff_id = %s'''
+        db.execute(sql,(request.get('staff_id'),))
+        row = db.fetchall()
+        # print(len(row) == 0)
+        if len(row) != 0:
+            resp_type = 1
+        if resp_type:
+            sql = '''delete from handle where staff_id = %s'''
+            db.execute(sql,(request.get('staff_id')))
+        else:
+           sql = '''delete from assg_to where staff_id = %s'''
+           db.execute(sql,(request.get('staff_id')))
+    except Exception as e:
+        print(e)
+        conn.rollback()
+        conn.close()
+        redirect(url_for('view_resp'))
+
+    conn.commit()
+    conn.close()
+    return redirect(url_for('view_resp'))
+
 def get_staff():
     data = {}
     conn = application.connect()
@@ -190,6 +287,23 @@ def get_admin_dashboard():
 
     return render_template('admin/add_admin.html',data=data)
 
+def pay_bill(request):
+    conn = application.connect()
+    db = conn.cursor(cursor_factory=application.DictCursor)
+    try:
+        sql = '''update bill
+                set paid_by=%s, mode=%s
+                where bill_no=%s'''
+        db.execute(sql,(request.get('id'),request.get('mode'),request.get('bill_no'),))
+        conn.commit()
+    except Exception as e:
+        print(e)
+        conn.rollback()
+        # conn.close()
+    
+    conn.close()
+    return redirect(url_for('dashboard'))
+
 def get_dashboard():
     data = {}
 
@@ -228,18 +342,18 @@ def get_dashboard():
             select * 
             from
             (
-                (select opd_charges as net_charges, purpose, discount, (case when paid_by is null then 'unpaid' else 'paid' end) as status, dat
+                (select bill_no, opd_charges as net_charges, purpose, discount, (case when paid_by is null then 'unpaid' else 'paid' end) as status, dat
                 from ((((meet natural join pt)
                         natural join appointment)
                         natural join bill)
                         natural join doctor) as foo)
                 union
-                (select charges  as net_charges, purpose, discount, (case when paid_by is null then 'unpaid' else 'paid' end) as status, dat
+                (select bill_no, charges  as net_charges, purpose, discount, (case when paid_by is null then 'unpaid' else 'paid' end) as status, dat
                 from (((pt natural join takes)
                         natural join bill)
                         natural join test) as bar)
                 union
-                (select charges*(end_dt-start_dt) as net_charges, purpose, discount, (case when paid_by is null then 'unpaid' else 'paid' end) as status, start_dt as dat
+                (select bill_no, charges*(end_dt-start_dt) as net_charges, purpose, discount, (case when paid_by is null then 'unpaid' else 'paid' end) as status, start_dt as dat
                 from (((pt natural join occupies)
                         natural join bill)
                         natural join bed) as foo)

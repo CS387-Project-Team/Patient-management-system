@@ -1,0 +1,233 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <!-- <h1>{% block title %}View available slots{% endblock %}</h1> -->
+{% endblock %}
+
+{% block content %}
+<div class="modal fade" id="WardModal" tabindex="-1" aria-labelledby="WardModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-success">
+        <h5 class="modal-title text-white" id="WardModalLabel">Confirm Changes</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="{{ url_for('assg_room_resp') }}">
+          <div class="mb-3">
+            <div class="input-group mb-3">
+              <span class="input-group-text">Staff</span>
+              <input type="text" readonly class="form-control bg-light" id="staff_name" name="staff_name">
+            </div>
+            <input type="hidden" class="form-control" id="staff_id" name="staff_id">
+         </div>
+        <div class="input-group mb-3">
+        <input class="form-control form-select" id="search_input" list="room" placeholder="Search for Rooms" title="Type in a num" name="room">
+        <datalist class="custom-select" id="room">
+            {% for room in data['room'] %}
+                <option value="{{ room['room_no'] }}">
+            {% endfor %}
+        </datalist>
+        <button type="submit" class="btn btn-outline-secondary"><i class="bi bi-search"></i></button>
+        </div>
+          <button class="btn btn-outline-success" type="submit">Assign</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="EqpModal" tabindex="-1" aria-labelledby="EqpModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-success">
+          <h5 class="modal-title text-white" id="EqpModalLabel">Confirm Changes</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="post" action="{{ url_for('assg_eqp_resp') }}">
+            <div class="mb-3">
+              <div class="input-group mb-3">
+                <span class="input-group-text">Staff</span>
+                <input type="text" readonly class="form-control bg-light" id="staff_name" name="staff_name">
+              </div>
+              <input type="hidden" class="form-control" id="staff_id" name="staff_id">
+           </div>
+          <div class="input-group mb-3">
+          <input class="form-control form-select" id="search_input" list="eqp" placeholder="Search for Eqp" title="Type in a num" name="eqp">
+          <datalist class="custom-select" id="eqp">
+              {% for eqp in data['eqp'] %}
+                  <option value="{{ eqp['eqp_id'] }}" label="{{ eqp['type'] }}">
+              {% endfor %}
+          </datalist>
+          <button type="submit" class="btn btn-outline-secondary"><i class="bi bi-search"></i></button>
+          </div>
+            <button class="btn btn-outline-success" type="submit">Assign</button>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<div class="modal fade" id="EvictModal" tabindex="-1" aria-labelledby="EvictModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+        <div class="modal-header bg-success">
+            <h5 class="modal-title text-white" id="EvictModalLabel">Confirm Eviction</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form method="post" action="{{ url_for('evict_resp') }}">
+            <div class="mb-3">
+                <div class="input-group mb-3">
+                <span class="input-group-text">Staff</span>
+                <input type="text" readonly class="form-control bg-light" id="staff_name" name="staff_name">
+                </div>
+                <input type="hidden" class="form-control" id="staff_id" name="staff_id">
+            </div>
+            <button class="btn btn-outline-success" type="submit">Evict</button>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center">
+  <div class="col-lg-4 col-md-7">
+      <div class="card rounded-pill mt-5" style="background-color: lightskyblue;">
+          <h2 class="text-center p-5">Available slots</h2>
+      </div>
+  </div>
+</div>
+<div class="row mt-5 justify-content-center">
+  <div class="col-sm-12 col-md-6 col-lg-4 mb-4 me-lg-5">
+		<div class="card">
+				<div class="card-header">
+						Search Staff
+				</div>
+				<div class="card-body">
+					<div class="row">
+						<div class="row">
+							<div class="col-lg-12 col-sm-12">
+								<div class="input-group">
+									<input class="form-control" type="text" id="search_staff1" onkeyup="search('search_staff1','all_staff1')" placeholder="Search for staff.." title="Type in a name">
+									<button type="button" class="btn btn-outline-secondary disabled"><i class="bi bi-search"></i></button>
+								</div>
+							</div>
+						</div>
+						<div class="mt-6" id="all_staff1">
+							{% for staff in data['staff'] %}
+								<div class="card" id="persons">
+									<div class="row g-0">
+										<div class="col-lg-12 col-md-4 bg-light rounded-3">
+											<div class="card-body">
+												{% set staff_name = staff['name'] %}
+												{% set staff_id = staff['staff_id'] %}
+												<h5 id="name">{{ staff['name'] }} </h5>
+												<h5>( {{staff['staff_id']}} )</h5>
+												{% if staff['assg'] %}
+													<h5 id="resp">{{ staff['resp_name'] }} ({{ staff['id'] }})</h5>
+													<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#EvictModal" data-bs-name="{{ staff_name }}" data-bs-id="{{ staff_id }}" >
+														Evict
+													</button>
+												{% else %}
+													<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#WardModal" data-bs-name="{{ staff_name }}" data-bs-id="{{ staff_id }}" >
+														Room
+													</button>	
+													<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#EqpModal" data-bs-name="{{ staff_name }}" data-bs-id="{{ staff_id }}" >
+														Eqp
+													</button>
+												{% endif %}
+											</div>
+										</div>
+									</div>
+								</div>
+							{% endfor %}
+						</div>
+					</div>
+				</div>
+			</div>
+</div>
+</div>
+<script>
+  function search(inpt,element) {
+			var input, filter, all_persons, persons, person_name, name_txt, i;
+			input = document.getElementById(inpt);
+			filter = input.value.toUpperCase();
+			all_persons = document.getElementById(element);
+			persons = all_persons.getElementsByClassName("card");
+			console.log("searched sth")
+
+			for (i = 0; i < persons.length; i++) {
+					person_name = persons[i].getElementsByTagName("h5")[0];
+					// console.log(doc_name);
+					name_txt = person_name.textContent || person_name.innerText;
+
+					if (name_txt.toUpperCase().indexOf(filter) > -1) {
+						console.log("Matched name ...", name_txt)
+						persons[i].style.display = "";
+					}
+					else {
+						persons[i].style.display = "none";
+					}
+			}
+    }
+
+	var EvictModal = document.getElementById('EvictModal')
+	EvictModal.addEventListener('show.bs.modal', function (event) {
+		// Button that triggered the modal
+		var button = event.relatedTarget
+		// Extract info from data-bs-* attributes
+		var staff_name = button.getAttribute('data-bs-name')
+		var staff_id = button.getAttribute('data-bs-id')
+
+		// Update the modal's content.
+		var modalTitle = EvictModal.querySelector('.modal-title')
+		var modal_body_staff_name = EvictModal.querySelector('#staff_name')
+		var modal_body_staff_id = EvictModal.querySelector('#staff_id')
+
+		modal_body_staff_name.value = staff_name
+		modal_body_staff_id.value = staff_id
+	})
+
+	var WardModal = document.getElementById('WardModal')
+	WardModal.addEventListener('show.bs.modal', function (event) {
+		// Button that triggered the modal
+		var button = event.relatedTarget
+		// Extract info from data-bs-* attributes
+		var staff_name = button.getAttribute('data-bs-name')
+		var staff_id = button.getAttribute('data-bs-id')
+
+		// Update the modal's content.
+		var modalTitle = WardModal.querySelector('.modal-title')
+		var modal_body_staff_name = WardModal.querySelector('#staff_name')
+		var modal_body_staff_id = WardModal.querySelector('#staff_id')
+
+		modal_body_staff_name.value = staff_name
+		modal_body_staff_id.value = staff_id
+	})
+
+	var EqpModal = document.getElementById('EqpModal')
+	EqpModal.addEventListener('show.bs.modal', function (event) {
+		// Button that triggered the modal
+		var button = event.relatedTarget
+		// Extract info from data-bs-* attributes
+		var staff_name = button.getAttribute('data-bs-name')
+		var staff_id = button.getAttribute('data-bs-id')
+
+		// Update the modal's content.
+		var modalTitle = EqpModal.querySelector('.modal-title')
+		var modal_body_staff_name = EqpModal.querySelector('#staff_name')
+		var modal_body_staff_id = EqpModal.querySelector('#staff_id')
+
+		modal_body_staff_name.value = staff_name
+		modal_body_staff_id.value = staff_id
+	})
+  </script>
+{% endblock %}
