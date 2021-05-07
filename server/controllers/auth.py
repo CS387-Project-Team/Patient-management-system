@@ -3,6 +3,8 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
 import application
+from werkzeug.urls import url_parse
+
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 @bp.route('/register', methods=('GET', 'POST'))
@@ -37,6 +39,7 @@ def register():
                 sql, (new_id, request.form.get('name'), request.form.get('address'), request.form.get('pincode'), request.form.get('contact'), request.form.get('gender'), request.form.get('email_id'), request.form.get('dob'), request.form.get('qualification'), username, hashed.decode('UTF-8'),)
             )
             conn.commit()
+            flash('Signed up successfully!', 'success')
             return redirect(url_for('auth.login'))
         conn.close()
         flash(error)
@@ -64,7 +67,12 @@ def login():
         if error is None:
             session.clear()
             session['user_id'] = user['id']
-            return redirect(url_for('dashboard'))
+            flash('Logged in successfully!', 'success')
+            next_page = request.args.get('next')
+            if not next_page:
+                print('Next page', next_page)
+                next_page = url_for('dashboard')
+            return redirect(next_page)
         conn.close()
         flash(error)
 
@@ -113,7 +121,7 @@ def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.user is None:
-            return redirect(url_for('auth.login'))
+            return redirect(url_for('auth.login', next=request.url))
 
         return view(**kwargs)
 

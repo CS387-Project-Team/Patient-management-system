@@ -1,4 +1,4 @@
-from flask import g, Response, jsonify, render_template, redirect, url_for
+from flask import g, Response, jsonify, render_template, redirect, url_for, flash
 import application
 from application import default, my_jsonify
 import datetime
@@ -32,10 +32,11 @@ def update_profile(request):
         print(e)
         conn.rollback()
         conn.close()
-        redirect(url_for('profile'))
-    
+        flash('Failed to update profile!', 'danger')
+        return redirect(url_for('profile'))
     conn.commit()
     conn.close()
+    flash('Updated profile successfully!', 'success')
     return redirect(url_for('profile'))
 
 def get_staff():
@@ -436,9 +437,11 @@ def add_history(data):
             disease_id = row['disease_id']
             db.execute(insert, (g.user.get('id'), disease_id, link, detected))
             conn.commit()
+            flash('Added to history successfully!', 'success')
         except Exception as e:
             print(e)
             conn.rollback()
+            flash('Failed to add to history!', 'danger')
     conn.close()
     return redirect(url_for('add_history'))
 
@@ -464,9 +467,11 @@ def delete_history(data):
         if row is None:
             raise('no row was deleted')
         conn.commit()
+        flash('Deleted successfully from history!', 'success')
     except Exception as e:
         print(e)
         conn.rollback()
+        flash('Failed to delete from history!', 'danger')
     conn.close()
     return redirect(url_for('add_history'))
 
@@ -497,8 +502,10 @@ def update_history(data):
                 '''
         db.execute(sql, (disease_id, detected, link, old_disease_id, g.user.get('id'),))
         conn.commit()
+        flash('Updated history successfully!', 'success')
     except Exception as e:
         print(e)
         conn.rollback()
+        flash('Failed to update history!', 'danger')
     conn.close()
     return redirect(url_for('add_history'))

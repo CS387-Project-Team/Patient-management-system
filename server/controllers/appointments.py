@@ -56,7 +56,15 @@ def get_available_slots(date_str):
     rows = db.fetchall()
     df = DataFrame(rows)
     if rows == []:
-        return jsonify({'msg':'No data found'})
+        sql = '''select doctor.id, doctor.name, doctor.speciality 
+                from (doctor join person on doc_id=id) as doctor
+                '''
+        db.execute(sql)
+        rows = db.fetchall()
+        data['slots'] = [{'name': row['name'], 'id': row['id'], 'speciality': row['speciality'], 'date': date_str, 'start_time': []} for row in rows]
+        data['today'] = date_str
+        conn.close()
+        return render_template('appointments/available_slots.html', data=data)
     df.columns = rows[0].keys()
     df = df.groupby('id', as_index=False).agg({'name':'first', 'speciality':'first', 'date':'first', 'start_time': lambda x: list(x)})
     conn.close()
@@ -82,7 +90,17 @@ def get_available_slots_followup(patient_id, doc_id, date_str):
     rows = db.fetchall()
     df = DataFrame(rows)
     if rows == []:
-        return jsonify({'msg':'No data found'})
+        sql = '''select doctor.id, doctor.name, doctor.speciality 
+                from (doctor join person on doc_id=id) as doctor
+                where doctor.id = %s
+                '''
+        db.execute(sql, (doc_id,))
+        row = db.fetchone()
+        data['slots'] = [{'name': row['name'], 'id': doc_id, 'speciality': row['speciality'], 'date': date_str, 'start_time': []}]
+        data['today'] = date_str
+        data['patient_id'] = patient_id
+        conn.close()
+        return render_template('appointments/follow_up.html', data=data)
     df.columns = rows[0].keys()
     df = df.groupby('id', as_index=False).agg({'name':'first', 'speciality':'first', 'date':'first', 'start_time': lambda x: list(x)})
     conn.close()
@@ -161,7 +179,8 @@ def book_appointment(request):
         print(e)
         conn.rollback()
         conn.close()
-        return jsonify({'status':'Failed to book a new appointment', 'code':401})    
+        flash('Failed to book appointment!', 'danger')
+        return redirect(url_for('get_appointments'))    
     flash('Apoointment booked successfully!', 'success')
     return redirect(url_for('get_appointments')) #render_template('appointments/appointments.html') #jsonify({'status':'Successfully booked a new appointment', 'code':200})
 
@@ -186,7 +205,8 @@ def update_complaint(request):
         print(e)
         conn.rollback()
         conn.close()
-        return jsonify({'status':'Failed to update complaint', 'code':401})
+        flash('Failed to update appointment!', 'danger')
+        return redirect(url_for('get_appointments'))    
     flash('Appointment updated successfully!', 'success')
     return redirect(url_for('get_appointments'))
 
@@ -221,6 +241,7 @@ def cancel_appointment(request):
         print(e)
         conn.rollback()
         conn.close()
-        return jsonify({'status':'Failed to cancel appointment', 'code':401})    
-    flash('Apoointment cancelled successfully!', 'danger')
+        flash('Failed to cancel appointment!', 'danger')
+        return redirect(url_for('get_appointments'))    
+    flash('Apoointment cancelled successfully!', 'success')
     return redirect(url_for('get_appointments'))
