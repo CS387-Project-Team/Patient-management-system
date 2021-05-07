@@ -64,6 +64,7 @@ def get_available_slots(date_str):
         data['slots'] = [{'name': row['name'], 'id': row['id'], 'speciality': row['speciality'], 'date': date_str, 'start_time': []} for row in rows]
         data['today'] = date_str
         conn.close()
+        print(data)
         return render_template('appointments/available_slots.html', data=data)
     df.columns = rows[0].keys()
     df = df.groupby('id', as_index=False).agg({'name':'first', 'speciality':'first', 'date':'first', 'start_time': lambda x: list(x)})

@@ -14,6 +14,7 @@
 </div>
 <div class="row mt-5 justify-content-center">
     <div class="col-lg-8 col-md-10">
+        {% if data['history'] %}
         <div class="shadow bg-body card-body mt-lg-5">
             <!-- appointments -->
             <div class="table-responsive app p-4">
@@ -31,6 +32,11 @@
                 </table>
             </div>
         </div>
+        {% else %}
+        <div class="shadow bg-body card-body mt-lg-5 p-5 text-center">
+            <strong>No history available.</strong>
+        </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

@@ -33,6 +33,7 @@
                             </ul>
                         </span>
                 </div>
+                {% if data['appointments'] %}
                 <div class="card-body">
                     <div class="table-responsive app">
                         <table class="table table-hover">
@@ -57,6 +58,11 @@
                         </table>
                     </div>
                 </div>
+                {% else %}
+                <div class="card-body p-5 text-center">
+                    <strong> Your appointments will be shown here. </strong>
+                </div>
+                {% endif %}
             </div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4 mb-4 ms-lg-5 mt-md-5">
@@ -77,6 +83,7 @@
                         </span>
                     
                 </div>
+                {% if data['bills'] %}
                 <div class="card-body">    
                     <div class="table-responsive app">
                         <table class="table table-hover">
@@ -99,6 +106,11 @@
                         </table>
                     </div>
                 </div>
+                {% else %}
+                <div class="card-body p-5 text-center">
+                    <strong> Your bills will be shown here. </strong>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -119,6 +131,7 @@
                         </span>
             
                 </div>
+                {% if data['tests'] %}
                 <div class="card-body">
                     <div class="table-responsive app">
                         <table class="table table-hover">
@@ -139,6 +152,11 @@
                         </table>
                     </div>
                 </div>
+                {% else %}
+                <div class="card-body p-5 text-center">
+                    <strong> Your diagnostic tests will be shown here. </strong>
+                </div>
+                {% endif %}
             </div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4 mb-4 ms-lg-5">
@@ -157,6 +175,7 @@
                         </ul>
                     </span>
                 </div>
+                {% if data['history'] %}
                 <div class="card-body">
                     <div class="table-responsive app">
                         <table class="table table-hover">
@@ -173,6 +192,11 @@
                         </table>
                     </div>
                 </div>
+                {% else %}
+                <div class="card-body p-5 text-center">
+                    <strong> Your biological history will be shown here. Add your history now.</strong>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
