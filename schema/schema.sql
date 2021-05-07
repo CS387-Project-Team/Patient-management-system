@@ -70,8 +70,10 @@ create table doctor
 		check(salary > 0),
 	permanent boolean,
 	experience int,
-	opd_charges int,
-	ot_charges int,
+	opd_charges int
+		check(opd_charges > 0),
+	ot_charges int
+		check(ot_charges > 0),
 	primary key (doc_id),
 	foreign key (doc_id) references person
 		on delete cascade
@@ -168,7 +170,7 @@ create table bill
 	purpose text
 		check (purpose in ('OPD','Pharmacy','Admission','Diagnosis')),
 	discount int default 0
-		check (discount <= 100),
+		check (discount <= 100 and discount >= 0),
 	mode text
 		check (mode in ('Cash','Card','Cheque','Online',NULL)),
 	primary key (bill_no),
@@ -224,7 +226,8 @@ create table disease
 create table bed
 	(bed_no int,
 	type text,
-	charges int,
+	charges int
+		check(charges > 0),
 	room_no int,
 	primary key (bed_no),
 	foreign key (room_no) references room
@@ -238,7 +241,8 @@ create table bed
 create table test
 	(test_id int,
 	name text,
-	charges int,
+	charges int
+		check(charges > 0),
 	--eqp_id int,
 	--foreign key (eqp_id) references equipment
 	--	on delete cascade,
@@ -267,7 +271,8 @@ create table medicine
 	name text,
 	descr text,
 	manufc text,
-	price int,
+	price int
+		check(price > 0),
 	--expiry_dt date,
 	--mfg_dt date,
 	primary key (med_id)

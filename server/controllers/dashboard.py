@@ -342,18 +342,18 @@ def get_dashboard():
             select * 
             from
             (
-                (select bill_no, opd_charges as net_charges, purpose, discount, (case when paid_by is null then 'unpaid' else 'paid' end) as status, dat
+                (select bill_no, ROUND(opd_charges*(1-discount/100.0),2) as net_charges, purpose, discount, (case when paid_by is null then 'unpaid' else 'paid' end) as status, dat
                 from ((((meet natural join pt)
                         natural join appointment)
                         natural join bill)
                         natural join doctor) as foo)
                 union
-                (select bill_no, charges  as net_charges, purpose, discount, (case when paid_by is null then 'unpaid' else 'paid' end) as status, dat
+                (select bill_no, ROUND(charges*(1-discount/100.0),2) as net_charges, purpose, discount, (case when paid_by is null then 'unpaid' else 'paid' end) as status, dat
                 from (((pt natural join takes)
                         natural join bill)
                         natural join test) as bar)
                 union
-                (select bill_no, charges*(end_dt-start_dt) as net_charges, purpose, discount, (case when paid_by is null then 'unpaid' else 'paid' end) as status, start_dt as dat
+                (select bill_no, ROUND(charges*(end_dt-start_dt)*(1-discount/100.0),2) as net_charges, purpose, discount, (case when paid_by is null then 'unpaid' else 'paid' end) as status, start_dt as dat
                 from (((pt natural join occupies)
                         natural join bill)
                         natural join bed) as foo)
