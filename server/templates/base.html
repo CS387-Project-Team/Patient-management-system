@@ -51,17 +51,26 @@
             </li>
 
             {% if g.is_doc %}
-            <li class="nav-item p-lg-3">
-	            <a class="nav-link middle disabled" href="#">Doctor</a>
-	          </li>
+            <li class="nav-item dropdown p-lg-3">
+              <a class="nav-link dropdown-toggle middle" href="#" id="tests" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Doctor
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="tests">
+                <li><a class="dropdown-item" href="{{ url_for('view_dis_symp') }}">Add new disease</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('view_dis_symp') }}">Add new symptom</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('view_dis_symp') }}">Decide slots</a></li>
+              </ul>
+            </li>
             {% endif %}
 
             {% if g.is_support %}
-            <li class="nav-item p-lg-3">
-	            <a class="nav-link middle disabled" href="#">Staff</a>
-	          </li>
-            <li class="nav-item p-lg-3">
-              <a class="nav-link middle" aria-current="page" href="{{ url_for('administer_test') }}">Administer Test</a>
+            <li class="nav-item dropdown p-lg-3">
+              <a class="nav-link dropdown-toggle middle" href="#" id="tests" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Support Staff
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="tests">
+                <li><a class="dropdown-item" href="{{ url_for('administer_test') }}">Administer Test</a></li>
+              </ul>
             </li>
             {% endif %}
 
@@ -74,6 +83,7 @@
                 <li><a class="dropdown-item" href="{{ url_for('add_admin') }}">Add admin</a></li>
                 <li><a class="dropdown-item" href="{{ url_for('view_resp') }}">Assg Responisibilty</a></li>
                 <li><a class="dropdown-item" href="{{ url_for('add_remove_staff') }}">Add/remove staff</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('assign_room') }}">Assg rooms</a></li>
               </ul>
             </li>
             {% endif %}
