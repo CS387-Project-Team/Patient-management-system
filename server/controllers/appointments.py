@@ -9,6 +9,16 @@ def get_appointments():
     conn = application.connect()
     db = conn.cursor(cursor_factory=application.DictCursor)
     # appointments and prescription
+    backup = '''with pt(patient_id) as
+                (select patient_id
+                from patient
+                where patient.id = %s)
+            select foo.type, d.name, foo.dat, foo.start_time, patient_id, app_id, foo.doc_id, patient_complaint as complaint
+            from (((meet natural join pt)
+                    natural join doctor_room_slot) 
+                    natural join appointment) as foo, (person join doctor on doctor.doc_id=person.id) as d
+            where foo.doc_id = d.id
+            order by foo.dat desc, foo.start_time desc'''
     sql = '''with pt(patient_id) as
                 (select patient_id
                 from patient
@@ -19,13 +29,19 @@ def get_appointments():
                     natural join appointment) 
                     natural left join prescription)
                     natural left join meds)
-                    natural left outer join medicine) as foo, (person join doctor on doctor.doc_id=person.id) as d
+                    natural left join medicine) as foo, (person join doctor on doctor.doc_id=person.id) as d
             where foo.doc_id = d.id
             order by foo.dat desc, foo.start_time desc'''
             # left outer join medicine on medicine.med_id = meds.med_id) as foo, (person natural join doctor) as d
     db.execute(sql, (g.user.get('id'),))
     rows = db.fetchall()
-    data['appointments'] = my_jsonify(rows)
+    if rows != []:  
+        df = DataFrame(rows)
+        df.columns = rows[0].keys()
+        df = df.groupby('app_id', as_index=False).agg({'name':'first', 'dat':'first', 'start_time': 'first', 'complaint': 'first', 'medicine': lambda x: list(x), 'dosage': lambda x: list(x), 'frequency': lambda x: list(x), 'instr': lambda x: list(x)})
+        data['appointments'] = df.to_dict(orient='records')
+    else:
+        data['appointments'] = []
     data['upcoming_appos'] = []
     data['past_appos'] = []
     for appo in data['appointments']:
@@ -46,13 +62,19 @@ def get_available_slots(date_str):
     # date = datetime.datetime.strptime(date_str, '%Y-%m-%d').date
     conn = application.connect()
     db = conn.cursor(cursor_factory=application.DictCursor)
-    sql = '''select doctor.id, doctor.name, doctor.speciality, start_time, %s as date 
-            from doctor_room_slot as drs, (doctor join person on doc_id=id) as doctor
-            where drs.doc_id = doctor.id and dat = %s and not exists (
-                select * from meet
-                where drs.doc_id = doctor.id and dat = %s and meet.start_time = drs.start_time
-            )'''
-    db.execute(sql, (date_str, date_str, date_str,))
+    sql = '''select person.name as name, p.doc_id as id, doctor.speciality, start_time, dat as date
+            from doctor natural join
+                (
+                select doc_id, start_time, dat
+                from doctor_room_slot
+                except
+                select doc_id, start_time, dat
+                from meet
+                ) as p
+                join person on person.id = p.doc_id
+            where dat = %s
+            '''
+    db.execute(sql, (date_str,))
     rows = db.fetchall()
     df = DataFrame(rows)
     if rows == []:
@@ -81,13 +103,19 @@ def get_available_slots_followup(patient_id, doc_id, date_str):
     # date = datetime.datetime.strptime(date_str, '%Y-%m-%d').date
     conn = application.connect()
     db = conn.cursor(cursor_factory=application.DictCursor)
-    sql = '''select doctor.id, doctor.name, doctor.speciality, start_time, %s as date 
-            from doctor_room_slot as drs, (doctor join person on doc_id=id) as doctor
-            where drs.doc_id = doctor.id and doctor.id = %s and dat = %s and not exists (
-                select * from meet
-                where drs.doc_id = doctor.id and dat = %s and meet.start_time = drs.start_time
-            )'''
-    db.execute(sql, (date_str, doc_id, date_str, date_str,))
+    sql = '''select person.name as name, p.doc_id as id, doctor.speciality, start_time, dat as date
+            from doctor natural join
+                (
+                select doc_id, start_time, dat
+                from doctor_room_slot
+                except
+                select doc_id, start_time, dat
+                from meet
+                ) as p
+                join person on person.id = p.doc_id
+            where dat = %s and p.doc_id = %s
+            '''
+    db.execute(sql, (date_str, doc_id,))
     rows = db.fetchall()
     df = DataFrame(rows)
     if rows == []:
