@@ -57,8 +57,8 @@
            </div>
 		   {% if (data['eqp'] | length)%}
 			<div class="input-group mb-3">
-			<input class="form-control form-select" id="search_input" list="eqp" placeholder="Search for Eqp" title="Type in a num" name="eqp">
-			<datalist class="custom-select" id="eqp">
+			<input class="form-control form-select" id="search_input" list="eqp_id" placeholder="Search for Eqp" title="Type in a num" name="eqp_id">
+			<datalist class="custom-select" id="eqp_id">
 				{% for eqp in data['eqp'] %}
 					<option value="{{ eqp['eqp_id'] }}" label="{{ eqp['name'] }}">
 				{% endfor %}
@@ -101,13 +101,6 @@
         </div>
         </div>
     </div>
-</div>
-<div class="row justify-content-center">
-  <div class="col-lg-4 col-md-7">
-      <div class="card rounded-pill mt-5" style="background-color: lightskyblue;">
-          <h2 class="text-center p-5">Available slots</h2>
-      </div>
-  </div>
 </div>
 <div class="row mt-5 justify-content-center">
   <div class="col-sm-12 col-md-6 col-lg-4 mb-4 me-lg-5">

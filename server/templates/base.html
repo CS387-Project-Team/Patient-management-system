@@ -60,7 +60,6 @@
                 Doctor
               </a>
               <ul class="dropdown-menu" aria-labelledby="tests">
-                <li><a class="dropdown-item" href="{{ url_for('show_analytics') }}">Analytics</a></li>
                 <li><a class="dropdown-item" href="{{ url_for('view_dis_symp') }}">Add disease/symptom</a></li>
                 <div class="dropdown-divider"></div>
                 <li><a class="dropdown-item" href="{{ url_for('get_week_slots') }}">Decide slots</a></li>
@@ -94,11 +93,10 @@
                 <li><a class="dropdown-item" href="{{ url_for('view_resp') }}">Assg Responisibilty</a></li>
                 <div class="dropdown-divider"></div>
                 <li><a class="dropdown-item" href="{{ url_for('add_remove_staff') }}">Add/remove staff</a></li>
-<<<<<<< HEAD
-                <!-- <li><a class="dropdown-item" href="{{ url_for('update_invent') }}">Update Inventory</a></li> -->
-=======
                 <div class="dropdown-divider"></div>
                 <li><a class="dropdown-item" href="{{ url_for('assign_room') }}">Assg rooms</a></li>
+                <div class="dropdown-divider"></div>
+                <li><a class="dropdown-item" href="{{ url_for('get_inventory') }}">Inventory</a></li>
               </ul>
             </li>
             <li class="nav-item dropdown p-lg-3">
@@ -109,7 +107,6 @@
                 <li><a class="dropdown-item" href="{{ url_for('show_analytics') }}">Overall Analytics</a></li>
                 <div class="dropdown-divider"></div>
                 <li><a class="dropdown-item" href="{{ url_for('show_disease_analytics', disease_id=1) }}">Disease Specific Analytics</a></li>
->>>>>>> link_everything
               </ul>
             </li>
             {% endif %}

@@ -98,6 +98,40 @@ def available_slots_followup():
 #     return controllers.appointments.confirm_booking(data)
 
 @login_required
+def get_inventory():
+	return controllers.inventory.get_inventory()
+
+@login_required
+def add_bed():
+	request_data = request.form
+	return controllers.inventory.add_bed(request_data)
+
+@login_required
+def remove_bed():
+	request_data = request.form
+	return controllers.inventory.remove_bed(request_data)
+
+@login_required
+def add_room():
+	request_data = request.form
+	return controllers.inventory.add_room(request_data)
+
+@login_required
+def add_test():
+	request_data = request.form
+	return controllers.inventory.add_test(request_data)
+
+@login_required
+def add_medicine():
+	request_data = request.form
+	return controllers.inventory.add_medicine(request_data)
+
+@login_required
+def add_eqp():
+	request_data = request.form
+	return controllers.inventory.add_eqp(request_data)
+
+@login_required
 def pay_bill():
 	request_data = request.form
 	return controllers.dashboard.pay_bill(request_data)
@@ -113,14 +147,13 @@ def assg_room_resp():
 
 @login_required
 def assg_eqp_resp():
+	# print("jere")
 	request_data = request.form
 	return controllers.dashboard.assg_staff_eqp(request_data)
-
 
 @login_required
 def evict_resp():
 	request_data = request.form
-	print("here1")
 	return controllers.dashboard.evict_staff_resp(request_data)
 
 @login_required
@@ -281,12 +314,12 @@ def allot_beds2():
 	elif request.method == 'POST':
 		return controllers.beds.allot_beds(request.form)
 
-@login_required
-def add_bed():
-	if request.method == 'GET':
-		return controllers.inventory.render_add_bed()
-	elif request.method == 'POST':
-		return controllers.inventory.handle_post(request.form)
+# @login_required
+# def add_bed():
+# 	if request.method == 'GET':
+# 		return controllers.inventory.render_add_bed()
+# 	elif request.method == 'POST':
+# 		return controllers.inventory.handle_post(request.form)
 
 @login_required
 def appo_feedback():

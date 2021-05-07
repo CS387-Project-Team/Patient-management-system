@@ -46,7 +46,7 @@ def get_appointments():
     data['past_appos'] = []
     for appo in data['appointments']:
         appo_time = datetime.datetime.strptime(appo['dat'].isoformat() + ' ' + appo['start_time'].isoformat(), '%Y-%m-%d %H:%M:%S')
-        hardcoded_now = datetime.datetime.strptime('2021-04-21 14:00:00', '%Y-%m-%d %H:%M:%S')
+        hardcoded_now = datetime.datetime.strptime('2021-05-07 14:00:00', '%Y-%m-%d %H:%M:%S')
         if appo_time >= hardcoded_now: #datetime.datetime.now() + datetime.timedelta(minutes=10)
             data['upcoming_appos'].append(appo)
         else:
