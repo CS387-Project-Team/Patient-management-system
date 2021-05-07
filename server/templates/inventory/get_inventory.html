@@ -1,0 +1,250 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <!-- <h1>{% block title %}Inventory{% endblock %}</h1> -->
+{% endblock %}
+
+{% block content %}
+
+
+<div class="modal fade" id="DeleteBedModal" tabindex="-1" aria-labelledby="DeleteBedModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="DeleteBedModalLabel">Confirm Changes</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form method="post" action="{{ url_for('remove_bed') }}">
+					<div class="mb-3">
+						<div class="input-group mb-3">
+							<input class="form-control form-select" id="search_input" list="bed_no" placeholder="Search for Beds" title="Type in a num" name="bed_no" required>
+							<datalist class="custom-select" id="bed_no">
+								{% for bed in data['beds'] %}
+										<option value="{{ bed['bed_no'] }}" label="Room_no {{ bed['room_no'] }}">
+								{% endfor %}
+							</datalist>
+						</div>
+					</div>
+					<button class="btn btn-outline-secondary" type="submit">Confirm</button>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="AddBedModal" tabindex="-1" aria-labelledby="AddBedModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="AddBedModalLabel">Confirm Changes</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="post" action="{{ url_for('add_bed') }}">
+            <div class="mb-3">
+              <div class="input-group mb-3">
+                <span class="input-group-text">Type</span>
+                <input type="text" class="form-control bg-light" id="bed_type" name="bed_type" required>
+              </div>
+              <div class="input-group mb-3">
+                <span class="input-group-text">Charges</span>
+                <input type="text" class="form-control bg-light" id="charges" name="charges" required>
+              </div>
+							<div class="input-group mb-3">
+								<input class="form-control form-select" id="search_input" list="room_no" placeholder="Search for Rooms" title="Type in a num" name="room_no" required>
+								<datalist class="custom-select" id="room_no">
+									{% for room in data['rooms'] %}
+											<option value="{{ room['room_no'] }}">
+									{% endfor %}
+								</datalist>
+								<!-- <button type="submit" class="btn btn-outline-secondary"><i class="bi bi-search"></i></button> -->
+							</div>
+  
+            </div>
+            <button class="btn btn-outline-secondary" type="submit">Confirm</button>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<div class="modal fade" id="AddRoomModal" tabindex="-1" aria-labelledby="AddRoomModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+    <div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="AddRoomModalLabel">Confirm Changes</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <form method="post" action="{{ url_for('add_room') }}">
+        <div class="mb-3">
+            <div class="input-group mb-3">
+            <span class="input-group-text">Type</span>
+            <input type="text" class="form-control bg-light" id="type" name="type" required>
+            </div>
+
+        </div>
+        <button class="btn btn-outline-secondary" type="submit">Confirm</button>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+    </div>
+    </div>
+</div>
+</div>
+<div class="modal fade" id="AddEqpModal" tabindex="-1" aria-labelledby="AddEqpModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="AddEqpModalLabel">Confirm Changes</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form method="post" action="{{ url_for('add_eqp') }}">
+            <div class="mb-3">
+                <div class="input-group mb-3">
+					<span class="input-group-text">Type</span>
+					<input type="text" class="form-control bg-light" id="type" name="type" required>
+                </div>
+				<div class="input-group mb-3">
+					<input class="form-control form-select" id="search_input" list="room_no" placeholder="Search for Rooms" title="Type in a num" name="room_no" required>
+					<datalist class="custom-select" id="room_no">
+						{% for room in data['rooms'] %}
+							<option value="{{ room['room_no'] }}" label="{{ room['type'] }}">
+						{% endfor %}
+					</datalist>
+					<!-- <button type="submit" class="btn btn-outline-secondary"><i class="bi bi-search"></i></button> -->
+				</div>
+				<input type="hidden" class="form-control" id="test_id" name="test_id">
+    
+            </div>
+            <button class="btn btn-outline-secondary" type="submit">Confirm</button>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="AddTestModal" tabindex="-1" aria-labelledby="AddTestModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+			<div class="modal-content">
+			<div class="modal-header">
+					<h5 class="modal-title" id="AddTestModalLabel">Confirm Changes</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+					<form method="post" action="{{ url_for('add_test') }}">
+					<div class="mb-3">
+							<div class="input-group mb-3">
+								<span class="input-group-text">Name</span>
+								<input type="text" class="form-control bg-light" id="name" name="name" required>
+							</div>
+							<div class="input-group mb-3">
+								<span class="input-group-text">Charge</span>
+								<input type="number" class="form-control bg-light" id="charges" name="charges" required>
+							</div>
+					</div>
+					<button class="btn btn-outline-secondary" type="submit">Confirm</button>
+					</form>
+			</div>
+			<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			</div>
+			</div>
+	</div>
+</div>
+
+<div class="modal fade" id="AddMedModal" tabindex="-1" aria-labelledby="AddMedModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+			<div class="modal-content">
+			<div class="modal-header">
+					<h5 class="modal-title" id="AddMedModalLabel">Confirm Changes</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+					<form method="post" action="{{ url_for('add_medicine') }}">
+					<div class="mb-3">
+							<div class="input-group mb-3">
+								<span class="input-group-text">Name</span>
+								<input type="text" class="form-control bg-light" id="name" name="name" required>
+							</div>
+							<div class="input-group mb-3">
+								<span class="input-group-text">Description</span>
+								<input type="text" class="form-control bg-light" id="descr" name="descr" required>
+							</div>
+							<div class="input-group mb-3">
+								<span class="input-group-text">Manufacturer</span>
+								<input type="text" class="form-control bg-light" id="manufc" name="manufc" required>
+							</div>
+							<div class="input-group mb-3">
+								<span class="input-group-text">Price</span>
+								<input type="number" class="form-control bg-light" id="price" name="price" required>
+							</div>
+	
+					</div>
+					<button class="btn btn-outline-secondary" type="submit">Confirm</button>
+					</form>
+			</div>
+			<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			</div>
+			</div>
+	</div>
+</div>
+<div class="row mt-5 justify-content-center">
+  <div class="col-sm-12 col-md-6 col-lg-4 mb-4 me-lg-5">
+      <div class="card">
+          <div class="card-header">
+							<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#AddBedModal">
+							Add Bed
+							</button>
+          </div>
+			</div>
+			<div class="card">
+				<div class="card-header">
+						<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#AddRoomModal">
+						Add Room
+						</button>
+				</div>
+		  </div>
+			<div class="card">
+				<div class="card-header">
+						<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#AddMedModal">
+						Add Medicine
+						</button>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-header">
+						<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#AddEqpModal">
+						Add Equipment
+						</button>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-header">
+						<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#AddTestModal">
+						Add Test
+						</button>
+				</div>
+			</div>
+	</div>
+	<div class="col-sm-12 col-md-6 col-lg-4 mb-4 me-lg-5">
+		<div class="card">
+			<div class="card-header">
+					<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#DeleteBedModal">
+					Remove Bed
+					</button>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

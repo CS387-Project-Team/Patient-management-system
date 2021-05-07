@@ -38,7 +38,7 @@ def get_appointments():
     if rows != []:  
         df = DataFrame(rows)
         df.columns = rows[0].keys()
-        df = df.groupby('app_id', as_index=False).agg({'name':'first', 'dat':'first', 'start_time': 'first', 'complaint': 'first', 'medicine': lambda x: list(x), 'dosage': lambda x: list(x), 'frequency': lambda x: list(x), 'instr': lambda x: list(x)})
+        df = df.groupby('app_id', as_index=False).agg({'name':'first', 'dat':'first', 'start_time': 'first', 'complaint': 'first', 'medicine': lambda x: list(x), 'dosage': lambda x: list(x), 'frequency': lambda x: list(x), 'instr': lambda x: list(x), 'patient_id': 'first', 'type': 'first', 'doc_id': 'first'})
         data['appointments'] = df.to_dict(orient='records')
     else:
         data['appointments'] = []
@@ -46,8 +46,8 @@ def get_appointments():
     data['past_appos'] = []
     for appo in data['appointments']:
         appo_time = datetime.datetime.strptime(appo['dat'].isoformat() + ' ' + appo['start_time'].isoformat(), '%Y-%m-%d %H:%M:%S')
-        hardcoded_now = datetime.datetime.strptime('2021-04-21 14:00:00', '%Y-%m-%d %H:%M:%S')
-        if appo_time >= hardcoded_now: #datetime.datetime.now() + datetime.timedelta(minutes=10)
+        # hardcoded_now = datetime.datetime.strptime('2021-04-21 14:00:00', '%Y-%m-%d %H:%M:%S')
+        if appo_time >= datetime.datetime.now() + datetime.timedelta(minutes=10):
             data['upcoming_appos'].append(appo)
         else:
             data['past_appos'].append(appo)
@@ -58,7 +58,7 @@ def get_appointments():
 def get_available_slots(date_str):
     data = {}
     if date_str == None:
-        date_str = "2021-04-21"
+        date_str = datetime.date.today().isoformat()
     # date = datetime.datetime.strptime(date_str, '%Y-%m-%d').date
     conn = application.connect()
     db = conn.cursor(cursor_factory=application.DictCursor)
@@ -73,6 +73,7 @@ def get_available_slots(date_str):
                 ) as p
                 join person on person.id = p.doc_id
             where dat = %s
+            order by start_time
             '''
     db.execute(sql, (date_str,))
     rows = db.fetchall()
@@ -99,7 +100,7 @@ def get_available_slots(date_str):
 def get_available_slots_followup(patient_id, doc_id, date_str):
     data = {}
     if date_str == None:
-        date_str = "2021-04-21"
+        date_str = datetime.date.today().isoformat()
     # date = datetime.datetime.strptime(date_str, '%Y-%m-%d').date
     conn = application.connect()
     db = conn.cursor(cursor_factory=application.DictCursor)
@@ -114,6 +115,7 @@ def get_available_slots_followup(patient_id, doc_id, date_str):
                 ) as p
                 join person on person.id = p.doc_id
             where dat = %s and p.doc_id = %s
+            order by start_time
             '''
     db.execute(sql, (date_str, doc_id,))
     rows = db.fetchall()
@@ -196,8 +198,9 @@ def book_appointment(request):
         sql = '''insert into appointment(app_id, type)
                 values (%s, %s);'''
         appo_datetime = datetime.datetime.strptime(date + ' ' + time, '%Y-%m-%d %H:%M:%S')
+        print(appo_datetime)
         # To uncomment this when database updates doctor_room_slot
-        # assert appo_datetime >= datetime.datetime.now() and appo_datetime.datetime.date <= datetime.date.today()+datetime.timedelta(days=application.MAX_BOOKING_RANGE), 'invalid date for booking a new appointment'
+        assert appo_datetime >= datetime.datetime.now() and appo_datetime.date() <= datetime.date.today()+datetime.timedelta(days=application.MAX_BOOKING_RANGE), 'invalid date for booking a new appointment'
         db.execute(sql, (app_id, appo_type,))
         sql = '''insert into meet(app_id, patient_id, doc_id, dat, start_time, patient_complaint)
                 values (%s, %s, %s, %s, %s, %s);'''
@@ -240,6 +243,7 @@ def update_complaint(request):
     return redirect(url_for('get_appointments'))
 
 def cancel_appointment(request):
+    print(request)
     app_id = int(request.get('app_id'))
     patient_id = int(request.get('patient_id'))
     conn = application.connect()
@@ -252,7 +256,7 @@ def cancel_appointment(request):
         deleted_meet = db.fetchone() 
         if deleted_meet is None:
             raise Exception('no appointment deleted')
-        # assert datetime.datetime.strptime(deleted_meet['dat'].isoformat() + ' ' + deleted_meet['start_time'].isoformat(), '%Y-%m-%d %H:%M:%S') > datetime.datetime.now(), 'attempting to cancel an appointment which has taken place'
+        assert datetime.datetime.strptime(deleted_meet['dat'].isoformat() + ' ' + deleted_meet['start_time'].isoformat(), '%Y-%m-%d %H:%M:%S') > datetime.datetime.now(), 'attempting to cancel an appointment which has taken place'
         sql = '''delete from appointment
                 where app_id = %s;'''
         db.execute(sql, (app_id,))

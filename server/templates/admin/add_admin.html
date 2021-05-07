@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <!-- <h1>{% block title %}View available slots{% endblock %}</h1> -->
+  <!-- <h1>{% block title %}Add Admin{% endblock %}</h1> -->
 {% endblock %}
 
 {% block content %}
@@ -25,7 +25,7 @@
             </div>
             <div class="input-group mb-3">
               <label for="salary" class="col-form-label">Salary</label>
-              <input class="form-control" type="number" id="salary" name="salary"></input>
+              <input class="form-control" type="number" id="salary" name="salary" required></input>
             </div>
           </div>
           <button class="btn btn-outline-secondary" type="submit">Confirm</button>
