@@ -79,16 +79,17 @@ def upd_doctor(request):
 
     conn.commit()
     conn.close()
-    return redirect(url_for('remove_staff'))
+    return redirect(url_for('add_remove_staff'))
 
 def upd_staff(request):
     conn = application.connect()
     db = conn.cursor(cursor_factory=application.DictCursor)
-    sql = '''update staff
+    try:
+        sql = '''update support_staff
             set salary=%s,start_hr=%s,end_hr=%s,days_of_week=%s
             where staff_id=%s'''
-    try:
         db.execute(sql,(request.get('salary'),request.get('start_hr'),request.get('end_hr'),request.get('days_of_week'),request.get('id'),))
+        print('Done')
     except Exception as e:
         print(e)
         conn.rollback()
@@ -97,7 +98,7 @@ def upd_staff(request):
 
     conn.commit()
     conn.close()
-    return redirect(url_for('remove_staff'))
+    return redirect(url_for('add_remove_staff'))
 
 def remove_staff(request):
     conn = application.connect()

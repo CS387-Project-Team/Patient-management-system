@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <!-- <h1>{% block title %}Dashboard{% endblock %}</h1> -->
+{% endblock %}
+
+{% block content %}
+<div class="card mt-5">
+	<div class="card-body">
+		<div class="row mt-5">
+			<div class="col-sm-12 col-md-6 col-lg-6 mb-4">
+				<div class="card mx-4-md mx-4-lg">
+					<div class="card-header">
+						<h4>
+							Patients
+						</h4>
+					</div>
+					<div class="card-body">
+						<div class="table-responsive app">
+							<table class="table table-light table-hover">
+								<tr>
+									<th>Patient id</th>
+									<th>Person id</th> 
+									<th>Name</th>
+									<th>Username</th>
+								</tr>
+								{% for p in data['patients'] %}
+									<tr>
+										<td>{{ p['patient_id'] }}</td>
+										<td>{{ p['person_id'] }}</td>
+										<td>{{ p['name'] }}</td>
+										<td>{{ p['username'] }}</td>
+									</tr>
+								{% endfor %}
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-12 col-md-6 col-lg-6 mb-4">
+				<div class="card mx-4-md mx-4-lg">
+					<div class="card-header">
+						<h4>
+							Occupies
+						</h4>
+					</div>
+					<div class="card-body">
+						<div class="table-responsive app">
+							<table class="table table-light table-hover">
+								<tr>
+									<th>Patient id</th>
+									<th>Bed no</th>
+									<th>Start date</th>
+									<th>End date</th>
+									<th>Bill no</th>
+								</tr>
+								{% for o in data['occupies'] %}
+									<tr>
+										<td>{{ o['patient_id'] }}</td>
+										<td>{{ o['bed_no'] }}</td>
+										<td>{{ o['start_dt'] }}</td>
+										<td>{{ o['end_dt'] }}</td>
+										<td>{{ o['bill_no'] }}</td>
+									</tr>
+								{% endfor %}
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="col-sm-12 col-md-6 col-lg-6 mb-4">
+				<div class="card mx-4-md mx-4-lg">
+					<div class="card-header">
+						<h4>
+							Room Types
+						</h4>
+					</div>
+					<div class="card-body">
+						<div class="table-responsive app">
+							<table class="table table-light table-hover">
+								<tr>
+									<th>Room</th>
+								</tr>
+								{% for room in data['rooms'] %}
+									<tr>
+										<td>{{ room['type'] }}</td>
+									</tr>
+								{% endfor %}
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-12 col-md-6 col-lg-6 mb-4">
+				<div class="card mx-4-md mx-4-lg">
+					<div class="card-header">
+						<h4>
+							Bed Types
+						</h4>
+					</div>
+					<div class="card-body">
+						<div class="table-responsive app">
+							<table class="table table-light table-hover">
+								<tr>
+									<th>Type</th>
+									<th>Total</th> 
+								</tr>
+								{% for bed in data['beds'] %}
+									<tr>
+										<td>{{ bed['type'] }}</td>
+										<td>{{ bed['cnt'] }}</td>
+									</tr>
+								{% endfor %}
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<form method="post">
+				 <input type="submit" class="btn btn-outline-secondary mt-5" value="Proceed to allot beds">
+			</form>
+		</div>
+	</div> 
+</div>
+{% endblock %}

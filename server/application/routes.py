@@ -60,6 +60,13 @@ def routes(app):
 
     app.add_url_rule('/assign_room',view_func=api.assign_room, methods=['GET','POST'])
 
+    # allot beds to admitted patients
+    app.add_url_rule('/allot-beds', view_func=api.allot_beds, methods=['GET', 'POST'])
+    app.add_url_rule('/allot-beds2', view_func=api.allot_beds2, methods=['GET', 'POST'])
+
+    # update inventory
+    app.add_url_rule('/update-inventory/add-bed', view_func=api.add_bed, methods=['GET', 'POST'])
+    # app.add_url_rule('/update-inventory/remove-bed', view_func=api.remove_bed, methods=['GET', 'POST'])
 
 
 

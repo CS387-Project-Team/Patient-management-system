@@ -5,12 +5,18 @@
 {% endblock %}
 
 {% block content %}
-<h3 class="text-center mt-5">Edit Manual History</h3>
+<div class="row justify-content-center">
+    <div class="col-lg-4 col-md-7">
+        <div class="card rounded-pill mt-5" style="background-color: lightskyblue;">
+            <h2 class="text-center p-5">Edit Manual History</h2>
+        </div>
+    </div>
+</div>
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Confirm delete</h5>
+        <div class="modal-header bg-danger">
+            <h5 class="modal-title text-white" id="exampleModalLabel">Confirm delete</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -34,7 +40,7 @@
                     <input type="text" readonly class="form-control bg-light" id="link" name="link" value="OPD">
                     </div>
                 </div>
-                <button class="btn btn-outline-secondary" type="submit">Confirm</button>
+                <button class="btn btn-outline-danger" type="submit">Confirm</button>
             </form>
         </div>
         <div class="modal-footer">
@@ -44,10 +50,10 @@
     </div>
 </div>
 <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="editModalLabel">Update entry</h5>
+        <div class="modal-header bg-success">
+            <h5 class="modal-title text-white" id="editModalLabel">Update entry</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -78,7 +84,7 @@
                     <input type="text" class="form-control bg-light" id="link" name="link" value="OPD">
                     </div>
                 </div>
-                <button class="btn btn-outline-secondary" type="submit">Confirm</button>
+                <button class="btn btn-outline-success" type="submit">Confirm</button>
             </form>
         </div>
         <div class="modal-footer">
@@ -88,83 +94,82 @@
     </div>
 </div>
 
-<div class="row mt-2">
+<div class="row mt-5 justify-content-center">
     <!-- appointments -->
-    <div class="table-responsive app p-4">
-        <table class="table table-light table-hover">
-            <tr>
-                <th>Disease</th>
-                <th>Detected</th> 
-                <th class="d-none d-md-table-cell">Link</th>
-                <th style="white-space: nowrap; width: 1%;"><span class="float-end">Actions</span></th>
-            </tr>
-            {% for hist in data['history'] %}
-                {% set disease_name = hist['name'] %}
-                {% set detected = hist['detected'] %}
-                {% set link = hist['link'] %}
-                <tr>
-                    <td>{{ hist['name'] }}</td>
-                    <td>{{ hist['detected'] }}</td>
-                    {% if hist['link'] %}
-                        <td class="d-none d-md-table-cell">{{ hist['link'] }}</td>
-                    {% else %}
-                        <td class="d-none d-md-table-cell"> None </td>
-                    {% endif %}
+    <div class="col-lg-8 col-md-10">
+        <div class="shadow bg-body mt-lg-5 card-body">
+            <div class="table-responsive app p-4">
+                <table class="table table-hover">
+                    <tr>
+                        <th>Disease</th>
+                        <th>Detected</th> 
+                        <th class="d-none d-md-table-cell">Link</th>
+                        <th style="white-space: nowrap; width: 1%;"><span class="float-end">Actions</span></th>
+                    </tr>
+                    {% for hist in data['history'] %}
+                        {% set disease_name = hist['name'] %}
+                        {% set detected = hist['detected'] %}
+                        {% set link = hist['link'] %}
+                        <tr>
+                            <td>{{ hist['name'] }}</td>
+                            <td><span class="badge bg-primary rounded-pill">{{ hist['detected'] }}</span></td>
+                            {% if hist['link'] %}
+                                <td class="d-none d-md-table-cell">{{ hist['link'] }}</td>
+                            {% else %}
+                                <td class="d-none d-md-table-cell"> None </td>
+                            {% endif %}
 
-                    <td style="white-space: nowrap; width: 1%;">
-                        <div class="btn-group btn-group-sm float-end" role="group" aria-label="actions">
-                            <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#editModal" data-bs-name="{{ disease_name }}" data-bs-detected="{{ detected }}" data-bs-link="{{ link }}"><i class="bi bi-pen"></i></button>
-                            <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-name="{{ disease_name }}" data-bs-detected="{{ detected }}" data-bs-link="{{ link }}"><i class="bi bi-trash"></i></button>
-                        </div>
-                    </td>
-                </tr>
-            {% endfor %}
-        </table>
-    </div>
-</div>
-<button class="add_form_field btn btn-secondary">Add New Entry &nbsp; 
-    <span style="font-size:16px; font-weight:bold;">+ </span>
-</button>
-
-<!-- <div class="input-group">
-    <input class="form-control form-select" id="search_input" list="disease" placeholder="Search for disease" title="Type in a name" name="disease">
-    <datalist class="custom-select" id="disease">
-        {% for disease in data['diseases'] %}
-            <option value="{{ disease['disease_name'] }}">
-        {% endfor %}
-    </datalist>
-    <button type="submit" class="btn btn-outline-secondary"><i class="bi bi-search"></i></button>
-</div> -->
-
-<form method="post">
-    <div id="repeat_form">
-        <div class="row">
-            <div class="col-lg-3 mt-sm-2">
-                <div class="input-group">
-                    <input class="form-control form-select" id="search_input" list="disease" placeholder="Search for disease" title="Type in a name" name="disease[]">
-                    <datalist class="custom-select" id="disease">
-                        {% for disease in data['diseases'] %}
-                            <option value="{{ disease['disease_name'] }}">
-                        {% endfor %}
-                    </datalist>
-                    <button type="button" class="btn btn-outline-secondary disabled"><i class="bi bi-search"></i></button>
-                </div>
-            </div>
-            <div class="col-lg-3 mt-sm-2">
-                <div class="input-group" method="post" action="{{ url_for('update_date_free_slots') }}">
-                    <input class="form-select" type="date" name="detected[]" id="date" title="Select earliest date of detection" required>
-                </div>
-            </div>
-            <div class="col-lg-3 mt-sm-2">
-                <div class="input-group">
-                    <input class="form-control" type="text" id="hist_link" placeholder="Previous history link ..." name="hist_link[]">
-                </div>
+                            <td style="white-space: nowrap; width: 1%;">
+                                <div class="btn-group btn-group-sm float-end" role="group" aria-label="actions">
+                                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#editModal" data-bs-name="{{ disease_name }}" data-bs-detected="{{ detected }}" data-bs-link="{{ link }}"><i class="bi bi-pen"></i></button>
+                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-name="{{ disease_name }}" data-bs-detected="{{ detected }}" data-bs-link="{{ link }}"><i class="bi bi-trash"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
             </div>
         </div>
     </div>
+</div>
+<div class="row mt-5 justify-content-center">
+    <div class="col-lg-8 col-md-10">
+        <div class="shadow bg-body card-body">
+            <button class="add_form_field btn btn-secondary">Add New Entry &nbsp; 
+                <span style="font-size:16px; font-weight:bold;">+ </span>
+            </button>
+            <form method="post">
+                <div id="repeat_form">
+                    <div class="row mt-2">
+                        <div class="col-lg-3 mt-2">
+                            <div class="input-group">
+                                <input class="form-control form-select" id="search_input" list="disease" placeholder="Search for disease" title="Type in a name" name="disease[]">
+                                <datalist class="custom-select" id="disease">
+                                    {% for disease in data['diseases'] %}
+                                        <option value="{{ disease['disease_name'] }}">
+                                    {% endfor %}
+                                </datalist>
+                                <button type="button" class="btn btn-outline-secondary disabled"><i class="bi bi-search"></i></button>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 mt-2">
+                            <div class="input-group" method="post" action="{{ url_for('update_date_free_slots') }}">
+                                <input class="form-select" type="date" name="detected[]" id="date" title="Select earliest date of detection" required>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 mt-2">
+                            <div class="input-group">
+                                <input class="form-control" type="text" id="hist_link" placeholder="Previous history link ..." name="hist_link[]">
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-    <button class="btn btn-primary mt-sm-2" type="submit">Add</button>
-</form>
+                <button class="btn btn-success mt-5" type="submit">Add to history</button>
+            </form>
+        </div>
+    </div>
+</div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -180,8 +185,8 @@
         if (x < max_fields) {
             x++;
             $(wrapper).append(`
-                <div class="row">
-                    <div class="col-lg-3 mt-sm-2">
+                <div class="row mt-2">
+                    <div class="col-lg-3 mt-2">
                         <div class="input-group">
                             <input class="form-control form-select" id="search_input" list="disease" placeholder="Search for disease" title="Type in a name" name="disease[]">
                             <datalist class="custom-select" id="disease">
@@ -192,17 +197,17 @@
                             <button type="button" class="btn btn-outline-secondary disabled"><i class="bi bi-search"></i></button>
                         </div>
                     </div>
-                    <div class="col-lg-3 mt-sm-2">
+                    <div class="col-lg-3 mt-2">
                         <div class="input-group" method="post" action="{{ url_for('update_date_free_slots') }}">
                             <input class="form-select" type="date" name="detected[]" title="Select earliest date of detection" id="date" required>
                         </div>
                     </div>
-                    <div class="col-lg-3 mt-sm-2">
+                    <div class="col-lg-3 mt-2">
                         <div class="input-group">
                             <input class="form-control" type="text" id="hist_link" placeholder="Previous history link ..." name="hist_link[]">
                         </div>
                     </div>
-                    <div class="col mt-sm-2">
+                    <div class="col mt-2">
                         <a href="#" class="delete"><button class="btn btn-outline-primary"><i class="bi bi-trash"></i></button></a>
                     </div>
                 </div>

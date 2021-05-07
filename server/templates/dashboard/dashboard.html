@@ -26,7 +26,9 @@
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="appointments">
                                 <li><a class="dropdown-item" href="{{ url_for('book_appointment') }}"> Book </a></li>
+                                <div class="dropdown-divider"></div>
                                 <li><a class="dropdown-item" href="{{ url_for('cancel_appointment') }}"> Cancel </a></li>
+                                <div class="dropdown-divider"></div>
                                 <li><a class="dropdown-item" href="{{ url_for('get_appointments') }}"> View all </a></li>
                             </ul>
                         </span>
@@ -69,6 +71,7 @@
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="bills">
                                 <li><a class="dropdown-item" href="{{ url_for('book_appointment') }}"> Pay </a></li>
+                                <div class="dropdown-divider"></div>
                                 <li><a class="dropdown-item" href="{{ url_for('cancel_appointment') }}"> View all </a></li>
                             </ul>
                         </span>
@@ -148,7 +151,9 @@
                             <i class="bi bi-three-dots-vertical"></i>
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="history">
-                            <li><a class="dropdown-item" href="{{ url_for('cancel_appointment') }}"> View all </a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('view_history') }}">View all</a></li>
+                            <div class="dropdown-divider"></div>
+                            <li><a class="dropdown-item" href="{{ url_for('add_history') }}">Edit Manual History</a></li>
                         </ul>
                     </span>
                 </div>

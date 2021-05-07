@@ -6,10 +6,10 @@
 
 {% block content %}
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Confirm booking</h5>
+      <div class="modal-header bg-success">
+        <h5 class="modal-title text-white" id="exampleModalLabel">Confirm booking</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -39,7 +39,7 @@
             <label for="complaint" class="col-form-label">Complaint:</label>
             <textarea class="form-control" id="complaint" name="complaint"></textarea>
           </div>
-          <button class="btn btn-outline-secondary" type="submit">Confirm</button>
+          <button class="btn btn-outline-success" type="submit">Confirm</button>
         </form>
       </div>
       <div class="modal-footer">
@@ -48,68 +48,62 @@
     </div>
   </div>
 </div>
-<div class="card mt-5">
-  <div class="card-header">
-      View available slots
+<div class="row justify-content-center">
+  <div class="col-lg-4 col-md-7">
+      <div class="card rounded-pill mt-5" style="background-color: lightskyblue;">
+          <h2 class="text-center p-5">Available slots</h2>
+      </div>
   </div>
-  <div class="card-body">
-      <div class="row mt-3 mb-2">
-        <div class="row">
-          <div class="col-lg-3 col-sm-6">
-            <div class="input-group">
-              <input class="form-control" type="text" id="search_input" onkeyup="search()" placeholder="Search for doctors.." title="Type in a name">
-              <button type="button" class="btn btn-outline-secondary disabled"><i class="bi bi-search"></i></button>
-            </div>
-          </div>
-          <div class="col-lg-3 col-sm-6 mt-3 mt-sm-0">
-            <form class="input-group" method="post" action="{{ url_for('update_date_free_slots') }}">
-              <input class="form-select" type="date" name="date" id="date" value="{{ data['today'] }}" required>
-              <button class="btn btn-secondary" type="submit"><i class="bi bi-search"></i></button>
-            </form>
-          </div>
-        </div>
-        <div class="mt-5" id="all_doc_slots">
-          {% for doc_slot in data['slots'] %}
-            <div class="card" id="doc_slots">
-              <div class="row g-0">
-                <div class="col-lg-2 col-md-4 bg-primary rounded-3">
-                  <div class="card-body">
-                    <h5 id="name">{{ doc_slot['name'] }}</h5>
-                    <h5 id="speciality">{{ doc_slot['speciality'] }}</h5>
-                  </div>
+</div>
+<div class="row mt-5 justify-content-center">
+  <div class="col-lg-8 col-md-10">
+    <div class="shadow bg-body rounded-3 card mt-5">
+      <div class="card-body">
+          <div class="row mt-3 mb-2">
+            <div class="row mb-lg-3">
+              <div class="col-lg-3 col-sm-6">
+                <div class="input-group">
+                  <input class="form-control" type="text" id="search_input" onkeyup="search()" placeholder="Search for doctors.." title="Type in a name">
+                  <button type="button" class="btn btn-outline-secondary disabled"><i class="bi bi-search"></i></button>
                 </div>
-                <div class="col-lg-10 col-md-8">
-                  <div class="card-body">
-                    <div class="row row-cols-auto g-0">
-                      {% for start_time in doc_slot['start_time'] %}
-                        {% set doc_name = doc_slot['name'] %}
-                        {% set doc_id = doc_slot['id'] %}
-                        {% set doc_speciality = doc_slot['speciality'] %}
-                        {% set date = doc_slot['date'] %}
-                        <div class="col">
-                          <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-name="{{ doc_name }}" data-bs-id="{{ doc_id }}" data-bs-speciality="{{ doc_speciality }}" data-bs-date="{{ date }}" data-bs-time="{{ start_time }}">{{ start_time }}</button>
-                          <!-- <button class="btn btn-outline-secondary" onclick="expandForm('{{ doc_name }}', '{{ doc_id }}', '{{ date }}', '{{ start_time }}')" id="time" name="time" value="{{ start_time }}">{{ start_time }}</button>           -->
-                          <!-- <form>  action="" method="post"> 
-                            <input class="form-control" type="hidden" id="doctor_name" name="doctor_name" value="{{ doc_slot['name'] }}">
-                            <input class="form-control" type="hidden" id="doctor_id" name="doctor_id" value="{{ doc_slot['id'] }}">
-                            <input class="form-control" type="hidden" id="date" name="date" value="{{ doc_slot['date'] }}">
-                            <input class="form-control" type="hidden" id="type" name="type" value="OPD">
-                            <input class="form-control" type="hidden" id="complaint" name="complaint" value="">
+              </div>
+              <div class="col-lg-3 col-sm-6 mt-3 mt-sm-0">
+                <form class="input-group" method="post" action="{{ url_for('update_date_free_slots') }}">
+                  <input class="form-select" type="date" name="date" id="date" value="{{ data['today'] }}" required>
+                  <button class="btn btn-secondary" type="submit"><i class="bi bi-search"></i></button>
+                </form>
+              </div>
+            </div>
+            <div class="mt-5" id="all_doc_slots">
+              {% for doc_slot in data['slots'] %}
+                <div class="card mb-lg-5 mb-3" style="border-radius: 10px;" id="doc_slots">
+                  <div class="row g-0">
+                    <div class="col-lg-3 col-md-4 p-lg-5 p-md-4 p-3 bg-success shadow text-white text-center" style="border-radius: 10px;">
+                        <h4 id="name">{{ doc_slot['name'] }}</h4>
+                        <h5 id="speciality">{{ doc_slot['speciality'] }}</h5>
+                    </div>
+                    <div class="col-lg-9 col-md-8">
+                      <div class="card-body">
+                        <div class="row row-cols-auto g-0">
+                          {% for start_time in doc_slot['start_time'] %}
                             {% set doc_name = doc_slot['name'] %}
                             {% set doc_id = doc_slot['id'] %}
+                            {% set doc_speciality = doc_slot['speciality'] %}
                             {% set date = doc_slot['date'] %}
-                            <button class="btn btn-outline-secondary" onclick="expandForm('{{ doc_name }}', '{{ doc_id }}', '{{ date }}', '{{ start_time }}')" id="time" name="time" value="{{ start_time }}">{{ start_time }}</button>
-                          </form> -->
+                            <div class="col">
+                              <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-name="{{ doc_name }}" data-bs-id="{{ doc_id }}" data-bs-speciality="{{ doc_speciality }}" data-bs-date="{{ date }}" data-bs-time="{{ start_time }}">{{ start_time }}</button>
+                            </div>
+                          {% endfor %}
                         </div>
-                      {% endfor %}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              {% endfor %}
             </div>
-          {% endfor %}
-        </div>
+          </div>
       </div>
+    </div>
   </div>
 </div>
 <script>
@@ -121,8 +115,8 @@
       doc_slots = all_doc_slots.getElementsByClassName("card");
 
       for (i = 0; i < doc_slots.length; i++) {
-          doc_name = doc_slots[i].getElementsByTagName("h5")[0];
-          doc_speciality = doc_slots[i].getElementsByTagName("h5")[1];
+          doc_name = doc_slots[i].getElementsByTagName("h4")[0];
+          doc_speciality = doc_slots[i].getElementsByTagName("h5")[0];
           name_txt = doc_name.textContent || doc_name.innerText;
           speciality_txt = doc_speciality.textContent || doc_speciality.innerText;
           if (name_txt.toUpperCase().indexOf(filter) > -1) {

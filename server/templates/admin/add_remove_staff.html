@@ -48,20 +48,20 @@
               <input type="text" readonly class="form-control bg-light" id="doctor_name" name="doctor_name">
             </div>
             <input type="hidden" class="form-control" id="id" name="id">
-            <div class="input-group">
-              <div class="input-group mb-3">
+            <!-- <div class="input-group"> -->
+            <div class="input-group mb-3">
               <span class="input-group-text">Salary</span>
               <input type="number" class="form-control bg-light" id="salary" name="salary">
-              </div>
-              <div class="input-group mb-3">
+            </div>
+            <div class="input-group mb-3">
               <span class="input-group-text">Opd Charges</span>
               <input type="number" class="form-control bg-light" id="opd_charges" name="opd_charges">
-              </div>
-              <div class="input-group mb-3">
+            </div>
+            <div class="input-group mb-3">
               <span class="input-group-text">OT Charges</span>
               <input type="number" class="form-control bg-light" id="ot_charges" name="ot_charges">
-              </div>
             </div>
+            <!-- </div> -->
 
           </div>
           <button class="btn btn-outline-secondary" type="submit">Confirm</button>
@@ -89,28 +89,24 @@
               <input type="text" readonly class="form-control bg-light" id="staff_name" name="staff_name">
             </div>
             <input type="hidden" class="form-control" id="id" name="id">
-            <div class="input-group">
-              <div class="input-group mb-3">
-              <span class="input-group-text">Role</span>
-              <input type="text" class="form-control bg-light" id="role" name="role">
-              </div>
-              <div class="input-group mb-3">
+            <!-- <div class="input-group"> -->
+            <div class="input-group mb-3">
               <span class="input-group-text">Salary</span>
               <input type="number" class="form-control bg-light" id="salary" name="salary">
-              </div>
-              <div class="input-group mb-3">
+            </div>
+            <div class="input-group mb-3">
               <span class="input-group-text">Start Hr</span>
               <input type="number" class="form-control bg-light" id="start_hr" name="start_hr">
-              </div>
-              <div class="input-group mb-3">
+            </div>
+            <div class="input-group mb-3">
               <span class="input-group-text">End Hr</span>
               <input type="number" class="form-control bg-light" id="end_hr" name="end_hr">
-              </div>
-              <div class="input-group mb-3">
+            </div>
+            <div class="input-group mb-3">
               <span class="input-group-text">Days Of Week</span>
               <input type="text" class="form-control bg-light" id="days_of_week" name="days_of_week">
-              </div>
             </div>
+            <!-- </div> -->
 
           </div>
           <button class="btn btn-outline-secondary" type="submit">Confirm</button>
@@ -138,32 +134,32 @@
                 <input type="text" readonly class="form-control bg-light" id="doctor_name" name="doctor_name">
               </div>
               <input type="hidden" class="form-control" id="id" name="id">
-              <div class="input-group">
-                <div class="input-group mb-3">
+              <!-- <div class="input-group"> -->
+              <div class="input-group mb-3">
                 <span class="input-group-text">Speciality</span>
                 <input type="text" class="form-control bg-light" id="speciality" name="speciality">
-                </div>
-                <div class="input-group mb-3">
+              </div>
+              <div class="input-group mb-3">
                 <span class="input-group-text">Salary</span>
                 <input type="number" class="form-control bg-light" id="salary" name="salary">
-                </div>
-                <div class="input-group mb-3">
+              </div>
+              <div class="input-group mb-3">
                 <span class="input-group-text">Permanent</span>
                 <input type="number" class="form-control bg-light" id="permanent" name="permanent">
-                </div>
-                <div class="input-group mb-3">
+              </div>
+              <div class="input-group mb-3">
                 <span class="input-group-text">Experience</span>
                 <input type="number" class="form-control bg-light" id="experience" name="experience">
-                </div>
-                <div class="input-group mb-3">
+              </div>
+              <div class="input-group mb-3">
                 <span class="input-group-text">Opd Charges</span>
                 <input type="number" class="form-control bg-light" id="opd_charges" name="opd_charges">
-                </div>
-                <div class="input-group mb-3">
+              </div>
+              <div class="input-group mb-3">
                 <span class="input-group-text">OT Charges</span>
                 <input type="number" class="form-control bg-light" id="ot_charges" name="ot_charges">
-                </div>
               </div>
+              <!-- </div> -->
 
             </div>
             <button class="btn btn-outline-secondary" type="submit">Confirm</button>
@@ -337,9 +333,9 @@
                           {% set doc_salary = doc['salary'] %}
                           {% set doc_opd_charges = doc['opd_charges'] %}
                           {% set doc_ot_charges = doc['ot_charges'] %}
-                          <h5 id="name">{{ doc['name'] }}</h5>
+                          <h5 id="name">{{ doc['name'] }} </h5>
                           <h5>( {{doc['id']}} )
-                            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#UpdDocModal" data-bs-name="{{ doc_name }}" data-bs-id="{{ doc_id }}" data-bs-salart="{{ doc_salary }}" data-bs-ot-charges = "{{ doc_ot_charges }}" data-bs-opd-charges = "{{ doc_opd_charges }}">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#UpdDocModal" data-bs-name="{{ doc_name }}" data-bs-id="{{ doc_id }}" data-bs-salary="{{ doc_salary }}" data-bs-ot-charges = "{{ doc_ot_charges }}" data-bs-opd-charges = "{{ doc_opd_charges }}">
                               <i class="bi bi-pen-fill"></i>
                             </button>
                             <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#DeleteModal" data-bs-name="{{ doc_name }}" data-bs-id="{{ doc_id }}" >
@@ -380,12 +376,12 @@
                           {% set staff_name = staff['name'] %}
                           {% set staff_id = staff['id'] %}
                           {% set staff_salary = staff['salary'] %}
-                          {% set stafff_start_hr = staff['start_hr'] %}
+                          {% set staff_start_hr = staff['start_hr'] %}
                           {% set staff_end_hr = staff['end_hr'] %}
                           {% set staff_days_of_week = staff['days_of_week'] %}
                           <h5 id="name">{{ staff['name'] }}</h5>
                           <h5>( {{staff['id']}} )
-                            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#UpdStaffModal" data-bs-name="{{ staff_name }}" data-bs-id="{{ staff_id }}" data-bs-salart="{{ staff_salary }}" data-bs-start = "{{ staff_start_hr }}" data-bs-end = "{{ staff_end_hr }}" data-bs-days = "{{ staff_days_of_week }}">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#UpdStaffModal" data-bs-name="{{ staff_name }}" data-bs-id="{{ staff_id }}" data-bs-salary="{{ staff_salary }}" data-bs-start = "{{ staff_start_hr }}" data-bs-end = "{{ staff_end_hr }}" data-bs-days = "{{ staff_days_of_week }}">
                               <i class="bi bi-pen-fill"></i>
                             </button>
                             <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#DeleteModal" data-bs-name="{{ staff_name }}" data-bs-id="{{ staff_id }}" >
@@ -428,8 +424,8 @@
         }
     }
   
-    var exampleModal = document.getElementById('DocModal')
-    exampleModal.addEventListener('show.bs.modal', function (event) {
+    var DocModal = document.getElementById('DocModal')
+    DocModal.addEventListener('show.bs.modal', function (event) {
       // Button that triggered the modal
       var button = event.relatedTarget
       // Extract info from data-bs-* attributes
@@ -437,16 +433,16 @@
       var doc_id = button.getAttribute('data-bs-id')
   
       // Update the modal's content.
-      var modalTitle = exampleModal.querySelector('.modal-title')
-      var modal_body_doc_name = exampleModal.querySelector('#doctor_name')
-      var modal_body_doc_id = exampleModal.querySelector('#id')
+      var modalTitle = DocModal.querySelector('.modal-title')
+      var modal_body_doc_name = DocModal.querySelector('#doctor_name')
+      var modal_body_doc_id = DocModal.querySelector('#id')
   
       modal_body_doc_name.value = doc_name
       modal_body_doc_id.value = doc_id
     })
 
-    exampleModal = document.getElementById('StaffModal')
-    exampleModal.addEventListener('show.bs.modal', function (event) {
+    var StaffModal = document.getElementById('StaffModal')
+    StaffModal.addEventListener('show.bs.modal', function (event) {
       // Button that triggered the modal
       var button = event.relatedTarget
       // Extract info from data-bs-* attributes
@@ -456,17 +452,17 @@
         var staff_id = button.getAttribute('data-bs-id')
 
         // Update the modal's content.
-        var modalTitle = exampleModal.querySelector('.modal-title')
-        var modal_body_staff_name = exampleModal.querySelector('#staff_name')
-        var modal_body_staff_id = exampleModal.querySelector('#id')
+        var modalTitle = StaffModal.querySelector('.modal-title')
+        var modal_body_staff_name = StaffModal.querySelector('#staff_name')
+        var modal_body_staff_id = StaffModal.querySelector('#id')
 
         modal_body_staff_name.value = staff_name
         modal_body_staff_id.value = staff_id
       }
     })
 
-    exampleModal = document.getElementById('DeleteModal')
-    exampleModal.addEventListener('show.bs.modal', function (event) {
+    var DeleteModal = document.getElementById('DeleteModal')
+    DeleteModal.addEventListener('show.bs.modal', function (event) {
       // Button that triggered the modal
       var button = event.relatedTarget
       // Extract info from data-bs-* attributes
@@ -474,16 +470,16 @@
       var id = button.getAttribute('data-bs-id')
 
       // Update the modal's content.
-      var modalTitle = exampleModal.querySelector('.modal-title')
-      var modal_body_name = exampleModal.querySelector('#name')
-      var modal_body_id = exampleModal.querySelector('#id')
+      var modalTitle = DeleteModal.querySelector('.modal-title')
+      var modal_body_name = DeleteModal.querySelector('#name')
+      var modal_body_id = DeleteModal.querySelector('#id')
 
       modal_body_name.value = name
       modal_body_id.value = id
     })
 
-    exampleModal = document.getElementById('UpdDocModal')
-    exampleModal.addEventListener('show.bs.modal', function (event) {
+    var UpdDocModal = document.getElementById('UpdDocModal')
+    UpdDocModal.addEventListener('show.bs.modal', function (event) {
       // Button that triggered the modal
       var button = event.relatedTarget
       // Extract info from data-bs-* attributes
@@ -494,29 +490,29 @@
       var doc_ot_charges = button.getAttribute('data-bs-ot-charges')
   
       // Update the modal's content.
-      var modalTitle = exampleModal.querySelector('.modal-title')
-      var modal_body_doc_name = exampleModal.querySelector('#doctor_name')
-      var modal_body_doc_id = exampleModal.querySelector('#id')
-      var modal_body_doc_salary = exampleModal.querySelector('#salary')
-      var modal_body_doc_opd_charges = exampleModal.querySelector('#opd_chrges')
-      var modal_body_doc_ot_charges = exampleModal.querySelector('#ot_charges')
+      var modalTitle = UpdDocModal.querySelector('.modal-title')
+      var modal_body_doc_name = UpdDocModal.querySelector('#doctor_name')
+      var modal_body_doc_id = UpdDocModal.querySelector('#id')
+      var modal_body_doc_salary = UpdDocModal.querySelector('#salary')
+      var modal_body_doc_opd_charges = UpdDocModal.querySelector('#opd_charges')
+      var modal_body_doc_ot_charges = UpdDocModal.querySelector('#ot_charges')
   
       modal_body_doc_name.value = doc_name
       modal_body_doc_id.value = doc_id
       modal_body_doc_salary.value = doc_salary
-      modal_body_doc_ot_charges = doc_ot_charges
-      modal_body_doc_opd_charges = doc_opd_charges
+      modal_body_doc_ot_charges.value = doc_ot_charges
+      modal_body_doc_opd_charges.value = doc_opd_charges
     })
 
-    exampleModal = document.getElementById('UpdStaffModal')
+    var exampleModal = document.getElementById('UpdStaffModal')
     exampleModal.addEventListener('show.bs.modal', function (event) {
       // Button that triggered the modal
       var button = event.relatedTarget
       // Extract info from data-bs-* attributes
-      var bt_type = button.getAttribute('data-bs-type')
+      // var bt_type = button.getAttribute('data-bs-type')
       var staff_name = button.getAttribute('data-bs-name')
       var staff_id = button.getAttribute('data-bs-id')
-      var staff_salary = button.getAttribute('data-salary')
+      var staff_salary = button.getAttribute('data-bs-salary')
       var staff_start_hr = button.getAttribute('data-bs-start')
       var staff_end_hr = button.getAttribute('data-bs-end')
       var staff_days_of_week = button.getAttribute('data-bs-days')
@@ -532,10 +528,10 @@
 
       modal_body_staff_name.value = staff_name
       modal_body_staff_id.value = staff_id
-      modal_staff_days_of_week = staff_days_of_week
-      modal_staff_end_hr = staff_end_hr
-      modal_staff_start_hr = staff_start_hr
-      modal_staff_salary = staff_salary
+      modal_staff_days_of_week.value = staff_days_of_week
+      modal_staff_end_hr.value = staff_end_hr
+      modal_staff_start_hr.value = staff_start_hr
+      modal_staff_salary.value = staff_salary
     })
 
 </script>
