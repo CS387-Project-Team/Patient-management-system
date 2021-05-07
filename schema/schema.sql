@@ -66,7 +66,8 @@ create table doctor
 	speciality text,
 		--check (speciality in ("Physician","Cardiology","Nephrology","Orthopaedic","Skin","Neurology")),
 	-- qualification text,
-	salary int,
+	salary int
+		check(salary > 0),
 	permanent boolean,
 	experience int,
 	opd_charges int,
@@ -84,7 +85,8 @@ create table support_staff
 	role text,
 	-- qualification text,
 	experience int,
-	salary int,
+	salary int
+		check(salary > 0),
 	start_hr int,
 	end_hr int,
 	days_of_week text,
@@ -100,7 +102,8 @@ create table support_staff
 
 create table admin
 	(id int,
-	salary int,
+	salary int
+		check(salary > 0),
 	-- qualification text,
 	primary key (id),
 	foreign key (id) references person

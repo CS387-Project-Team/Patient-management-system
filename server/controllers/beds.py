@@ -48,7 +48,7 @@ def allot_beds(request):
 	room_type = request.get('room_type')
 	bed_type = request.get('bed_type') 
 
-	db.execute(''' select * from patient where patient_id = %s ''', pid)
+	db.execute(''' select * from patient where patient_id = %s ''', (pid,))
 	if len(db.fetchall()) == 0:
 		return flask.Response('No patient with the given id exists', 200) 
 

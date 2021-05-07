@@ -24,7 +24,7 @@ def update_profile(request):
     db = conn.cursor(cursor_factory=application.DictCursor)
     try:
         sql = '''update person
-                set (name, username, address, pincode, contact, gender, email_id, dob) = (%s, %s, %s, %s, %s, %s, %s)
+                set (name, username, address, pincode, contact, gender, email_id, dob) = (%s, %s, %s, %s, %s, %s, %s, %s)
                 where id = %s;
                 '''
         db.execute(sql, (request.get('name'), request.get('username'), request.get('address'), request.get('pincode'), request.get('contact'), request.get('gender'), request.get('email_id'), request.get('dob'), g.user.get('id'),))
