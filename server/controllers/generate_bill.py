@@ -89,6 +89,10 @@ def show_medicine():
 	rows = db.fetchall()
 	data['bills'] = my_jsonify(rows)
 
+	db.execute('''select id, name, username from person''')
+	rows = db.fetchall()
+	data['persons'] = my_jsonify(rows)
+
 	conn.close()
 	return render_template('bill/medicine.html', data=data)
 
@@ -99,6 +103,7 @@ def handle_post_medicine(request):
 
 	meds = request.get('meds')
 	purpose = 'Pharmacy'
+	paid_by = request.get('paid_by')
 	discount = request.get('discount')
 
 	meds = meds.replace(' ','').split(';')
@@ -110,6 +115,10 @@ def handle_post_medicine(request):
 	if int(discount) < 0 or int(discount) > 100:
 		return flask.Response('Invalid input for discount, please retry with a number between 0 and 100', 200)
 	
+	db.execute('''select * from person where id = %s''', (paid_by,))
+	if len(db.fetchall()) == 0:
+		return flask.Response(f'No person with id {paid_by} exists', 200) 
+
 	for m in meds:
 		db.execute('''select * from medicine where med_id = %s''', (m[0],))
 		if len(db.fetchall()) == 0:
@@ -119,7 +128,7 @@ def handle_post_medicine(request):
 	bill_no = db.fetchall()[0][0] + 1
 
 	try:
-		db.execute('''insert into bill values (%s, null, %s, %s, null)''', (bill_no, purpose, discount))
+		db.execute('''insert into bill values (%s, %s, %s, %s, null)''', (bill_no, paid_by, purpose, discount))
 		for m in meds:
 			db.execute('''insert into bill_med values (%s,%s,%s)''', (bill_no, m[0], m[1]))
 	except Exception as e:
