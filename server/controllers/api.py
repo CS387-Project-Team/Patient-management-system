@@ -97,6 +97,20 @@ def available_slots_followup():
 #     return controllers.appointments.confirm_booking(data)
 
 @login_required
+def view_resp():
+	return controllers.dashboard.get_staff_resp()
+
+@login_required
+def assg_resp():
+	request_data = request.form
+	return controllers.dashboard.assg_staff_resp(request_data)
+
+@login_required
+def evict_resp():
+	request_data = request.form
+	return controllers.dashboard.evict_staff_resp(request_data)
+
+@login_required
 def add_admin():
     if request.method == 'GET':
         return controllers.dashboard.get_admin_dashboard()

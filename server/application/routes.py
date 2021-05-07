@@ -20,6 +20,10 @@ def routes(app):
     app.add_url_rule('/remove-staff',view_func=api.remove_staff,methods=['POST'])
     app.add_url_rule('/upd-doctor',view_func=api.upd_doctor,methods=['POST'])
     app.add_url_rule('/upd-staff',view_func=api.upd_staff,methods=['POST'])
+    app.add_url_rule('/view-resp',view_func=api.view_resp,methods=['GET'])
+    app.add_url_rule('/assg-resp',view_func=api.assg_resp,methods=['POST'])
+    app.add_url_rule('/evict-resp',view_func=api.evict_resp,methods=['POST'])
+
     # appos
     app.add_url_rule('/appointments', view_func=api.get_appointments)
     app.add_url_rule('/show-free-slots', view_func=api.available_slots, methods=['GET'])

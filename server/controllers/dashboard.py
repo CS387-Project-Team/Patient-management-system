@@ -38,6 +38,87 @@ def update_profile(request):
     conn.close()
     return redirect(url_for('profile'))
 
+def get_staff_resp():
+    data = {}
+    conn = application.connect()
+    db = conn.cursor(cursor_factory=application.DictCursor)
+
+    sql = '''select room_no,'Room' as name,0 as resp_type
+        from room'''
+    db.execute(sql)
+    row = db.fetchall()
+    data['room'] = my_jsonify(row)
+
+    sql = '''select eqp_id,type as name,1 as resp_type
+        from equipment
+        where not exists (select * from handle where handle.eqp_id = equipment.eqp_id)'''
+    db.execute(sql)
+    row = db.fetchall()
+    data['eqp'] = my_jsonify(row)
+
+    sql = '''(select name,staff_id,room_no as id,'Room' as name,1 as assg
+            from (support_staff join person on support_staff.staff_id=person.id) natural join assg_to)
+            union
+            (select name,staff_id,eqp_id as id,type as name,1 as assg
+            from (support_staff join person on support_staff.staff_id=person.id) natural join handle natural join equipment)
+            union
+            (with unassg(staff_id) as
+                (select staff_id from support_staff
+                    where not exists (select * from handle where handle.staff_id = support_staff.staff_id)
+                    and not exists (select * from assg_to where assg_to.staff_id = support_staff.staff_id))
+            select name,staff_id,NULL as id,NULL as name,0 as assg
+            from unassg join person on unassg.staff_id = person.id)'''
+    db.execute(sql)
+    row = db.fetchall()
+    data['staff'] = my_jsonify(row)
+    return render_template('admin/view_resp.html',data=data)
+
+def assg_staff_resp(request):
+    conn = application.connect()
+    db = conn.cursor(cursor_factory=application.DictCursor)
+    try:
+        if request.get('resp_type') == 1: #assg_to eqp
+            sql = '''insert into assg_to values (%s,%s)'''
+            db.execute(sql,(request.get('staff_id'),reqeust.get('id'),))
+        elif request.get('resp_type') == 0: #assg_to_room
+            sql = '''insert into handle values(%s,%s)'''
+            db.execute(sql,(request.get('staff_id'),reqeust.get('id'),))
+    except Exception as e:
+        print(e)
+        conn.rollback()
+        conn.close()
+        redirect(url_for('view_resp'))
+
+    conn.commit()
+    conn.close()
+    return redirect(url_for('view_resp'))
+
+def evict_staff_resp(request):
+    conn = application.connect()
+    db = conn.cursor(cursor_factory=application.DictCursor)
+    try:
+        resp_type = 0
+        sql = '''select * from handle where staff_id = %s'''
+        db.execute(sql,(request.get('staff_id'),))
+        row = db.fetchall()
+        if row is not None:
+            resp_type = 1
+        if resp_type:
+            sql = '''delete from handle where staff_id = %s'''
+            db.execute(sql,(request.get('staff_id')))
+        else:
+           sql = '''delete from assg_to where staff_id = %s'''
+           db.execute(sql,(request.get('staff_id')))
+    except Exception as e:
+        print(e)
+        conn.rollback()
+        conn.close()
+        redirect(url_for('view_resp'))
+
+    conn.commit()
+    conn.close()
+    return redirect(url_for('view_resp'))
+
 def get_staff():
     data = {}
     conn = application.connect()
