@@ -39,10 +39,6 @@ def handle_post_test(request):
 	purpose = request.get('purpose')
 	discount = request.get('discount')
 
-	print(pid)
-	print(date)
-	print(discount)
-
 	if int(discount) < 0 or int(discount) > 100:
 		return flask.Response('Invalid input for discount, please retry with a number between 0 and 100', 200)
 	if purpose not in ['OPD', 'Pharmacy', 'Admission', 'Diagnosis']:
@@ -82,7 +78,61 @@ def handle_post_medicine(request):
 	pass
 
 def show_appo():
-	pass
+	data = {}
+
+	conn = application.connect()
+	db = conn.cursor(cursor_factory=application.DictCursor)
+
+	db.execute(''' select * from support_staff where staff_id = %s''', (g.user.get('id'),))
+	if len(db.fetchall()) == 0:
+		return flask.Response('This page is only for support staff', 200)
+
+	db.execute('''select * from meet natural join appointment''')
+	rows = db.fetchall()
+	data['appos'] = my_jsonify(rows)
+
+	db.execute('''select * from bill''')
+	rows = db.fetchall()
+	data['bills'] = my_jsonify(rows)
+
+	conn.close()
+	return render_template('bill/appointment.html', data=data)
 
 def handle_post_appo(request):
-	pass
+	conn = application.connect()
+	db = conn.cursor(cursor_factory=application.DictCursor)
+
+	app_id = request.get('app_id')
+	purpose = ''
+	discount = request.get('discount')
+
+	if int(discount) < 0 or int(discount) > 100:
+		return flask.Response('Invalid input for discount, please retry with a number between 0 and 100', 200)
+	
+	db.execute('''select * from appointment where app_id = %s''', (app_id,))
+	if len(db.fetchall()) == 0:
+		return flask.Response(f'No appointment exists with id {app_id}, please try again with proper input', 200)
+
+	db.execute('''select type from appointment where app_id = %s and bill_no is null ''', (app_id,))
+	rows = db.fetchall()
+	if len(rows) == 0:
+		return flask.Response('A bill is already linked to this appointment', 200)
+	else:
+		purpose = rows[0][0]
+
+	db.execute('''select max(bill_no) from bill''')
+	bill_no = db.fetchall()[0][0] + 1
+
+	try:
+		db.execute('''insert into bill values (%s, null, %s, %s, null)''', (bill_no, purpose, discount))
+		db.execute('''update appointment set bill_no = %s where app_id = %s''', (bill_no, app_id))
+	except Exception as e:
+		print(e)
+		conn.rollback()
+		conn.close()
+		return redirect(url_for(generate_bill_appo))
+
+	conn.commit()
+	conn.close()
+
+	return redirect(url_for('generate_bill_appo')) 

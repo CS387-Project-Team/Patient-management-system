@@ -21,31 +21,23 @@
 						<div class="table-responsive app">
 							<table class="table table-light table-hover">
 								<tr>
+									<th>Appointment id</th> 
 									<th>Patient id</th>
-									<th>Person id</th> 
-									<th>Name</th>
-									<th>Username</th>
-									<th>Test id</th>
-									<th>Test name</th>
-									<th>Charges</th>
-									<th>Result file</th>
+									<th>Doctor id</th>
 									<th>Date</th>
+									<th>Start time</th>
+									<th>Type</th>
 									<th>Bill no</th>
-									<th>Comments</th>
 								</tr>
-								{% for row in data['tests'] %}
+								{% for row in data['appos'] %}
 									<tr>
+										<td>{{ row['app_id'] }}</td>
 										<td>{{ row['patient_id'] }}</td>
-										<td>{{ row['pid'] }}</td>
-										<td>{{ row['pname'] }}</td>
-										<td>{{ row['username'] }}</td>
-										<td>{{ row['test_id'] }}</td>
-										<td>{{ row['tname'] }}</td>
-										<td>{{ row['charges'] }}</td>
-										<td>{{ row['result_file'] }}</td>
+										<td>{{ row['doc_id'] }}</td>
 										<td>{{ row['dat'] }}</td>
+										<td>{{ row['start_time'] }}</td>
+										<td>{{ row['type'] }}</td>
 										<td>{{ row['bill_no'] }}</td>
-										<td>{{ row['comment'] }}</td>
 									</tr>
 								{% endfor %}
 							</table>
@@ -95,29 +87,17 @@
 			<div class="card-body">
 				<form method="post">
 					<div class="mb-3 row">
-						<label for="name" class="col-sm-5 col-form-label">Choose patient id</label>
+						<label for="name" class="col-sm-5 col-form-label">Choose appointment id</label>
 						<div class="col-sm-7">
-							<input type="text" class="form-control bg-light" name="patient_id" id="patient_id" value="" required>
+							<input type="text" class="form-control bg-light" name="app_id" id="app_id" value="" required>
 						</div>
 					</div>
-					<div class="mb-3 row">
-						<label for="name" class="col-sm-5 col-form-label">Choose test id</label>
-						<div class="col-sm-7">
-							<input type="text" class="form-control bg-light" name="test_id" id="test_id" value="">
-						</div>
-					</div>
-					<div class="mb-3 row">
-						<label for="name" class="col-sm-5 col-form-label">Choose date</label>
-						<div class="col-sm-7">
-							<input type="date" class="form-control bg-light" name="date" id="date" value="">
-						</div>
-					</div>
-					<div class="mb-3 row">
+					<!-- <div class="mb-3 row">
 						<label for="name" class="col-sm-5 col-form-label">Purpose</label>
 						<div class="col-sm-7">
 							<input type="text" class="form-control bg-light" name="purpose" id="purpose" value="">
 						</div>
-					</div>
+					</div> -->
 					<div class="mb-3 row">
 						<label for="name" class="col-sm-5 col-form-label">Discount</label>
 						<div class="col-sm-7">
