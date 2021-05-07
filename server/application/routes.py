@@ -68,6 +68,8 @@ def routes(app):
     app.add_url_rule('/update-inventory/add-bed', view_func=api.add_bed, methods=['GET', 'POST'])
     # app.add_url_rule('/update-inventory/remove-bed', view_func=api.remove_bed, methods=['GET', 'POST'])
 
+    # use case 14
+    app.add_url_rule('/appo-feedback', view_func=api.appo_feedback, methods=['GET', 'POST'])
 
 
 

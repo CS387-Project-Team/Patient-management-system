@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+
+{% block header %}
+	<!-- <h1>{% block title %}Profile{% endblock %}</h1> -->
+{% endblock %}
+
+{% block content %}
+
+<div class="row mt-5 justify-content-center">
+	<div class="col-sm-9">
+		<div class="row mt-5">
+
+			<div class="col-sm-15 col-md-15 col-lg-15 mb-6">
+				<div class="card mx-4-md mx-4-lg">
+					<div class="card-header">
+						<h4>
+							Your appointments
+						</h4>
+					</div>
+					<div class="card-body">
+						<div class="table-responsive app">
+							<table class="table table-light table-hover">
+								<tr>
+									<th>Appointment id</th>
+									<th>Patient id</th>
+									<th>Person id</th> 
+									<th>Name</th>
+									<th>Username</th>
+									<th>Date</th>
+									<th>Start time</th>
+									<th>Patient complaint</th>
+								</tr>
+								{% for row in data['appos'] %}
+									<tr>
+										<td>{{ row['app_id'] }}</td>
+										<td>{{ row['patient_id'] }}</td>
+										<td>{{ row['id'] }}</td>
+										<td>{{ row['name'] }}</td>
+										<td>{{ row['username'] }}</td>
+										<td>{{ row['dat'] }}</td>
+										<td>{{ row['start_time'] }}</td>
+										<td>{{ row['patient_complaint'] }}</td>
+									</tr>
+								{% endfor %}
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-12 col-md-6 col-lg-6 mb-4">
+				<div class="card mx-4-md mx-4-lg">
+					<div class="card-header">
+						<h4>
+							Symptoms
+						</h4>
+					</div>
+					<div class="card-body">
+						<div class="table-responsive app">
+							<table class="table table-light table-hover">
+								<tr>
+									<th>Symptom id</th>									
+									<th>Name</th>
+								</tr>
+								{% for row in data['symptoms'] %}
+									<tr>
+										<td>{{ row['symp_id'] }}</td>
+										<td>{{ row['symp_name'] }}</td>
+									</tr>
+								{% endfor %}
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-12 col-md-6 col-lg-6 mb-4">
+				<div class="card mx-4-md mx-4-lg">
+					<div class="card-header">
+						<h4>
+							Diseases
+						</h4>
+					</div>
+					<div class="card-body">
+						<div class="table-responsive app">
+							<table class="table table-light table-hover">
+								<tr>
+									<th>Disease id</th>									
+									<th>Name</th>
+									<th>Info link</th> 
+								</tr>
+								{% for row in data['diseases'] %}
+									<tr>
+										<td>{{ row['disease_id'] }}</td>
+										<td>{{ row['disease_name'] }}</td>
+										<td>{{ row['info_link'] }}</td>
+									</tr>
+								{% endfor %}
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-12 col-md-6 col-lg-6 mb-4">
+				<div class="card mx-4-md mx-4-lg">
+					<div class="card-header">
+						<h4>
+							Medicines
+						</h4>
+					</div>
+					<div class="card-body">
+						<div class="table-responsive app">
+							<table class="table table-light table-hover">
+								<tr>
+									<th>Medicine id</th>									
+									<th>Name</th>
+									<th>Description</th>
+									<th>Manufacturer</th>
+									<th>Price</th>
+								</tr>
+								{% for row in data['medicines'] %}
+									<tr>
+										<td>{{ row['med_id'] }}</td>
+										<td>{{ row['name'] }}</td>
+										<td>{{ row['descr'] }}</td>
+										<td>{{ row['manufc'] }}</td>
+										<td>{{ row['price'] }}</td>
+									</tr>
+								{% endfor %}
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-12 col-md-6 col-lg-6 mb-4">
+				<div class="card mx-4-md mx-4-lg">
+					<div class="card-header">
+						<h4>
+							Tests
+						</h4>
+					</div>
+					<div class="card-body">
+						<div class="table-responsive app">
+							<table class="table table-light table-hover">
+								<tr>
+									<th>Test id</th>									
+									<th>Name</th>
+									<th>Charges</th> 
+								</tr>
+								{% for row in data['tests'] %}
+									<tr>
+										<td>{{ row['test_id'] }}</td>
+										<td>{{ row['name'] }}</td>
+										<td>{{ row['charges'] }}</td>
+									</tr>
+								{% endfor %}
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<div class="card">
+			<div class="card-header">
+				<h5> Give feedback </h5>
+			</div>
+			<div class="card-body">
+				<form method="post">
+					<div class="mb-3 row">
+						<label for="name" class="col-sm-5 col-form-label">Choose appointment id</label>
+						<div class="col-sm-7">
+							<input type="text" class="form-control bg-light" name="appo_id" id="appo_id" value="" required>
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label for="name" class="col-sm-5 col-form-label">Enter symptom ids (comma seperated)</label>
+						<div class="col-sm-7">
+							<input type="text" class="form-control bg-light" name="symptoms" id="symptoms" value="" required>
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label for="contact" class="col-sm-5 col-form-label">Enter disease ids (comma seperated)</label>
+						<div class="col-sm-7">
+							<input type="text" class="form-control bg-light" name="diseases" id="diseases" value="">
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label for="username" class="col-sm-5 col-form-label">
+							Enter medicine ids, dosage and frequency (semicolon seperated tuples, for eg : "(1, 200mg, twice a day); (2, 2ml, once a day)") 
+						</label>
+						<div class="col-sm-7">
+							<input type="text" class="form-control bg-light" name="meds" id="meds" value="" >
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label for="contact" class="col-sm-5 col-form-label">Enter test ids (comma seperated)</label>
+						<div class="col-sm-7">
+							<input type="text" class="form-control bg-light" name="tests" id="tests" value="" >
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label for="contact" class="col-sm-5 col-form-label">Enter prescription description</label>
+						<div class="col-sm-7">
+							<input type="text" class="form-control bg-light" name="desc" id="desc" value="" >
+						</div>
+					</div>
+
+					<input type="submit" class="btn btn-outline-secondary mt-5" name="action" value="Submit">
+				</form>
+			</div>
+		</div>
+
+	</div>
+</div>
+{% endblock %}

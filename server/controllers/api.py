@@ -7,7 +7,7 @@ import controllers.tests, controllers.administer_test, controllers.dis_symp
 import controllers.assign_room
 import controllers.generic_info
 import controllers.dashboard, controllers.appointments, controllers.analytics, controllers.tests, controllers.administer_test
-import controllers.generic_info, controllers.beds, controllers.inventory
+import controllers.generic_info, controllers.beds, controllers.inventory, controllers.appo_feedback
 
 @login_required
 def hello():
@@ -248,9 +248,16 @@ def allot_beds2():
 
 @login_required
 def add_bed():
-	print(request.form)
-	print(request.method)
 	if request.method == 'GET':
 		return controllers.inventory.render_add_bed()
 	elif request.method == 'POST':
 		return controllers.inventory.handle_post(request.form)
+
+@login_required
+def appo_feedback():
+	if request.method == 'GET':
+		return controllers.appo_feedback.show_appos()
+	elif request.method == 'POST':
+		return controllers.appo_feedback.handle_post(request.form)
+
+
