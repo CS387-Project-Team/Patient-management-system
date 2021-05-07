@@ -82,6 +82,7 @@
                         <h4 id="name">{{ doc_slot['name'] }}</h4>
                         <h5 id="speciality">{{ doc_slot['speciality'] }}</h5>
                     </div>
+                    {% if doc_slot['start_time'] %}
                     <div class="col-lg-9 col-md-8">
                       <div class="card-body">
                         <div class="row row-cols-auto g-0">
@@ -97,6 +98,11 @@
                         </div>
                       </div>
                     </div>
+                    {% else %}
+                    <div class="col-lg-9 col-md-8 my-auto">
+                    <span class="text-danger ms-3">No slot available. Try another date.</span>
+                    </div>
+                    {% endif %}
                   </div>
                 </div>
               {% endfor %}
