@@ -55,6 +55,9 @@ def book_test(request):
     conn = application.connect()
     db = conn.cursor(cursor_factory=application.DictCursor)
     try:
+        if datetime.datetime.strptime(date,"%Y-%m-%d")<datetime.datetime.now():
+            flash("Please select an upcoming date",'danger')
+            return redirect(url_for('get_tests'))
         sql = '''SELECT 1+max(patient_id) as new_id
                         from patient'''
         db.execute(sql)
