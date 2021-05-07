@@ -75,7 +75,14 @@ def routes(app):
     app.add_url_rule('/allot-beds2', view_func=api.allot_beds2, methods=['GET', 'POST'])
 
     # update inventory
-    app.add_url_rule('/update-inventory/add-bed', view_func=api.add_bed, methods=['GET', 'POST'])
+    # app.add_url_rule('/update-inventory/add-bed', view_func=api.add_bed, methods=['GET', 'POST'])
+    app.add_url_rule('/get-inventory',view_func=api.get_inventory,methods=['GET'])
+    app.add_url_rule('/add-bed',view_func=api.add_bed,methods=['POST'])
+    app.add_url_rule('/remove-bed',view_func=api.remove_bed,methods=['POST'])
+    app.add_url_rule('/add-test',view_func=api.add_test,methods=['POST'])
+    app.add_url_rule('/add-eqp',view_func=api.add_eqp,methods=['POST'])
+    app.add_url_rule('/add-room',view_func=api.add_room,methods=['POST'])
+    app.add_url_rule('/add-medicine',view_func=api.add_medicine,methods=['POST'])
     # app.add_url_rule('/update-inventory/remove-bed', view_func=api.remove_bed, methods=['GET', 'POST'])
 
     # use case 14

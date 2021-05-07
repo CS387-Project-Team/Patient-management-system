@@ -78,8 +78,10 @@ def get_staff_resp():
 def assg_staff_eqp(request):
     conn = application.connect()
     db = conn.cursor(cursor_factory=application.DictCursor)
+    print("here2")
     try:
         sql = '''insert into handle  values(%s,%s)'''
+        print(request.get('eqp_id'))
         db.execute(sql,(request.get('staff_id'),request.get('eqp_id'),))
         print("here")
     except Exception as e:
@@ -102,7 +104,7 @@ def assg_staff_room(request):
         print(e)
         conn.rollback()
         conn.close()
-        redirect(url_for('view_resp'))
+        return redirect(url_for('view_resp'))
 
     conn.commit()
     conn.close()
@@ -130,7 +132,7 @@ def evict_staff_resp(request):
         print(e)
         conn.rollback()
         conn.close()
-        redirect(url_for('view_resp'))
+        return redirect(url_for('view_resp'))
 
     conn.commit()
     conn.close()
@@ -173,7 +175,7 @@ def upd_doctor(request):
         print(e)
         conn.rollback()
         conn.close()
-        redirect(url_for('add_remove_staff'))
+        return redirect(url_for('add_remove_staff'))
 
     conn.commit()
     conn.close()
@@ -192,7 +194,7 @@ def upd_staff(request):
         print(e)
         conn.rollback()
         conn.close()
-        redirect(url_for('add_remove_staff'))
+        return redirect(url_for('add_remove_staff'))
 
     conn.commit()
     conn.close()
@@ -218,7 +220,7 @@ def remove_staff(request):
         print(e)
         conn.rollback()
         conn.close()
-        redirect(url_for('add_remove_staff'))
+        return redirect(url_for('add_remove_staff'))
 
     conn.commit()
     conn.close()
@@ -230,13 +232,11 @@ def add_doctor(request):
     try:
         sql = '''insert into doctor values (%s,%s,%s,%s,%s,%s,%s)'''
         db.execute(sql,(request.get('id'),request.get('speciality'),request.get('salary'),request.get('permanent'),request.get('experience'),request.get('opd_charges'),request.get('ot_charges'),))
+        conn.commit()
     except Exception as e:
         print(e)
         conn.rollback()
-        conn.close()
-        redirect(url_for('add_remove_staff'))
     
-    conn.commit()
     conn.close()
     return redirect(url_for('add_remove_staff'))
 
@@ -250,7 +250,7 @@ def add_staff(request):
         print(e)
         conn.rollback()
         conn.close()
-        redirect(url_for('add_remove_staff'))
+        return redirect(url_for('add_remove_staff'))
     
     conn.commit()
     conn.close()
@@ -269,7 +269,7 @@ def add_admin(request):
         print(e)
         conn.rollback()
         conn.close()
-        redirect(url_for('add_admin'))
+        return redirect(url_for('add_admin'))
     
     conn.commit()
     conn.close()
