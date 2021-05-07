@@ -35,7 +35,9 @@
 	            </a>
 	            <ul class="dropdown-menu" aria-labelledby="appointments">
 	              <li><a class="dropdown-item" href="{{ url_for('get_appointments') }}">View all</a></li>
+                <div class="dropdown-divider"></div>
 	              <li><a class="dropdown-item" href="{{ url_for('book_appointment') }}">Book</a></li>
+                <div class="dropdown-divider"></div>
 	              <li><a class="dropdown-item" href="{{ url_for('cancel_appointment') }}">Cancel</a></li>
 	            </ul>
 	          </li>
@@ -45,28 +47,39 @@
               </a>
               <ul class="dropdown-menu" aria-labelledby="tests">
                 <li><a class="dropdown-item" href="{{ url_for('get_tests') }}">View all</a></li>
+                <div class="dropdown-divider"></div>
                 <li><a class="dropdown-item" href="{{ url_for('book_test') }}">Book</a></li>
+                <div class="dropdown-divider"></div>
                 <li><a class="dropdown-item" href="{{ url_for('cancel_appointment') }}">Cancel</a></li>
               </ul>
             </li>
 
-            {% if g.is_doc %}
+            {% if g.is_doctor %}
             <li class="nav-item dropdown p-lg-3">
               <a class="nav-link dropdown-toggle middle" href="#" id="tests" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Doctor
               </a>
               <ul class="dropdown-menu" aria-labelledby="tests">
-                <li><a class="dropdown-item" href="{{ url_for('get_analytics') }}">Analytics</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('show_analytics') }}">Analytics</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('view_dis_symp') }}">Add disease/symptom</a></li>
+                <div class="dropdown-divider"></div>
+                <li><a class="dropdown-item" href="{{ url_for('get_week_slots') }}">Decide slots</a></li>
+                <div class="dropdown-divider"></div>
+                <li><a class="dropdown-item" href="{{ url_for('appo_feedback') }}">Appointment</a></li>
+                <div class="dropdown-divider"></div>
+                <li><a class="dropdown-item" href="{{ url_for('allot_beds2') }}">Assg beds</a></li>
               </ul>
             </li>
             {% endif %}
 
             {% if g.is_support %}
-            <li class="nav-item p-lg-3">
-	            <a class="nav-link middle disabled" href="#">Staff</a>
-	          </li>
-            <li class="nav-item p-lg-3">
-              <a class="nav-link middle" aria-current="page" href="{{ url_for('administer_test') }}">Administer Test</a>
+            <li class="nav-item dropdown p-lg-3">
+              <a class="nav-link dropdown-toggle middle" href="#" id="tests" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Support Staff
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="tests">
+                <li><a class="dropdown-item" href="{{ url_for('administer_test') }}">Administer Test</a></li>
+              </ul>
             </li>
             {% endif %}
 
@@ -77,9 +90,26 @@
               </a>
               <ul class="dropdown-menu" aria-labelledby="tests">
                 <li><a class="dropdown-item" href="{{ url_for('add_admin') }}">Add admin</a></li>
+                <div class="dropdown-divider"></div>
                 <li><a class="dropdown-item" href="{{ url_for('view_resp') }}">Assg Responisibilty</a></li>
+                <div class="dropdown-divider"></div>
                 <li><a class="dropdown-item" href="{{ url_for('add_remove_staff') }}">Add/remove staff</a></li>
+<<<<<<< HEAD
                 <!-- <li><a class="dropdown-item" href="{{ url_for('update_invent') }}">Update Inventory</a></li> -->
+=======
+                <div class="dropdown-divider"></div>
+                <li><a class="dropdown-item" href="{{ url_for('assign_room') }}">Assg rooms</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown p-lg-3">
+              <a class="nav-link dropdown-toggle middle" href="#" id="tests" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Analytics
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="tests">
+                <li><a class="dropdown-item" href="{{ url_for('show_analytics') }}">Overall Analytics</a></li>
+                <div class="dropdown-divider"></div>
+                <li><a class="dropdown-item" href="{{ url_for('show_disease_analytics', disease_id=1) }}">Disease Specific Analytics</a></li>
+>>>>>>> link_everything
               </ul>
             </li>
             {% endif %}
@@ -94,6 +124,7 @@
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                 <li><a class="dropdown-item p-lg-2" href="{{ url_for('profile')}}">My profile</a></li>
+                <div class="dropdown-divider"></div>
                 <li><a class="dropdown-item p-lg-2" href="{{ url_for('auth.logout') }}">Log out</a></li>
               </ul>
             </li>
