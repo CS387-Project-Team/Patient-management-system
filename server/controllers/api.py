@@ -4,6 +4,7 @@ from flask import request, make_response, render_template, url_for, redirect
 from controllers.auth import login_required
 import controllers.dashboard, controllers.appointments, controllers.analytics
 import controllers.tests, controllers.administer_test, controllers.dis_symp
+import controllers.doc_slots
 import controllers.assign_room
 import controllers.generic_info
 import controllers.dashboard, controllers.appointments, controllers.analytics, controllers.tests, controllers.administer_test
@@ -234,6 +235,14 @@ def assign_room():
     else:
         request_data=request.form
         return controllers.assign_room.edit_slot(request_data)
+
+@login_required
+def get_week_slots():
+	if request.method=='GET':
+		return controllers.doc_slots.show_all()
+	else:
+		request_data=request.form
+		return controllers.doc_slots.change(request_data)
 
 def view_info():
 	return controllers.generic_info.get_info()
