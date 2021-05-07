@@ -73,6 +73,7 @@ def get_available_slots(date_str):
                 ) as p
                 join person on person.id = p.doc_id
             where dat = %s
+            order by start_time
             '''
     db.execute(sql, (date_str,))
     rows = db.fetchall()
@@ -114,6 +115,7 @@ def get_available_slots_followup(patient_id, doc_id, date_str):
                 ) as p
                 join person on person.id = p.doc_id
             where dat = %s and p.doc_id = %s
+            order by start_time
             '''
     db.execute(sql, (date_str, doc_id,))
     rows = db.fetchall()
@@ -196,8 +198,9 @@ def book_appointment(request):
         sql = '''insert into appointment(app_id, type)
                 values (%s, %s);'''
         appo_datetime = datetime.datetime.strptime(date + ' ' + time, '%Y-%m-%d %H:%M:%S')
+        print(appo_datetime)
         # To uncomment this when database updates doctor_room_slot
-        assert appo_datetime >= datetime.datetime.now() and appo_datetime.datetime.date <= datetime.date.today()+datetime.timedelta(days=application.MAX_BOOKING_RANGE), 'invalid date for booking a new appointment'
+        assert appo_datetime >= datetime.datetime.now() and appo_datetime.date() <= datetime.date.today()+datetime.timedelta(days=application.MAX_BOOKING_RANGE), 'invalid date for booking a new appointment'
         db.execute(sql, (app_id, appo_type,))
         sql = '''insert into meet(app_id, patient_id, doc_id, dat, start_time, patient_complaint)
                 values (%s, %s, %s, %s, %s, %s);'''
