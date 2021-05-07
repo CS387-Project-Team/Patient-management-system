@@ -40,6 +40,10 @@ def get_appointments():
         df.columns = rows[0].keys()
         df = df.groupby('app_id', as_index=False).agg({'name':'first', 'dat':'first', 'start_time': 'first', 'complaint': 'first', 'medicine': lambda x: list(x), 'dosage': lambda x: list(x), 'frequency': lambda x: list(x), 'instr': lambda x: list(x), 'patient_id': 'first', 'type': 'first', 'doc_id': 'first'})
         data['appointments'] = df.to_dict(orient='records')
+        for appo in data['appointments']:
+            print([med + ', ' + freq for med, freq in zip(appo['medicine'], appo['frequency']) if med is not None and freq is not None])
+            appo['med_dosage_freq'] = '\n'.join([med + ', ' + freq for med, freq in zip(appo['medicine'], appo['frequency']) if med is not None and freq is not None])
+            appo['all_instr'] = '\n'.join([instr for instr in appo['instr'] if instr is not None and instr != '']) 
     else:
         data['appointments'] = []
     data['upcoming_appos'] = []

@@ -75,6 +75,10 @@
             </div>
             <label for="complaint" class="col-form-label">Complaint:</label>
             <textarea readonly class="form-control bg-light" id="complaint" name="complaint"></textarea>
+            <label id="med_list_label" for="med_list" class="col-form-label">Prescribed Medicines:</label>
+            <textarea readonly class="form-control bg-light" id="med_list" name="med_list" value="None"></textarea>
+            <label id="instr_list_label" for="instr_list" class="col-form-label">Instructions:</label>
+            <textarea readonly class="form-control bg-light" id="instr_list" name="instr_list" value="None"></textarea>
           </div>
         </form>
       </div>
@@ -216,6 +220,8 @@
                           {% set app_type = appo['type'] %}
                           {% set complaint = appo['complaint'] %}
                           {% set doc_id = appo['doc_id'] %}
+                          {% set med_list = appo['med_dosage_freq'] %}
+                          {% set instr_list = appo['all_instr'] %}
                           <tr>
                               <td>{{ appo['name'] }}</td>
                               <td><span class="badge bg-danger rounded-pill">{{ appo['dat'] }}</span></td>
@@ -230,7 +236,7 @@
                                   <input type="hidden" name="doc_id" value="{{ doc_id }}">
                                   <input type="hidden" name="patient_id" value="{{ patient_id }}">
                                   <div class="btn-group btn-group-sm float-end" role="group" aria-label="actions">
-                                      <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#viewModal" data-bs-name="{{ doc_name }}" data-bs-appid="{{ app_id }}" data-bs-patientid="{{ patient_id }}" data-bs-date="{{ date }}" data-bs-time="{{ time }}" data-bs-type="{{ app_type }}" data-bs-complaint="{{ complaint }}"><i class="bi bi-eye"></i></button>
+                                      <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#viewModal" data-bs-name="{{ doc_name }}" data-bs-appid="{{ app_id }}" data-bs-patientid="{{ patient_id }}" data-bs-date="{{ date }}" data-bs-time="{{ time }}" data-bs-type="{{ app_type }}" data-bs-complaint="{{ complaint }}" data-bs-med-list="{{ med_list }}" data-bs-instr-list="{{ instr_list }}"><i class="bi bi-eye"></i></button>
                                       <button type="submit" class="btn btn-warning"><i class="bi bi-arrow-right-square"></i></button>
                                   </div>
                                 </form>
@@ -299,6 +305,8 @@
     var date = button.getAttribute('data-bs-date')
     var appo_type = button.getAttribute('data-bs-type')
     var complaint = button.getAttribute('data-bs-complaint')
+    var med_list = button.getAttribute('data-bs-med-list')
+    var instr_list = button.getAttribute('data-bs-instr-list')
 
     // If necessary, you could initiate an AJAX request here
     // and then do the updating in a callback.
@@ -312,6 +320,8 @@
     var modal_body_date = viewModal.querySelector('#date')
     var modal_body_type = viewModal.querySelector('#type')
     var modal_body_complaint = viewModal.querySelector('#complaint')
+    var modal_body_med = viewModal.querySelector('#med_list')
+    var modal_body_instr = viewModal.querySelector('#instr_list')
 
     modal_body_doc_name.value = doc_name
     modal_body_app_id.value = app_id
@@ -320,7 +330,20 @@
     modal_body_time.value = time
     modal_body_type.value = appo_type
     modal_body_complaint.innerHTML = complaint
-
+    modal_body_med.innerHTML = med_list
+    modal_body_instr.innerHTML = instr_list
+    console.log('med-list' + med_list)
+    if (med_list === null){
+      $("#med_list").hide();
+      $("#med_list_label").hide();
+      console.log("entering here")
+    }
+    console.log('instr-list' + instr_list + instr_list.length)
+    if (instr_list.length === 0){
+      $("#instr_list").hide();
+      $("#instr_list_label").hide();
+      console.log("entering here")
+    }
   })
   var editModal = document.getElementById('editModal')
   editModal.addEventListener('show.bs.modal', function (event) {
