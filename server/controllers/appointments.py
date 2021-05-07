@@ -38,7 +38,7 @@ def get_appointments():
     if rows != []:  
         df = DataFrame(rows)
         df.columns = rows[0].keys()
-        df = df.groupby('app_id', as_index=False).agg({'name':'first', 'dat':'first', 'start_time': 'first', 'complaint': 'first', 'medicine': lambda x: list(x), 'dosage': lambda x: list(x), 'frequency': lambda x: list(x), 'instr': lambda x: list(x)})
+        df = df.groupby('app_id', as_index=False).agg({'name':'first', 'dat':'first', 'start_time': 'first', 'complaint': 'first', 'medicine': lambda x: list(x), 'dosage': lambda x: list(x), 'frequency': lambda x: list(x), 'instr': lambda x: list(x), 'patient_id': 'first', 'type': 'first'})
         data['appointments'] = df.to_dict(orient='records')
     else:
         data['appointments'] = []
@@ -197,7 +197,7 @@ def book_appointment(request):
                 values (%s, %s);'''
         appo_datetime = datetime.datetime.strptime(date + ' ' + time, '%Y-%m-%d %H:%M:%S')
         # To uncomment this when database updates doctor_room_slot
-        # assert appo_datetime >= datetime.datetime.now() and appo_datetime.datetime.date <= datetime.date.today()+datetime.timedelta(days=application.MAX_BOOKING_RANGE), 'invalid date for booking a new appointment'
+        assert appo_datetime >= datetime.datetime.now() and appo_datetime.datetime.date <= datetime.date.today()+datetime.timedelta(days=application.MAX_BOOKING_RANGE), 'invalid date for booking a new appointment'
         db.execute(sql, (app_id, appo_type,))
         sql = '''insert into meet(app_id, patient_id, doc_id, dat, start_time, patient_complaint)
                 values (%s, %s, %s, %s, %s, %s);'''
@@ -240,6 +240,7 @@ def update_complaint(request):
     return redirect(url_for('get_appointments'))
 
 def cancel_appointment(request):
+    print(request)
     app_id = int(request.get('app_id'))
     patient_id = int(request.get('patient_id'))
     conn = application.connect()
@@ -252,7 +253,7 @@ def cancel_appointment(request):
         deleted_meet = db.fetchone() 
         if deleted_meet is None:
             raise Exception('no appointment deleted')
-        # assert datetime.datetime.strptime(deleted_meet['dat'].isoformat() + ' ' + deleted_meet['start_time'].isoformat(), '%Y-%m-%d %H:%M:%S') > datetime.datetime.now(), 'attempting to cancel an appointment which has taken place'
+        assert datetime.datetime.strptime(deleted_meet['dat'].isoformat() + ' ' + deleted_meet['start_time'].isoformat(), '%Y-%m-%d %H:%M:%S') > datetime.datetime.now(), 'attempting to cancel an appointment which has taken place'
         sql = '''delete from appointment
                 where app_id = %s;'''
         db.execute(sql, (app_id,))
