@@ -97,6 +97,16 @@
                 <li><a class="dropdown-item" href="{{ url_for('assign_room') }}">Assg rooms</a></li>
               </ul>
             </li>
+            <li class="nav-item dropdown p-lg-3">
+              <a class="nav-link dropdown-toggle middle" href="#" id="tests" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Analytics
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="tests">
+                <li><a class="dropdown-item" href="{{ url_for('show_analytics') }}">Overall Analytics</a></li>
+                <div class="dropdown-divider"></div>
+                <li><a class="dropdown-item" href="{{ url_for('show_disease_analytics', disease_id=1) }}">Disease Specific Analytics</a></li>
+              </ul>
+            </li>
             {% endif %}
 
           {% endif %}
